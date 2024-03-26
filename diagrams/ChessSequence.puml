@@ -1,0 +1,55 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+title Sequence diagram: en passant
+'TODO: correct mistakes
+
+actor user
+    user -> Game: movePiece(String from, String to)
+    Game -> Game: isMovable(String position)
+    Game -> HashGameBoard: positionExists(String position)
+    HashGameBoard -> SquaredBoardValidator: positionExists(String position)
+    HashGameBoard <-- SquaredBoardValidator: boolean
+
+    Game <-- HashGameBoard: boolean
+
+alt Position exists in board
+    Game -> HashGameBoard: getPieceAt(String pos)
+    Game <-- HashGameBoard: Piece
+    Game -> Piece: isPlayValid(String position)
+    Piece -> Piece: getAvailablePlays(): Set<Plays>
+
+    ' Check 'to' is in the set of available moves
+alt valid play
+    ' Example: en passant
+    Piece -> Play: executeActions()
+
+    ' Move
+    Play -> Move: execute()
+    Move -> HashGameBoard: getPieceAt(String position)
+    Move <-- HashGameBoard: void
+    Move -> HashGameBoard: setPieceAt(String position, Piece piece)
+    Move <-- HashGameBoard: void
+    Move -> HashGameBoard: setPieceAt(String position, Piece piece)
+    Move <-- HashGameBoard: void
+    Play <-- Move: void
+
+    ' Take
+    Play -> Take: execute()
+    Take -> HashGameBoard: setPieceAt(String position, Piece piece)
+    Take <-- HashGameBoard: void
+    Play <-- Take: void
+
+    Game <-- Play: void
+    user <-- Game: void
+else invalid play
+    Game <-- Piece: void
+    user <-- Game: void
+end
+else Position does not exist
+    user <-- Game: void
+end
+
+@enduml

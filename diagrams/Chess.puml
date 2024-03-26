@@ -1,0 +1,193 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+'enum Color {
+'WHITE
+'BLACK
+'}
+
+class Player {
+    - isChecked: boolean
+    - reachedWinCondition: boolean
+    + isChecked(): boolean
+    + setCheckedStatus(boolean isChecked): void
+    + reachedWinCondition(): boolean
+    + setWinConditionStatus(boolean reachedWinCondition): void
+}
+
+class Game {
+    '- gameRules: GameRules
+    - gameBoard: GameBoard
+    - white: Player
+    - black: Player
+    - currentTurn: Player
+    - reachedWinCondition(): boolean
+    - isMovable(String position): boolean
+    ' isMovable would be used in movePiece(): it permits, for instance, to block the rival's pieces, or piece movements when the player's king is checked.
+    + movePiece(String from, String to)
+}
+
+'class GameRules {
+'    + playerReachedWinCondition(Player player)
+'    + playerIsChecked(Player player)
+'}
+
+interface GameBoard {
+    + isOccupied(String position): boolean
+    + getPieceAt(String position): Piece
+    + setPieceAt(String position, Piece piece): Piece
+    + positionExists(String position): boolean
+    + containsPieceOfPlayer(String position, Player player): boolean
+    + getAllPiecesOfPlayer(Player player): Iterable<Piece>
+}
+
+class HashGameBoard implements GameBoard {
+    - squares: HashMap<String, Piece>
+    - validator: PositionValidator
+    + isOccupied(String position): boolean
+    + getPieceAt(String position): Piece
+    + positionExists(String position): boolean
+    + containsPieceOfPlayer(String position, Player player): boolean
+    + getAllPiecesOfPlayer(Player player): Iterable<Piece>
+}
+
+interface PositionValidator {
+    ' Allows to define different kinds of game board
+    + positionExists(): boolean
+}
+
+class SquaredBoardValidator implements PositionValidator {
+    - numOfRows: int
+    + positionExists(): boolean
+}
+
+'class Square {
+'    - x: Character
+'    - y: int
+'    - pieceOccupying: Piece
+'
+'    + getX(): Character
+'    + getY(): int
+'    + isOccupied(): boolean
+'    + getPieceOccupying(): Piece
+'}
+
+'interface Rule {
+'    + isViolated(Square currSquare, Square newSquare): boolean
+'}
+
+'class BoardLimitsRule implements Rule {
+'}
+
+'class RuleSet implements Rule {
+'    - rules: Iterable<Rule>
+'    + isViolated(Square currSquare, Square newSquare): boolean
+'}
+
+'class MoveRuleSet {
+'
+'    + getValidMoves(): Iterable<String>
+'}
+
+'class MoveFilter {
+'}
+
+' class PawnMove implements Rule {
+'   boolean isViolated(Square currSquare, Square newSquare) {
+'       return currSquare.y == newSquare.y + 1;
+'   }
+'}
+'
+' class
+'
+'
+
+class Play {
+    - board: GameBoard
+    - actions: Iterable<Action>
+    + getActions(): Iterable<Action>
+    + executeActions(): void
+}
+
+interface Action {
+    + execute()
+    ' Maybe this could simply be a Runnable
+}
+
+class Move implements Action {
+    - from: String
+    - to: String
+    - board: GameBoard
+    + execute()
+}
+
+class Take implements Action {
+    - position: String
+    - board: GameBoard
+    + execute()
+    ' TODO: Sometimes moving our piece implicitly includes taking the rival's piece (we reassign the latter's board position to the former, so the reference is replaced). Think about this.
+}
+
+class Promote implements Action {
+    - promotionPiece: Class
+    - board: GameBoard
+    + execute()
+}
+
+class Piece {
+    - board: GameBoard
+    ' There would be no consistency-circularity issues with the field above, since it's final
+    ' - ruleset: MoveRuleSet
+    - player: Player
+    + getPlayer(): Player
+'    + rulesAreViolated(): boolean
+    + isPlayValid(String position): boolean
+    - getValidPlays(): Set<Play>
+}
+
+'enum StandardPiece {
+'    KING
+'    ROOK
+'    QUEEN
+'    BISHOP
+'    KNIGHT
+'    PAWN
+'
+'    + getInstanceOf(StandardPiece piece, Player player)
+'}
+
+'class King extends Piece {
+'    move(Square): void
+'}
+'class Rook extends Piece {
+'    move(Square): void
+'}
+'class Bishop extends Piece {
+'    move(Square): void
+'}
+'class Queen extends Piece {
+'    move(Square): void
+'}
+'class Knight extends Piece {
+'    move(Square): void
+'}
+'class Pawn extends Piece {
+'    move(Square): void
+'}
+
+'Game --> GameRules
+Game -> GameBoard
+GameBoard -> Piece
+HashGameBoard --> PositionValidator
+'Piece -> MoveRuleSet
+'RuleSet -> Rule
+'Piece -> Rule
+Piece --> Player
+Game -> Player
+Piece -> Play
+Play -> Action
+
+'TODO: The fact that you cannot take your own pieces is a general rule. Check and checkmate are, too; even board-limit rules. Think about which general rules could be represented and how.
+
+
+@enduml
