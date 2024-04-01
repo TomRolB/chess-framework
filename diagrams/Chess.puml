@@ -6,40 +6,41 @@
 'BLACK
 '}
 
-class Player {
-    - isChecked: boolean
-    - reachedWinCondition: boolean
-    + isChecked(): boolean
-    + setCheckedStatus(boolean isChecked): void
-    + reachedWinCondition(): boolean
-    + setWinConditionStatus(boolean reachedWinCondition): void
+enum Player {
+    BLACK
+    WHITE
 }
 
 class Game {
-    '- gameRules: GameRules
+    - gameRules: GameRules
     - gameBoard: GameBoard
-    - white: Player
-    - black: Player
+    - validator: MoveValidator
     - currentTurn: Player
-    - reachedWinCondition(): boolean
-    - isMovable(String position): boolean
     ' isMovable would be used in movePiece(): it permits, for instance, to block the rival's pieces, or piece movements when the player's king is checked.
     + movePiece(String from, String to)
 }
 
-'class GameRules {
-'    + playerReachedWinCondition(Player player)
-'    + playerIsChecked(Player player)
-'}
+interface GameRules {
+    + isPieceMovable(String position): boolean
+    + isMoveValid(String from, String to): boolean
+    + playerReachedWinCondition(Player player)
+    + playerIsChecked(Player player)
+}
 
 interface GameBoard {
     + isOccupied(String position): boolean
     + getPieceAt(String position): Piece
-    + setPieceAt(String position, Piece piece): Piece
+    + setPieceAt(String position, Piece piece)
     + positionExists(String position): boolean
     + containsPieceOfPlayer(String position, Player player): boolean
     + getAllPiecesOfPlayer(Player player): Iterable<Piece>
 }
+
+'interface MoveValidator {
+'    + isPieceMovable(String position): boolean
+'    + isMoveValid(String from, String to): boolean
+'    'TODO: Maybe instead have a method that gets all movable pieces? Or maybe isMovable() should support polymorphism by Piece. In that case, it should be a method of that interface.
+'}
 
 class HashGameBoard implements GameBoard {
     - squares: HashMap<String, Piece>
@@ -129,6 +130,7 @@ class Take implements Action {
 }
 
 class Promote implements Action {
+    - position: String
     - promotionPiece: Class
     - board: GameBoard
     + execute()
@@ -139,10 +141,21 @@ class Piece {
     ' There would be no consistency-circularity issues with the field above, since it's final
     ' - ruleset: MoveRuleSet
     - player: Player
+    - rules: PieceRules
     + getPlayer(): Player
 '    + rulesAreViolated(): boolean
-    + isPlayValid(String position): boolean
-    - getValidPlays(): Set<Play>
+    + isPlayValid(String from, String to)
+    + getValidPlays(): Set<Play>
+}
+
+interface PieceRules {
+    + isPlayValid(): boolean
+    + getValidPlays(): Set<Play>
+}
+
+class PathValidator {
+    + isPathClear(Player player, String from, String to): boolean
+    ' Checks whether something is blocking the path between a piece and a position.
 }
 
 'enum StandardPiece {
@@ -175,14 +188,19 @@ class Piece {
 '    move(Square): void
 '}
 
-'Game --> GameRules
+Game --> GameRules
 Game -> GameBoard
+'MoveValidator -> GameRules
+
+GameRules -> GameBoard
 GameBoard -> Piece
 HashGameBoard --> PositionValidator
 'Piece -> MoveRuleSet
 'RuleSet -> Rule
 'Piece -> Rule
-Piece --> Player
+Piece -> Player
+Piece --> PieceRules
+Piece --> PathValidator
 Game -> Player
 Piece -> Play
 Play -> Action
