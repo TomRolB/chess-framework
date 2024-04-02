@@ -24,7 +24,7 @@ class Game(val gameRules: GameRules, val gameBoard: GameBoard) {
             println("This movement is not valid")
             return
         }
-        play.executeActions()
+        play.execute()
     }
 }
 
