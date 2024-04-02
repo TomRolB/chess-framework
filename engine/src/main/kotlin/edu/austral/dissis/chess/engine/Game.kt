@@ -5,7 +5,26 @@ fun main() {
 
 class Game(val gameRules: GameRules, val gameBoard: GameBoard) {
     fun movePiece(from: String, to: String) {
+        if (!gameBoard.positionExists(from)) {
+            println("Invalid board position")
+            return
+        }
 
+        val piece = gameBoard.getPieceAt(from)
+        if (piece == null) {
+            println("There is no piece at this position")
+            return
+        }
+        if (!gameRules.isPieceMovable(from)) {
+            println("This piece is not movable")
+            return
+        }
+        val play = piece.getPlayIfValid(from, to)
+        if (play == null) {
+            println("This movement is not valid")
+            return
+        }
+        play.executeActions()
     }
 }
 

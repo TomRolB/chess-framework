@@ -1,26 +1,26 @@
 package edu.austral.dissis.chess.engine
 
-class Play(val gameBoard: GameBoard, val actions: Iterable<Action>) {
-    fun executeActions() {
-        for (action in actions) action.execute()
-    }
-}
-
 interface Action {
     fun execute()
 }
 
+class Play(val actions: Iterable<Action>): Action {
+    override fun execute() {
+        for (action in actions) action.execute()
+    }
+}
+
 class Move(val from: String, val to: String, val board: GameBoard) : Action {
     override fun execute() {
-        val piece = board.getPieceAt(from)
+        val piece: Piece = board.getPieceAt(from)!! // At this point, we've made all necessary checks
         board.setPieceAt(to, piece)
-        board.setPieceAt(from, null)
+        board.delPieceAt(from)
     }
 }
 
 class Take(val position: String, val board: GameBoard) : Action {
     override fun execute() {
-        board.setPieceAt(position, null)
+        board.delPieceAt(position)
     }
 }
 
