@@ -88,12 +88,12 @@ class PawnMovementTests {
     }
 }
 
-class TowerMovementTest {
+class RookMovementTest {
     lateinit var board: HashGameBoard
     lateinit var game: Game
     lateinit var closestPawn: Piece
     lateinit var blockedPawn: Piece
-    lateinit var whiteTower: Piece
+    lateinit var whiteRook: Piece
 
 
     @BeforeEach
@@ -103,69 +103,150 @@ class TowerMovementTest {
 
         closestPawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
         blockedPawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
-        whiteTower = Piece(Player.WHITE, board, TowerPieceRules(board, Player.WHITE))
+        whiteRook = Piece(Player.WHITE, board, RookPieceRules(board, Player.WHITE))
 
         board.setPieceAt("b4", closestPawn)
         board.setPieceAt("b6", blockedPawn)
-        board.setPieceAt("b2", whiteTower)
+        board.setPieceAt("b2", whiteRook)
     }
 
     @Test
-    fun `tower takes closest pawn`() {
+    fun `rook takes closest pawn`() {
         game.movePiece("b2", "b4")
 
-        assertEquals(whiteTower, board.getPieceAt("b4"))
+        assertEquals(whiteRook, board.getPieceAt("b4"))
         assertEquals(null, board.getPieceAt("b2"))
         assertEquals(blockedPawn, board.getPieceAt("b6"))
     }
 
     @Test
-    fun `tower cannot take blocked pawn`() {
+    fun `rook cannot take blocked pawn`() {
         game.movePiece("b2", "b6")
 
-        assertEquals(whiteTower, board.getPieceAt("b2"))
+        assertEquals(whiteRook, board.getPieceAt("b2"))
         assertEquals(closestPawn, board.getPieceAt("b4"))
         assertEquals(blockedPawn, board.getPieceAt("b6"))
     }
 
     @Test
-    fun `tower can move back`() {
+    fun `rook can move back`() {
         game.movePiece("b2", "b1")
 
-        assertEquals(whiteTower, board.getPieceAt("b1"))
+        assertEquals(whiteRook, board.getPieceAt("b1"))
         assertEquals(null, board.getPieceAt("b2"))
         assertEquals(closestPawn, board.getPieceAt("b4"))
         assertEquals(blockedPawn, board.getPieceAt("b6"))
     }
 
     @Test
-    fun `tower can move right`() {
+    fun `rook can move right`() {
         game.movePiece("b2", "a2")
 
-        assertEquals(whiteTower, board.getPieceAt("a2"))
+        assertEquals(whiteRook, board.getPieceAt("a2"))
         assertEquals(null, board.getPieceAt("b2"))
         assertEquals(closestPawn, board.getPieceAt("b4"))
         assertEquals(blockedPawn, board.getPieceAt("b6"))
     }
 
     @Test
-    fun `tower can move left`() {
+    fun `rook can move left`() {
         game.movePiece("b2", "h2")
 
-        assertEquals(whiteTower, board.getPieceAt("h2"))
+        assertEquals(whiteRook, board.getPieceAt("h2"))
         assertEquals(null, board.getPieceAt("b2"))
         assertEquals(closestPawn, board.getPieceAt("b4"))
         assertEquals(blockedPawn, board.getPieceAt("b6"))
     }
 
     @Test
-    fun `tower cannot move diagonally`() {
+    fun `rook cannot move diagonally`() {
         game.movePiece("b2", "d4")
 
-        assertEquals(whiteTower, board.getPieceAt("b2"))
+        assertEquals(whiteRook, board.getPieceAt("b2"))
         assertEquals(null, board.getPieceAt("d4"))
         assertEquals(closestPawn, board.getPieceAt("b4"))
         assertEquals(blockedPawn, board.getPieceAt("b6"))
+    }
+}
+
+class BishopMovementTest {
+    lateinit var board: HashGameBoard
+    lateinit var game: Game
+    lateinit var closestPawn: Piece
+    lateinit var blockedPawn: Piece
+    lateinit var whiteBishop: Piece
+
+
+    @BeforeEach
+    fun setUp() {
+        board = HashGameBoard(RectangleBoardValidator(8, 8))
+        game = Game(NoRules(), board)
+
+        closestPawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
+        blockedPawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
+        whiteBishop = Piece(Player.WHITE, board, BishopPieceRules(board, Player.WHITE))
+
+        board.setPieceAt("d4", closestPawn)
+        board.setPieceAt("c3", blockedPawn)
+        board.setPieceAt("g7", whiteBishop)
+    }
+
+    @Test
+    fun `bishop takes closest pawn`() {
+        game.movePiece("g7", "d4")
+
+        assertEquals(whiteBishop, board.getPieceAt("d4"))
+        assertEquals(null, board.getPieceAt("g7"))
+        assertEquals(blockedPawn, board.getPieceAt("c3"))
+    }
+
+    @Test
+    fun `bishop cannot take blocked pawn`() {
+        game.movePiece("g7", "c3")
+
+        assertEquals(whiteBishop, board.getPieceAt("g7"))
+        assertEquals(closestPawn, board.getPieceAt("d4"))
+        assertEquals(blockedPawn, board.getPieceAt("c3"))
+    }
+
+    @Test
+    fun `bishop can move to corner`() {
+        game.movePiece("g7", "h8")
+
+        assertEquals(whiteBishop, board.getPieceAt("h8"))
+        assertEquals(null, board.getPieceAt("g7"))
+        assertEquals(closestPawn, board.getPieceAt("d4"))
+        assertEquals(blockedPawn, board.getPieceAt("c3"))
+    }
+
+    @Test
+    fun `bishop can move to the front and to the right`() {
+        game.movePiece("g7", "f8")
+
+        assertEquals(whiteBishop, board.getPieceAt("f8"))
+        assertEquals(null, board.getPieceAt("g7"))
+        assertEquals(closestPawn, board.getPieceAt("d4"))
+        assertEquals(blockedPawn, board.getPieceAt("c3"))
+    }
+
+    @Test
+    fun `bishop can move close to the first pawn`() {
+        game.movePiece("g7", "e5")
+
+        assertEquals(whiteBishop, board.getPieceAt("e5"))
+        assertEquals(null, board.getPieceAt("g7"))
+        assertEquals(closestPawn, board.getPieceAt("d4"))
+        assertEquals(blockedPawn, board.getPieceAt("c3"))
+    }
+
+    @Test
+    fun `bishop cannot move vertically`() {
+        game.movePiece("g7", "g2")
+
+        assertEquals(whiteBishop, board.getPieceAt("g7"))
+        assertEquals(null, board.getPieceAt("g2"))
+        assertEquals(closestPawn, board.getPieceAt("d4"))
+        assertEquals(blockedPawn, board.getPieceAt("c3"))
     }
 }
 

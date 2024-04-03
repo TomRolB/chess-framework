@@ -100,7 +100,7 @@ class PawnPieceRules(val board: GameBoard, val player: Player) : PieceRules {
 
 }
 
-class TowerPieceRules(val board: GameBoard, val player: Player) : PieceRules {
+class RookPieceRules(val board: GameBoard, val player: Player) : PieceRules {
     override fun isPlayValid(from: String, to: String): Boolean {
         TODO("Not yet implemented")
     }
@@ -119,6 +119,33 @@ class TowerPieceRules(val board: GameBoard, val player: Player) : PieceRules {
         }
 
         if (Heuristics.PLUS_SYMBOL.isPathBlocked(moveData, board, player)) {
+            println("Cannot move there: the path is blocked")
+            return null
+        }
+
+        return Play(listOf(Move(from, to, board)))
+    }
+}
+
+class BishopPieceRules(val board: GameBoard, val player: Player) : PieceRules {
+    override fun isPlayValid(from: String, to: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getValidPlays(): Set<Play> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPlayIfValid(from: String, to: String): Play? {
+        val moveData = MovementData(from, to, board)
+
+
+        if (Heuristics.X_SYMBOL.isViolated(moveData)) {
+            println("A bishop cannot move this way")
+            return null
+        }
+
+        if (Heuristics.X_SYMBOL.isPathBlocked(moveData, board, player)) {
             println("Cannot move there: the path is blocked")
             return null
         }
