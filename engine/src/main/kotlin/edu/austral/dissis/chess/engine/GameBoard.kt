@@ -9,7 +9,7 @@ interface GameBoard {
     fun containsPieceOfPlayer(position: String, player: Player): Boolean
     fun getAllPiecesOfPlayer(player: Player): Iterable<Piece>
     fun unpackPosition(position: String): RowAndCol
-    fun getRowAsWhite(position: String): Int
+    fun getRowAsWhite(position: String, player: Player): Int
 }
 
 class HashGameBoard(val validator: PositionValidator): GameBoard {
@@ -36,7 +36,9 @@ class HashGameBoard(val validator: PositionValidator): GameBoard {
     }
 
     override fun containsPieceOfPlayer(position: String, player: Player): Boolean {
-        TODO("Not yet implemented")
+        val piece = getPieceAt(position)
+        if (piece == null) return false
+        return piece.player == player
     }
 
     override fun getAllPiecesOfPlayer(player: Player): Iterable<Piece> {
@@ -47,8 +49,8 @@ class HashGameBoard(val validator: PositionValidator): GameBoard {
         return validator.unpackPosition(position)
     }
 
-    override fun getRowAsWhite (position: String): Int {
-        return validator.getRowAsWhite(position)
+    override fun getRowAsWhite (position: String, player: Player): Int {
+        return validator.getRowAsWhite(position, player)
     }
 }
 
@@ -57,7 +59,7 @@ data class RowAndCol(val row: Int, val col: Int)
 interface PositionValidator {
     fun positionExists(position: String): Boolean
     fun unpackPosition(position: String): RowAndCol
-    fun getRowAsWhite(position: String): Int
+    fun getRowAsWhite(position: String, player: Player): Int
 }
 
 class RectangleBoardValidator(val numberRows: Int, val numberCols: Int) : PositionValidator {
@@ -68,12 +70,14 @@ class RectangleBoardValidator(val numberRows: Int, val numberCols: Int) : Positi
     }
 
 
-    override fun getRowAsWhite(position: String): Int {
-        return numberCols + position[0].code - 'a'.code + 2
+    override fun getRowAsWhite(position: String, player: Player): Int {
+        if (player == Player.WHITE) return position[1].charToCol()
+
+        return numberRows - position[1].charToCol() + 1
     }
 
     override fun unpackPosition(position: String): RowAndCol {
-        val col: Int = position[0].charToInt()
+        val col: Int = position[0].charToCol()
         val row: Int = position[1].digitToInt()
         return RowAndCol(row, col)
     }

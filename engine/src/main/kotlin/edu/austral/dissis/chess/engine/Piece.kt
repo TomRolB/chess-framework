@@ -40,8 +40,8 @@ class PawnPieceRules(val board: GameBoard, val player: Player) : PieceRules {
     override fun getPlayIfValid(from: String, to: String): Play? {
         val (fromRow, fromCol) = board.unpackPosition(from)
         val (toRow, toCol) = board.unpackPosition(to)
-        val fromRowAsWhite = board.getRowAsWhite(from)
-        val toRowAsWhite = board.getRowAsWhite(to)
+        val fromRowAsWhite = board.getRowAsWhite(from, player)
+        val toRowAsWhite = board.getRowAsWhite(to, player)
         val rowDelta = toRowAsWhite - fromRowAsWhite
         val colDelta = toCol - fromCol
 
@@ -59,12 +59,16 @@ class PawnPieceRules(val board: GameBoard, val player: Player) : PieceRules {
                         if (board.isOccupied(to)) {
                             return null;
                         }
+
+                        hasEverMoved = true;
                         return Play(listOf(Move(from, to, board)))
                     }
                     1, -1 -> {
                         if (!board.containsPieceOfPlayer(to, !player)) {
                             return null
                         }
+
+                        hasEverMoved = true;
                         return Play(listOf(Move(from, to, board)))
                     }
                 }
@@ -78,6 +82,8 @@ class PawnPieceRules(val board: GameBoard, val player: Player) : PieceRules {
                 if (board.isOccupied(to) || board.isOccupied(front)) {
                     return null;
                 }
+
+                hasEverMoved = true;
                 return Play(listOf(Move(from, to, board)))
             }
         }
@@ -86,10 +92,37 @@ class PawnPieceRules(val board: GameBoard, val player: Player) : PieceRules {
     }
 
     private fun isPlayWithinPawnRange(rowDelta: Int, colDelta: Int): Boolean {
-        val movedFrontOrDiagonally = (rowDelta == 1) && (-1 < colDelta) && (colDelta < 1)
+        val movedFrontOrDiagonally = (rowDelta == 1) && (-1 <= colDelta) && (colDelta <= 1)
         val movedTwoSpaces = (rowDelta == 2 && colDelta == 0)
         return movedFrontOrDiagonally || movedTwoSpaces
     }
 
 
+}
+
+class TowerPieceRules(val board: GameBoard, val player: Player) : PieceRules {
+    override fun isPlayValid(from: String, to: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getValidPlays(): Set<Play> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPlayIfValid(from: String, to: String): Play? {
+        val moveData = MovementData(from, to, board)
+
+
+        if (Heuristics.PLUS_SYMBOL.isViolated(moveData)) {
+            println("A tower cannot move this way")
+            return null
+        }
+
+        if (Heuristics.PLUS_SYMBOL.isPathBlocked(moveData, board, player)) {
+            println("Cannot move there: the path is blocked")
+            return null
+        }
+
+        return Play(listOf(Move(from, to, board)))
+    }
 }
