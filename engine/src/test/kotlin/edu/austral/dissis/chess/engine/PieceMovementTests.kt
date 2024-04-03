@@ -250,6 +250,184 @@ class BishopMovementTest {
     }
 }
 
+class QueenMovementTest {
+    lateinit var board: HashGameBoard
+    lateinit var game: Game
+    lateinit var horizontalPawn: Piece
+    lateinit var unreachablePawn: Piece
+    lateinit var diagonalPawn: Piece
+    lateinit var whiteQueen: Piece
+
+
+    @BeforeEach
+    fun setUp() {
+        board = HashGameBoard(RectangleBoardValidator(8, 8))
+        game = Game(NoRules(), board)
+
+        horizontalPawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
+        unreachablePawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
+        diagonalPawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
+        whiteQueen = Piece(Player.WHITE, board, QueenPieceRules(board, Player.WHITE))
+
+        board.setPieceAt("b6", horizontalPawn)
+        board.setPieceAt("b5", unreachablePawn)
+        board.setPieceAt("b4", diagonalPawn)
+        board.setPieceAt("d6", whiteQueen)
+    }
+
+    @Test
+    fun `queen takes pawn horizontally`() {
+        game.movePiece("d6", "b6")
+
+        assertEquals(whiteQueen, board.getPieceAt("b6"))
+        assertEquals(null, board.getPieceAt("d6"))
+        assertEquals(unreachablePawn, board.getPieceAt("b5"))
+        assertEquals(diagonalPawn, board.getPieceAt("b4"))
+    }
+
+    @Test
+    fun `queen cannot take unreachable pawn`() {
+        game.movePiece("d6", "b5")
+
+        assertEquals(whiteQueen, board.getPieceAt("d6"))
+        assertEquals(horizontalPawn, board.getPieceAt("b6"))
+        assertEquals(unreachablePawn, board.getPieceAt("b5"))
+        assertEquals(diagonalPawn, board.getPieceAt("b4"))
+    }
+
+    @Test
+    fun `queen takes pawn diagonally`() {
+        game.movePiece("d6", "b4")
+
+        assertEquals(whiteQueen, board.getPieceAt("b4"))
+        assertEquals(null, board.getPieceAt("d6"))
+        assertEquals(unreachablePawn, board.getPieceAt("b5"))
+        assertEquals(horizontalPawn, board.getPieceAt("b6"))
+    }
+
+    @Test
+    fun `queen can move back`() {
+        game.movePiece("d6", "d1")
+
+        assertEquals(whiteQueen, board.getPieceAt("d1"))
+        assertEquals(null, board.getPieceAt("d6"))
+        assertEquals(horizontalPawn, board.getPieceAt("b6"))
+        assertEquals(unreachablePawn, board.getPieceAt("b5"))
+        assertEquals(diagonalPawn, board.getPieceAt("b4"))
+    }
+
+    @Test
+    fun `queen can move to the front and to the left`() {
+        game.movePiece("d6", "e7")
+
+        assertEquals(whiteQueen, board.getPieceAt("e7"))
+        assertEquals(null, board.getPieceAt("d6"))
+        assertEquals(horizontalPawn, board.getPieceAt("b6"))
+        assertEquals(unreachablePawn, board.getPieceAt("b5"))
+        assertEquals(diagonalPawn, board.getPieceAt("b4"))
+    }
+
+    @Test
+    fun `queen cannot bypass pawn diagonally`() {
+        game.movePiece("d6", "a3")
+
+        assertEquals(whiteQueen, board.getPieceAt("d6"))
+        assertEquals(null, board.getPieceAt("a3"))
+        assertEquals(horizontalPawn, board.getPieceAt("b6"))
+        assertEquals(unreachablePawn, board.getPieceAt("b5"))
+        assertEquals(diagonalPawn, board.getPieceAt("b4"))
+    }
+
+    @Test
+    fun `queen cannot move like knight`() {
+        game.movePiece("d6", "e4")
+
+        assertEquals(whiteQueen, board.getPieceAt("d6"))
+        assertEquals(null, board.getPieceAt("e4"))
+        assertEquals(horizontalPawn, board.getPieceAt("b6"))
+        assertEquals(unreachablePawn, board.getPieceAt("b5"))
+        assertEquals(diagonalPawn, board.getPieceAt("b4"))
+    }
+}
+
+class KnightMovementTest {
+    lateinit var board: HashGameBoard
+    lateinit var game: Game
+    lateinit var horizontalPawn: Piece
+    lateinit var verticalPawn: Piece
+    lateinit var takeablePawn: Piece
+    lateinit var whiteKnight: Piece
+
+
+    @BeforeEach
+    fun setUp() {
+        board = HashGameBoard(RectangleBoardValidator(8, 8))
+        game = Game(NoRules(), board)
+
+        horizontalPawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
+        takeablePawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
+        verticalPawn = Piece(Player.BLACK, board, PawnPieceRules(board, Player.BLACK))
+        whiteKnight = Piece(Player.WHITE, board, KnightPieceRules(board, Player.WHITE))
+
+        board.setPieceAt("f3", horizontalPawn)
+        board.setPieceAt("f5", takeablePawn)
+        board.setPieceAt("g4", verticalPawn)
+        board.setPieceAt("g3", whiteKnight)
+    }
+
+    @Test
+    fun `knight takes pawn moving in an L shape`() {
+        game.movePiece("g3", "f5")
+
+        assertEquals(whiteKnight, board.getPieceAt("f5"))
+        assertEquals(null, board.getPieceAt("g3"))
+        assertEquals(horizontalPawn, board.getPieceAt("f3"))
+        assertEquals(verticalPawn, board.getPieceAt("g4"))
+    }
+
+    @Test
+    fun `knight cannot take pawn horizontally`() {
+        game.movePiece("g3", "f3")
+
+        assertEquals(whiteKnight, board.getPieceAt("g3"))
+        assertEquals(verticalPawn, board.getPieceAt("g4"))
+        assertEquals(takeablePawn, board.getPieceAt("f5"))
+        assertEquals(horizontalPawn, board.getPieceAt("f3"))
+    }
+
+    @Test
+    fun `knight cannot take pawn vertically`() {
+        game.movePiece("g3", "g4")
+
+        assertEquals(whiteKnight, board.getPieceAt("g3"))
+        assertEquals(verticalPawn, board.getPieceAt("g4"))
+        assertEquals(takeablePawn, board.getPieceAt("f5"))
+        assertEquals(horizontalPawn, board.getPieceAt("f3"))
+    }
+
+    @Test
+    fun `knight can jump over pawn in L shape`() {
+        game.movePiece("g3", "e4")
+
+        assertEquals(whiteKnight, board.getPieceAt("e4"))
+        assertEquals(null, board.getPieceAt("g3"))
+        assertEquals(verticalPawn, board.getPieceAt("g4"))
+        assertEquals(takeablePawn, board.getPieceAt("f5"))
+        assertEquals(horizontalPawn, board.getPieceAt("f3"))
+    }
+
+    @Test
+    fun `knight cannot jump over pawn horizontally`() {
+        game.movePiece("g3", "e3")
+
+        assertEquals(whiteKnight, board.getPieceAt("g3"))
+        assertEquals(null, board.getPieceAt("e3"))
+        assertEquals(verticalPawn, board.getPieceAt("g4"))
+        assertEquals(takeablePawn, board.getPieceAt("f5"))
+        assertEquals(horizontalPawn, board.getPieceAt("f3"))
+    }
+}
+
 class NoRules : GameRules {
     override fun isPieceMovable(position: String): Boolean {
         return true

@@ -113,12 +113,12 @@ class RookPieceRules(val board: GameBoard, val player: Player) : PieceRules {
         val moveData = MovementData(from, to, board)
 
 
-        if (Heuristics.PLUS_SYMBOL.isViolated(moveData)) {
+        if (PathHeuristic.VERTICAL_AND_HORIZONTAL.isViolated(moveData)) {
             println("A tower cannot move this way")
             return null
         }
 
-        if (Heuristics.PLUS_SYMBOL.isPathBlocked(moveData, board, player)) {
+        if (PathHeuristic.VERTICAL_AND_HORIZONTAL.isPathBlocked(moveData, board, player)) {
             println("Cannot move there: the path is blocked")
             return null
         }
@@ -140,13 +140,62 @@ class BishopPieceRules(val board: GameBoard, val player: Player) : PieceRules {
         val moveData = MovementData(from, to, board)
 
 
-        if (Heuristics.X_SYMBOL.isViolated(moveData)) {
+        if (PathHeuristic.DIAGONAL.isViolated(moveData)) {
             println("A bishop cannot move this way")
             return null
         }
 
-        if (Heuristics.X_SYMBOL.isPathBlocked(moveData, board, player)) {
+        if (PathHeuristic.DIAGONAL.isPathBlocked(moveData, board, player)) {
             println("Cannot move there: the path is blocked")
+            return null
+        }
+
+        return Play(listOf(Move(from, to, board)))
+    }
+}
+
+class QueenPieceRules(val board: GameBoard, val player: Player) : PieceRules {
+    override fun isPlayValid(from: String, to: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getValidPlays(): Set<Play> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPlayIfValid(from: String, to: String): Play? {
+        val moveData = MovementData(from, to, board)
+
+
+        if (PathHeuristic.ANY_STRAIGHT.isViolated(moveData)) {
+            println("A bishop cannot move this way")
+            return null
+        }
+
+        if (PathHeuristic.ANY_STRAIGHT.isPathBlocked(moveData, board, player)) {
+            println("Cannot move there: the path is blocked")
+            return null
+        }
+
+        return Play(listOf(Move(from, to, board)))
+    }
+}
+
+class KnightPieceRules(val board: GameBoard, val player: Player) : PieceRules {
+    override fun isPlayValid(from: String, to: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getValidPlays(): Set<Play> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPlayIfValid(from: String, to: String): Play? {
+        val moveData = MovementData(from, to, board)
+
+
+        if (PathHeuristic.L_SHAPE.isViolated(moveData)) {
+            println("A bishop cannot move this way")
             return null
         }
 

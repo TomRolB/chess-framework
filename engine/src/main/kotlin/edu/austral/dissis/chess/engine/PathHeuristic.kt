@@ -3,31 +3,40 @@ package edu.austral.dissis.chess.engine
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
-enum class Heuristics {
-    PLUS_SYMBOL,
-    X_SYMBOL;
+enum class PathHeuristic {
+    VERTICAL_AND_HORIZONTAL,
+    DIAGONAL,
+    ANY_STRAIGHT,
+    L_SHAPE;
+    //TODO: Yes, names are horrible. Change them.
 
     fun isViolated(moveData: MovementData): Boolean {
         when(this) {
-            PLUS_SYMBOL -> {
+            VERTICAL_AND_HORIZONTAL -> {
                 val movedVertically: Boolean = (moveData.rowDelta != 0)
                 val movedHorizontally: Boolean = (moveData.colDelta != 0)
                 val movedBothWays = (movedVertically && movedHorizontally)
 
                 return movedBothWays
             }
-            X_SYMBOL -> {
+            DIAGONAL -> {
                 val movedDiagonally: Boolean = moveData.rowDelta.absoluteValue == moveData.colDelta.absoluteValue
 
                 return !movedDiagonally
+            }
+            ANY_STRAIGHT -> return VERTICAL_AND_HORIZONTAL.isViolated(moveData) && DIAGONAL.isViolated(moveData)
+            L_SHAPE -> {
+                val absRowDelta = moveData.rowDelta.absoluteValue
+                val absColDelta = moveData.colDelta.absoluteValue
+                val movedInL = (absRowDelta == 1 && absColDelta == 2) || (absRowDelta == 2 && absColDelta == 1)
+                return !movedInL
             }
         }
     }
 
     fun isPathBlocked(moveData: MovementData, board: GameBoard, player: Player): Boolean {
         when(this) {
-            PLUS_SYMBOL, X_SYMBOL -> {
-                    //TODO("Will probably also hold X_SYMBOL and OCTOGRAM")
+            VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT -> {
                 val rowIncrement = moveData.rowDelta.sign
                 val colIncrement = moveData.colDelta.sign
 
@@ -46,7 +55,8 @@ enum class Heuristics {
 
                 return false
             }
+
+            L_SHAPE -> return false
         }
     }
 }
-
