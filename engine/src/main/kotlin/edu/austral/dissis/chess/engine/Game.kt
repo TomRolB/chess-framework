@@ -3,7 +3,7 @@ package edu.austral.dissis.chess.engine
 fun main() {
 }
 
-class Game(val gameRules: GameRules, val gameBoard: GameBoard) {
+class Game(val gameRules: GameRules, var gameBoard: GameBoard) {
     fun movePiece(from: String, to: String) {
         if (!gameBoard.positionExists(from)) {
             println("Invalid board position")
@@ -19,12 +19,13 @@ class Game(val gameRules: GameRules, val gameBoard: GameBoard) {
             println("This piece is not movable")
             return
         }
-        val play = piece.getPlayIfValid(from, to)
+        val play = piece.rules.getPlayIfValid(gameBoard, from, to)
         if (play == null) {
             println("This movement is not valid")
             return
         }
-        play.execute()
+        val gameBoardAfterPlay = play.execute()
+        gameBoard = gameBoardAfterPlay
     }
 }
 

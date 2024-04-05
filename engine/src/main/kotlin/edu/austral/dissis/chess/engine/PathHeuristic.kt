@@ -34,7 +34,7 @@ enum class PathHeuristic {
         }
     }
 
-    fun isPathBlocked(moveData: MovementData, board: GameBoard, player: Player): Boolean {
+    fun isPathBlocked(moveData: MovementData, board: GameBoard): Boolean {
         when(this) {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT -> {
                 val rowIncrement = moveData.rowDelta.sign

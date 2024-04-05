@@ -3,8 +3,8 @@ package edu.austral.dissis.chess.engine
 interface GameBoard {
     fun isOccupied(position: String): Boolean
     fun getPieceAt(position: String): Piece?
-    fun setPieceAt(position: String, piece: Piece)
-    fun delPieceAt(position: String)
+    fun setPieceAt(position: String, piece: Piece): GameBoard
+    fun delPieceAt(position: String): GameBoard
     fun positionExists(position: String): Boolean
     fun containsPieceOfPlayer(position: String, player: Player): Boolean
     fun getAllPiecesOfPlayer(player: Player): Iterable<Piece>
@@ -12,8 +12,15 @@ interface GameBoard {
     fun getRowAsWhite(position: String, player: Player): Int
 }
 
-class HashGameBoard(val validator: PositionValidator): GameBoard {
-    val boardMap: HashMap<String, Piece> = HashMap()
+class HashGameBoard : GameBoard {
+
+    val validator: PositionValidator
+    val boardMap: Map<String, Piece>
+
+    constructor(validator: PositionValidator, boardMap: Map<String, Piece>) {
+        this.validator = validator
+        this.boardMap = boardMap
+    }
 
     override fun isOccupied(position: String): Boolean {
         return boardMap[position] != null
@@ -23,12 +30,18 @@ class HashGameBoard(val validator: PositionValidator): GameBoard {
         return boardMap[position]
     }
 
-    override fun setPieceAt(position: String, piece: Piece) {
-        boardMap[position] = piece
+    override fun setPieceAt(position: String, piece: Piece): HashGameBoard {
+        val newMap = boardMap + (position to piece)
+
+        return HashGameBoard(validator, newMap)
     }
 
-    override fun delPieceAt(position: String) {
-        boardMap.remove(position)
+
+    override fun delPieceAt(position: String): HashGameBoard {
+        val newMap: HashMap<String, Piece> = HashMap(boardMap)
+        newMap.remove(position)
+
+        return HashGameBoard(validator, newMap)
     }
 
     override fun positionExists(position: String): Boolean {
