@@ -3,7 +3,7 @@ package edu.austral.dissis.chess.engine
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
-enum class PathHeuristic {
+enum class Path {
     VERTICAL_AND_HORIZONTAL,
     DIAGONAL,
     ANY_STRAIGHT,
@@ -11,31 +11,36 @@ enum class PathHeuristic {
     //TODO: Yes, names are horrible. Change them.
 
     fun isViolated(moveData: MovementData): Boolean {
-        when(this) {
+        return when(this) {
             VERTICAL_AND_HORIZONTAL -> {
                 val movedVertically: Boolean = (moveData.rowDelta != 0)
                 val movedHorizontally: Boolean = (moveData.colDelta != 0)
                 val movedBothWays = (movedVertically && movedHorizontally)
 
-                return movedBothWays
+                movedBothWays
             }
             DIAGONAL -> {
                 val movedDiagonally: Boolean = moveData.rowDelta.absoluteValue == moveData.colDelta.absoluteValue
 
-                return !movedDiagonally
+                !movedDiagonally
             }
-            ANY_STRAIGHT -> return VERTICAL_AND_HORIZONTAL.isViolated(moveData) && DIAGONAL.isViolated(moveData)
+            ANY_STRAIGHT -> {
+                val noStraightLine = VERTICAL_AND_HORIZONTAL.isViolated(moveData) && DIAGONAL.isViolated(moveData)
+
+                noStraightLine
+            }
             L_SHAPE -> {
                 val absRowDelta = moveData.rowDelta.absoluteValue
                 val absColDelta = moveData.colDelta.absoluteValue
                 val movedInL = (absRowDelta == 1 && absColDelta == 2) || (absRowDelta == 2 && absColDelta == 1)
-                return !movedInL
+
+                !movedInL
             }
         }
     }
 
     fun isPathBlocked(moveData: MovementData, board: GameBoard): Boolean {
-        when(this) {
+        return when(this) {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT -> {
                 val rowIncrement = moveData.rowDelta.sign
                 val colIncrement = moveData.colDelta.sign
@@ -43,20 +48,23 @@ enum class PathHeuristic {
                 var row = moveData.fromRow + rowIncrement
                 var col = moveData.fromCol + colIncrement
 
+                var anyPieceBlocking = false
+
                 while (!(row == moveData.toRow && col == moveData.toCol)) {
                     val position: String = getStringPosition(row, col)
                     if (board.isOccupied(position)) {
-                        return true
+                        anyPieceBlocking = true
+                        break;
                     }
 
                     row += rowIncrement
                     col += colIncrement
                 }
 
-                return false
+                anyPieceBlocking
             }
 
-            L_SHAPE -> return false
+            L_SHAPE -> false
         }
     }
 }

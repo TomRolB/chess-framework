@@ -3,13 +3,14 @@ package edu.austral.dissis.chess.engine
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class PawnMovementTests {
-    lateinit var map: Map<String, Piece>
-    lateinit var board: HashGameBoard
-    lateinit var game: Game
-    lateinit var whitePawn: Piece
-    lateinit var blackPawn: Piece
+    private lateinit var map: Map<String, Piece>
+    private lateinit var board: HashGameBoard
+    private lateinit var game: Game
+    private lateinit var whitePawn: Piece
+    private lateinit var blackPawn: Piece
 
 
     @BeforeEach
@@ -46,7 +47,8 @@ class PawnMovementTests {
 
     @Test
     fun `white pawn cannot move anywhere`() {
-        game.movePiece("d1", "h8")
+
+        assertThrows<IllegalArgumentException> { game.movePiece("d1", "h8") }
 
         assertEquals(whitePawn, game.gameBoard.getPieceAt("d1"))
         assertEquals(null, game.gameBoard.getPieceAt("h8"))
@@ -64,7 +66,7 @@ class PawnMovementTests {
 
     @Test
     fun `white pawn cannot move to the other diagonal`() {
-        game.movePiece("d1", "e2")
+        assertThrows<IllegalArgumentException> { game.movePiece("d1", "e2") }
 
         assertEquals(whitePawn, game.gameBoard.getPieceAt("d1"))
         assertEquals(null, game.gameBoard.getPieceAt("e2"))
@@ -80,7 +82,7 @@ class PawnMovementTests {
         assertEquals(null, game.gameBoard.getPieceAt("d1"))
         assertEquals(blackPawn, game.gameBoard.getPieceAt("c2"))
 
-        game.movePiece("d3", "d5")
+        assertThrows<IllegalArgumentException> { game.movePiece("d3", "d5") }
 
         assertEquals(whitePawn.rules.javaClass, game.gameBoard.getPieceAt("d3")!!.rules.javaClass)
         assertEquals(whitePawn.player, game.gameBoard.getPieceAt("d3")!!.player)
@@ -90,12 +92,12 @@ class PawnMovementTests {
 }
 
 class RookMovementTest {
-    lateinit var map: Map<String, Piece>
-    lateinit var board: HashGameBoard
-    lateinit var game: Game
-    lateinit var closestPawn: Piece
-    lateinit var blockedPawn: Piece
-    lateinit var whiteRook: Piece
+    private lateinit var map: Map<String, Piece>
+    private lateinit var board: HashGameBoard
+    private lateinit var game: Game
+    private lateinit var closestPawn: Piece
+    private lateinit var blockedPawn: Piece
+    private lateinit var whiteRook: Piece
 
 
     @BeforeEach
@@ -121,7 +123,7 @@ class RookMovementTest {
 
     @Test
     fun `rook cannot take blocked pawn`() {
-        game.movePiece("b2", "b6")
+        assertThrows<IllegalArgumentException> { game.movePiece("b2", "b6") }
 
         assertEquals(whiteRook, game.gameBoard.getPieceAt("b2"))
         assertEquals(closestPawn, game.gameBoard.getPieceAt("b4"))
@@ -163,7 +165,7 @@ class RookMovementTest {
 
     @Test
     fun `rook cannot move diagonally`() {
-        game.movePiece("b2", "d4")
+        assertThrows<IllegalArgumentException> { game.movePiece("b2", "d4") }
 
         assertEquals(whiteRook, game.gameBoard.getPieceAt("b2"))
         assertEquals(null, game.gameBoard.getPieceAt("d4"))
@@ -173,12 +175,12 @@ class RookMovementTest {
 }
 
 class BishopMovementTest {
-    lateinit var map: Map<String, Piece>
-    lateinit var board: HashGameBoard
-    lateinit var game: Game
-    lateinit var closestPawn: Piece
-    lateinit var blockedPawn: Piece
-    lateinit var whiteBishop: Piece
+    private lateinit var map: Map<String, Piece>
+    private lateinit var board: HashGameBoard
+    private lateinit var game: Game
+    private lateinit var closestPawn: Piece
+    private lateinit var blockedPawn: Piece
+    private lateinit var whiteBishop: Piece
 
 
     @BeforeEach
@@ -203,7 +205,7 @@ class BishopMovementTest {
 
     @Test
     fun `bishop cannot take blocked pawn`() {
-        game.movePiece("g7", "c3")
+        assertThrows<IllegalArgumentException> { game.movePiece("g7", "c3") }
 
         assertEquals(whiteBishop, game.gameBoard.getPieceAt("g7"))
         assertEquals(closestPawn, game.gameBoard.getPieceAt("d4"))
@@ -242,7 +244,7 @@ class BishopMovementTest {
 
     @Test
     fun `bishop cannot move vertically`() {
-        game.movePiece("g7", "g2")
+        assertThrows<IllegalArgumentException> { game.movePiece("g7", "g2") }
 
         assertEquals(whiteBishop, game.gameBoard.getPieceAt("g7"))
         assertEquals(null, game.gameBoard.getPieceAt("g2"))
@@ -252,13 +254,13 @@ class BishopMovementTest {
 }
 
 class QueenMovementTest {
-    lateinit var map: Map<String, Piece>
-    lateinit var board: HashGameBoard
-    lateinit var game: Game
-    lateinit var horizontalPawn: Piece
-    lateinit var unreachablePawn: Piece
-    lateinit var diagonalPawn: Piece
-    lateinit var whiteQueen: Piece
+    private lateinit var map: Map<String, Piece>
+    private lateinit var board: HashGameBoard
+    private lateinit var game: Game
+    private lateinit var horizontalPawn: Piece
+    private lateinit var unreachablePawn: Piece
+    private lateinit var diagonalPawn: Piece
+    private lateinit var whiteQueen: Piece
 
 
     @BeforeEach
@@ -285,7 +287,7 @@ class QueenMovementTest {
 
     @Test
     fun `queen cannot take unreachable pawn`() {
-        game.movePiece("d6", "b5")
+        assertThrows<IllegalArgumentException> { game.movePiece("d6", "b5") }
 
         assertEquals(whiteQueen, game.gameBoard.getPieceAt("d6"))
         assertEquals(horizontalPawn, game.gameBoard.getPieceAt("b6"))
@@ -326,8 +328,8 @@ class QueenMovementTest {
     }
 
     @Test
-    fun `queen cannot bypass pawn diagonally`() {
-        game.movePiece("d6", "a3")
+    fun `queen cannot jump pawn diagonally`() {
+        assertThrows<IllegalArgumentException> { game.movePiece("d6", "a3") }
 
         assertEquals(whiteQueen, game.gameBoard.getPieceAt("d6"))
         assertEquals(null, game.gameBoard.getPieceAt("a3"))
@@ -338,7 +340,7 @@ class QueenMovementTest {
 
     @Test
     fun `queen cannot move like knight`() {
-        game.movePiece("d6", "e4")
+        assertThrows<IllegalArgumentException> { game.movePiece("d6", "e4") }
 
         assertEquals(whiteQueen, game.gameBoard.getPieceAt("d6"))
         assertEquals(null, game.gameBoard.getPieceAt("e4"))
@@ -349,13 +351,13 @@ class QueenMovementTest {
 }
 
 class KnightMovementTest {
-    lateinit var map: Map<String, Piece>
-    lateinit var board: HashGameBoard
-    lateinit var game: Game
-    lateinit var horizontalPawn: Piece
-    lateinit var verticalPawn: Piece
-    lateinit var takeablePawn: Piece
-    lateinit var whiteKnight: Piece
+    private lateinit var map: Map<String, Piece>
+    private lateinit var board: HashGameBoard
+    private lateinit var game: Game
+    private lateinit var horizontalPawn: Piece
+    private lateinit var verticalPawn: Piece
+    private lateinit var takeablePawn: Piece
+    private lateinit var whiteKnight: Piece
 
 
     @BeforeEach
@@ -382,7 +384,7 @@ class KnightMovementTest {
 
     @Test
     fun `knight cannot take pawn horizontally`() {
-        game.movePiece("g3", "f3")
+        assertThrows<IllegalArgumentException> { game.movePiece("g3", "f3") }
 
         assertEquals(whiteKnight, game.gameBoard.getPieceAt("g3"))
         assertEquals(verticalPawn, game.gameBoard.getPieceAt("g4"))
@@ -392,7 +394,7 @@ class KnightMovementTest {
 
     @Test
     fun `knight cannot take pawn vertically`() {
-        game.movePiece("g3", "g4")
+        assertThrows<IllegalArgumentException> { game.movePiece("g3", "g4") }
 
         assertEquals(whiteKnight, game.gameBoard.getPieceAt("g3"))
         assertEquals(verticalPawn, game.gameBoard.getPieceAt("g4"))
@@ -413,7 +415,7 @@ class KnightMovementTest {
 
     @Test
     fun `knight cannot jump over pawn horizontally`() {
-        game.movePiece("g3", "e3")
+        assertThrows<IllegalArgumentException> { game.movePiece("g3", "e3") }
 
         assertEquals(whiteKnight, game.gameBoard.getPieceAt("g3"))
         assertEquals(null, game.gameBoard.getPieceAt("e3"))

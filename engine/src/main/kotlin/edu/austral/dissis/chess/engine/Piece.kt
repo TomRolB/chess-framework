@@ -19,18 +19,10 @@ interface PieceRules {
     fun getPlayIfValid(board: GameBoard, from: String, to: String): Play?
 }
 
-class PathValidator {
-    fun isPathClear(player: Player, from: String, to: String) {
-        // Checks whether something is blocking the path between a piece and a position.
-        // Will probably hold all of the standard paths (for instance, up, down, left, right, each diagonal,etc.), since many are repeated across pieces.
-        // TODO: Should this actually be an interface? A singleton class?
-    }
-}
-
 class PawnPieceRules : PieceRules {
-    val player: Player
-    val hasEverMoved: Boolean
-    val hasJustMovedTwoPlaces: Boolean
+    private val player: Player
+    private val hasEverMoved: Boolean
+    private val hasJustMovedTwoPlaces: Boolean
 
     enum class State {
         MOVED,
@@ -67,68 +59,56 @@ class PawnPieceRules : PieceRules {
     }
 
     override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
-        val (fromRow, fromCol) = board.unpackPosition(from)
-        val (toRow, toCol) = board.unpackPosition(to)
-        val fromRowAsWhite = board.getRowAsWhite(from, player)
-        val toRowAsWhite = board.getRowAsWhite(to, player)
-        val rowDelta = toRowAsWhite - fromRowAsWhite
-        val colDelta = toCol - fromCol
-
-        if (!isPlayWithinPawnRange(rowDelta, colDelta)) {
-            println("A pawn cannot move this way")
-            return null
-        }
+        // In this case, moveData is always created from
+        // WHITE's point of view, to avoid splitting rules
+        // based on the player
+        val moveData = MovementData(from, to, board, player)
 
         // TODO: en passant
 
-        when (rowDelta) {
-            1 -> {
-                when (colDelta) {
-                    0 -> {
-                        if (board.isOccupied(to)) {
-                            return null;
-                        }
-
-                        return Play(listOf(Move(from, to, board)), board)
-                    }
-                    1, -1 -> {
-                        if (!board.containsPieceOfPlayer(to, !player)) {
-                            return null
-                        }
-
-                        return Play(listOf(Move(from, to, board)), board)
-                    }
-                }
-            }
-            2 -> {
-                if (hasEverMoved) {
-                    println("Pawn already moved. Cannot move two places")
-                    return null;
-                }
-                val front: String = getStringPosition(fromCol, fromRow + 1)
-                if (board.isOccupied(to) || board.isOccupied(front)) {
-                    return null
-                }
-
-                if (!hasEverMoved) {
-                    val rulesNextTurn = PawnPieceRules(player, State.MOVED)
-                    val pieceNextTurn = Piece(player, rulesNextTurn)
-                    return Play(listOf(Move(from, to, board, pieceNextTurn)), board)
-                }
-                else return Play(listOf(Move(from, to, board)), board)
+        return when (moveData.rowDelta) {
+            1 -> moveAheadOrDiagonallyIfValid(board, moveData)
+            2 -> moveTwoPlacesIfValid(board, moveData)
+            else -> {
+                println("A pawn cannot move this way")
+                null
             }
         }
-
-        return null
     }
 
-    private fun isPlayWithinPawnRange(rowDelta: Int, colDelta: Int): Boolean {
-        val movedFrontOrDiagonally = (rowDelta == 1) && (-1 <= colDelta) && (colDelta <= 1)
-        val movedTwoSpaces = (rowDelta == 2 && colDelta == 0)
-        return movedFrontOrDiagonally || movedTwoSpaces
+    private fun moveTwoPlacesIfValid(board:GameBoard, moveData: MovementData): Play? {
+        if (hasEverMoved || pathIsBlocked(board, moveData)) {
+            return null
+        }
+
+        val rulesNextTurn = PawnPieceRules(player, State.MOVED)
+        val pieceNextTurn = Piece(player, rulesNextTurn)
+        return Play(listOf(Move(moveData.from, moveData.to, board, pieceNextTurn)), board)
     }
 
+    private fun pathIsBlocked(board: GameBoard, moveData: MovementData): Boolean {
+        val front: String = getStringPosition(moveData.fromCol, moveData.fromRow + 1)
+        return board.isOccupied(moveData.to) || board.isOccupied(front)
+    }
 
+    private fun moveAheadOrDiagonallyIfValid(board: GameBoard, moveData: MovementData): Play? {
+        return when (moveData.colDelta) {
+            0 -> {
+                if (board.isOccupied(moveData.to)) null
+                else Play(listOf(Move(moveData.from, moveData.to, board)), board)
+
+            }
+            1, -1 -> {
+                if (!board.containsPieceOfPlayer(moveData.to, !player)) null
+                else Play(listOf(Move(moveData.from, moveData.to, board)), board)
+            }
+
+            else -> {
+                println("A pawn cannot move this way")
+                null
+            }
+        }
+    }
 }
 
 class RookPieceRules : PieceRules {
@@ -156,24 +136,24 @@ class RookPieceRules : PieceRules {
     override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
         val moveData = MovementData(from, to, board)
 
-
-        if (PathHeuristic.VERTICAL_AND_HORIZONTAL.isViolated(moveData)) {
-            println("A tower cannot move this way")
-            return null
+        return when {
+            Path.VERTICAL_AND_HORIZONTAL.isViolated(moveData) -> {
+                println("A tower cannot move this way")
+                null
+            }
+            Path.VERTICAL_AND_HORIZONTAL.isPathBlocked(moveData, board) -> {
+                println("Cannot move there: the path is blocked")
+                null
+            }
+            !hasEverMoved -> {
+                val rulesNextTurn = RookPieceRules(player, true)
+                val pieceNextTurn = Piece(player, rulesNextTurn)
+                Play(listOf(Move(from, to, board, pieceNextTurn)), board)
+            }
+            else -> {
+                Play(listOf(Move(from, to, board)), board)
+            }
         }
-
-        if (PathHeuristic.VERTICAL_AND_HORIZONTAL.isPathBlocked(moveData, board)) {
-            println("Cannot move there: the path is blocked")
-            return null
-        }
-
-
-        if (!hasEverMoved) {
-            val rulesNextTurn = RookPieceRules(player, true)
-            val pieceNextTurn = Piece(player, rulesNextTurn)
-            return Play(listOf(Move(from, to, board, pieceNextTurn)), board)
-        }
-        else return Play(listOf(Move(from, to, board)), board)
     }
 }
 
@@ -190,18 +170,19 @@ class BishopPieceRules : PieceRules {
     override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
         val moveData = MovementData(from, to, board)
 
-
-        if (PathHeuristic.DIAGONAL.isViolated(moveData)) {
-            println("A bishop cannot move this way")
-            return null
+        return when {
+            Path.DIAGONAL.isViolated(moveData) -> {
+                println("A bishop cannot move this way")
+                null
+            }
+            Path.DIAGONAL.isPathBlocked(moveData, board) -> {
+                println("Cannot move there: the path is blocked")
+                null
+            }
+            else -> {
+                Play(listOf(Move(from, to, board)), board)
+            }
         }
-
-        if (PathHeuristic.DIAGONAL.isPathBlocked(moveData, board)) {
-            println("Cannot move there: the path is blocked")
-            return null
-        }
-
-        return Play(listOf(Move(from, to, board)), board)
     }
 }
 
@@ -217,18 +198,19 @@ class QueenPieceRules : PieceRules {
     override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
         val moveData = MovementData(from, to, board)
 
-
-        if (PathHeuristic.ANY_STRAIGHT.isViolated(moveData)) {
-            println("A bishop cannot move this way")
-            return null
+        return when {
+            Path.ANY_STRAIGHT.isViolated(moveData) -> {
+                println("A queen cannot move this way")
+                null
+            }
+            Path.ANY_STRAIGHT.isPathBlocked(moveData, board) -> {
+                println("Cannot move there: the path is blocked")
+                null
+            }
+            else -> {
+                Play(listOf(Move(from, to, board)), board)
+            }
         }
-
-        if (PathHeuristic.ANY_STRAIGHT.isPathBlocked(moveData, board)) {
-            println("Cannot move there: the path is blocked")
-            return null
-        }
-
-        return Play(listOf(Move(from, to, board)), board)
     }
 }
 
@@ -244,12 +226,12 @@ class KnightPieceRules : PieceRules {
     override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
         val moveData = MovementData(from, to, board)
 
-
-        if (PathHeuristic.L_SHAPE.isViolated(moveData)) {
-            println("A bishop cannot move this way")
-            return null
+        return when {
+            Path.L_SHAPE.isViolated(moveData) -> {
+                println("A bishop cannot move this way")
+                null
+            }
+            else -> Play(listOf(Move(from, to, board)), board)
         }
-
-        return Play(listOf(Move(from, to, board)), board)
     }
 }

@@ -14,8 +14,8 @@ interface GameBoard {
 
 class HashGameBoard : GameBoard {
 
-    val validator: PositionValidator
-    val boardMap: Map<String, Piece>
+    private val validator: PositionValidator
+    private val boardMap: Map<String, Piece>
 
     constructor(validator: PositionValidator, boardMap: Map<String, Piece>) {
         this.validator = validator
@@ -49,8 +49,7 @@ class HashGameBoard : GameBoard {
     }
 
     override fun containsPieceOfPlayer(position: String, player: Player): Boolean {
-        val piece = getPieceAt(position)
-        if (piece == null) return false
+        val piece = getPieceAt(position) ?: return false
         return piece.player == player
     }
 
@@ -75,7 +74,7 @@ interface PositionValidator {
     fun getRowAsWhite(position: String, player: Player): Int
 }
 
-class RectangleBoardValidator(val numberRows: Int, val numberCols: Int) : PositionValidator {
+class RectangleBoardValidator(private val numberRows: Int, private val numberCols: Int) : PositionValidator {
 
     override fun positionExists(position: String): Boolean {
         val (row, col) = unpackPosition(position)

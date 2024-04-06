@@ -1,29 +1,22 @@
 package edu.austral.dissis.chess.engine
 
 fun main() {
+    TODO("Main game declaration (although this may be simulated in tests, actually)")
 }
 
-class Game(val gameRules: GameRules, var gameBoard: GameBoard) {
+class Game(private val gameRules: GameRules, var gameBoard: GameBoard) {
     fun movePiece(from: String, to: String) {
-        if (!gameBoard.positionExists(from)) {
-            println("Invalid board position")
-            return
-        }
+
+        require(gameBoard.positionExists(from)) {"Invalid board position"}
 
         val piece = gameBoard.getPieceAt(from)
-        if (piece == null) {
-            println("There is no piece at this position")
-            return
-        }
-        if (!gameRules.isPieceMovable(from)) {
-            println("This piece is not movable")
-            return
-        }
+        require(piece != null) {"There is no piece at this position"}
+
+        require(gameRules.isPieceMovable(from)) {"This piece is not movable"}
+
         val play = piece.rules.getPlayIfValid(gameBoard, from, to)
-        if (play == null) {
-            println("This movement is not valid")
-            return
-        }
+        require(play != null) { "This movement is not valid" }
+
         val gameBoardAfterPlay = play.execute()
         gameBoard = gameBoardAfterPlay
     }
