@@ -4,7 +4,7 @@ interface Action {
     fun execute(): GameBoard
 }
 
-class Play(private val actions: Iterable<Action>, private val board: GameBoard): Action {
+class Play(private val actions: Iterable<Action>, private val board: GameBoard) : Action {
     override fun execute(): GameBoard {
         var gameBoardAfter = board
         for (action in actions) gameBoardAfter = action.execute()
@@ -42,18 +42,17 @@ class Move : Action {
     }
 }
 
-//class Take(val position: String, val board: GameBoard) : Action {
+// class Take(val position: String, val board: GameBoard) : Action {
 //    override fun execute(): GameBoard {
 //        val gameBoardAfter = board.delPieceAt(position)
 //        return gameBoardAfter
 //    }
-//}
-
+// }
 
 // TODO: Promote
-//class Promote(val position: String, val board: GameBoard, val promotionPieceRules: PieceRules) : Action {
+// class Promote(val position: String, val board: GameBoard, val promotionPieceRules: PieceRules) : Action {
 //    override fun execute() {
 //        val player = board.getPieceAt(position)
 //        board.setPieceAt(position, Piece(player, promotionPieceRules))
 //    }
-//}
+// }

@@ -7,11 +7,13 @@ enum class Path {
     VERTICAL_AND_HORIZONTAL,
     DIAGONAL,
     ANY_STRAIGHT,
-    L_SHAPE;
-    //TODO: Yes, names are horrible. Change them.
+    L_SHAPE,
+    ;
+
+    // TODO: Yes, names are horrible. Change them.
 
     fun isViolated(moveData: MovementData): Boolean {
-        return when(this) {
+        return when (this) {
             VERTICAL_AND_HORIZONTAL -> {
                 val movedVertically: Boolean = (moveData.rowDelta != 0)
                 val movedHorizontally: Boolean = (moveData.colDelta != 0)
@@ -39,8 +41,11 @@ enum class Path {
         }
     }
 
-    fun isPathBlocked(moveData: MovementData, board: GameBoard): Boolean {
-        return when(this) {
+    fun isPathBlocked(
+        moveData: MovementData,
+        board: GameBoard,
+    ): Boolean {
+        return when (this) {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT -> {
                 val rowIncrement = moveData.rowDelta.sign
                 val colIncrement = moveData.colDelta.sign
@@ -54,7 +59,7 @@ enum class Path {
                     val position: String = getStringPosition(row, col)
                     if (board.isOccupied(position)) {
                         anyPieceBlocking = true
-                        break;
+                        break
                     }
 
                     row += rowIncrement

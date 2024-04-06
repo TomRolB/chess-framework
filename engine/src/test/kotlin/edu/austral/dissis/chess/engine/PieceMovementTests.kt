@@ -12,7 +12,6 @@ class PawnMovementTests {
     private lateinit var whitePawn: Piece
     private lateinit var blackPawn: Piece
 
-
     @BeforeEach
     fun setUp() {
         whitePawn = Piece(Player.WHITE, PawnPieceRules(Player.WHITE))
@@ -47,7 +46,6 @@ class PawnMovementTests {
 
     @Test
     fun `white pawn cannot move anywhere`() {
-
         assertThrows<IllegalArgumentException> { game.movePiece("d1", "h8") }
 
         assertEquals(whitePawn, game.gameBoard.getPieceAt("d1"))
@@ -98,7 +96,6 @@ class RookMovementTest {
     private lateinit var closestPawn: Piece
     private lateinit var blockedPawn: Piece
     private lateinit var whiteRook: Piece
-
 
     @BeforeEach
     fun setUp() {
@@ -182,7 +179,6 @@ class BishopMovementTest {
     private lateinit var blockedPawn: Piece
     private lateinit var whiteBishop: Piece
 
-
     @BeforeEach
     fun setUp() {
         closestPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
@@ -261,7 +257,6 @@ class QueenMovementTest {
     private lateinit var unreachablePawn: Piece
     private lateinit var diagonalPawn: Piece
     private lateinit var whiteQueen: Piece
-
 
     @BeforeEach
     fun setUp() {
@@ -359,7 +354,6 @@ class KnightMovementTest {
     private lateinit var takeablePawn: Piece
     private lateinit var whiteKnight: Piece
 
-
     @BeforeEach
     fun setUp() {
         horizontalPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
@@ -430,7 +424,10 @@ class NoRules : GameRules {
         return true
     }
 
-    override fun isMoveValid(from: String, to: String): Boolean {
+    override fun isMoveValid(
+        from: String,
+        to: String,
+    ): Boolean {
         return true
     }
 
@@ -441,5 +438,4 @@ class NoRules : GameRules {
     override fun playerIsChecked(player: Player): Boolean {
         return false
     }
-
 }

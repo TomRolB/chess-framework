@@ -1,9 +1,13 @@
 package edu.austral.dissis.chess.engine
 
 class Piece(val player: Player, val rules: PieceRules) {
-    fun isPlayValid(from: String, to: String): Boolean {
+    fun isPlayValid(
+        from: String,
+        to: String,
+    ): Boolean {
         return rules.isPlayValid(from, to)
     }
+
     fun getValidPlays(): Set<Play> {
         return rules.getValidPlays()
     }
@@ -14,9 +18,18 @@ class Piece(val player: Player, val rules: PieceRules) {
 }
 
 interface PieceRules {
-    fun isPlayValid(from: String, to: String): Boolean
+    fun isPlayValid(
+        from: String,
+        to: String,
+    ): Boolean
+
     fun getValidPlays(): Set<Play>
-    fun getPlayIfValid(board: GameBoard, from: String, to: String): Play?
+
+    fun getPlayIfValid(
+        board: GameBoard,
+        from: String,
+        to: String,
+    ): Play?
 }
 
 class PawnPieceRules : PieceRules {
@@ -26,7 +39,7 @@ class PawnPieceRules : PieceRules {
 
     enum class State {
         MOVED,
-        MOVED_TWO_PLACES
+        MOVED_TWO_PLACES,
     }
 
     constructor(player: Player) {
@@ -49,8 +62,10 @@ class PawnPieceRules : PieceRules {
         }
     }
 
-
-    override fun isPlayValid(from: String, to: String): Boolean {
+    override fun isPlayValid(
+        from: String,
+        to: String,
+    ): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -58,7 +73,11 @@ class PawnPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
+    override fun getPlayIfValid(
+        board: GameBoard,
+        from: String,
+        to: String,
+    ): Play? {
         // In this case, moveData is always created from
         // WHITE's point of view, to avoid splitting rules
         // based on the player
@@ -76,7 +95,10 @@ class PawnPieceRules : PieceRules {
         }
     }
 
-    private fun moveTwoPlacesIfValid(board:GameBoard, moveData: MovementData): Play? {
+    private fun moveTwoPlacesIfValid(
+        board: GameBoard,
+        moveData: MovementData,
+    ): Play? {
         if (hasEverMoved || pathIsBlocked(board, moveData)) {
             return null
         }
@@ -86,21 +108,32 @@ class PawnPieceRules : PieceRules {
         return Play(listOf(Move(moveData.from, moveData.to, board, pieceNextTurn)), board)
     }
 
-    private fun pathIsBlocked(board: GameBoard, moveData: MovementData): Boolean {
+    private fun pathIsBlocked(
+        board: GameBoard,
+        moveData: MovementData,
+    ): Boolean {
         val front: String = getStringPosition(moveData.fromCol, moveData.fromRow + 1)
         return board.isOccupied(moveData.to) || board.isOccupied(front)
     }
 
-    private fun moveAheadOrDiagonallyIfValid(board: GameBoard, moveData: MovementData): Play? {
+    private fun moveAheadOrDiagonallyIfValid(
+        board: GameBoard,
+        moveData: MovementData,
+    ): Play? {
         return when (moveData.colDelta) {
             0 -> {
-                if (board.isOccupied(moveData.to)) null
-                else Play(listOf(Move(moveData.from, moveData.to, board)), board)
-
+                if (board.isOccupied(moveData.to)) {
+                    null
+                } else {
+                    Play(listOf(Move(moveData.from, moveData.to, board)), board)
+                }
             }
             1, -1 -> {
-                if (!board.containsPieceOfPlayer(moveData.to, !player)) null
-                else Play(listOf(Move(moveData.from, moveData.to, board)), board)
+                if (!board.containsPieceOfPlayer(moveData.to, !player)) {
+                    null
+                } else {
+                    Play(listOf(Move(moveData.from, moveData.to, board)), board)
+                }
             }
 
             else -> {
@@ -125,7 +158,10 @@ class RookPieceRules : PieceRules {
         this.hasEverMoved = true
     }
 
-    override fun isPlayValid(from: String, to: String): Boolean {
+    override fun isPlayValid(
+        from: String,
+        to: String,
+    ): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -133,7 +169,11 @@ class RookPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
+    override fun getPlayIfValid(
+        board: GameBoard,
+        from: String,
+        to: String,
+    ): Play? {
         val moveData = MovementData(from, to, board)
 
         return when {
@@ -158,8 +198,10 @@ class RookPieceRules : PieceRules {
 }
 
 class BishopPieceRules : PieceRules {
-
-    override fun isPlayValid(from: String, to: String): Boolean {
+    override fun isPlayValid(
+        from: String,
+        to: String,
+    ): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -167,7 +209,11 @@ class BishopPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
+    override fun getPlayIfValid(
+        board: GameBoard,
+        from: String,
+        to: String,
+    ): Play? {
         val moveData = MovementData(from, to, board)
 
         return when {
@@ -187,7 +233,10 @@ class BishopPieceRules : PieceRules {
 }
 
 class QueenPieceRules : PieceRules {
-    override fun isPlayValid(from: String, to: String): Boolean {
+    override fun isPlayValid(
+        from: String,
+        to: String,
+    ): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -195,7 +244,11 @@ class QueenPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
+    override fun getPlayIfValid(
+        board: GameBoard,
+        from: String,
+        to: String,
+    ): Play? {
         val moveData = MovementData(from, to, board)
 
         return when {
@@ -215,7 +268,10 @@ class QueenPieceRules : PieceRules {
 }
 
 class KnightPieceRules : PieceRules {
-    override fun isPlayValid(from: String, to: String): Boolean {
+    override fun isPlayValid(
+        from: String,
+        to: String,
+    ): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -223,7 +279,11 @@ class KnightPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getPlayIfValid(board: GameBoard, from: String, to: String): Play? {
+    override fun getPlayIfValid(
+        board: GameBoard,
+        from: String,
+        to: String,
+    ): Play? {
         val moveData = MovementData(from, to, board)
 
         return when {

@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.engine
 
 enum class Player {
     BLACK,
-    WHITE;
+    WHITE,
 }
 
 operator fun Player.not(): Player {

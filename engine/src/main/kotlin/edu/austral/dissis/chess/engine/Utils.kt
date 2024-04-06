@@ -1,6 +1,9 @@
 package edu.austral.dissis.chess.engine
 
-fun getStringPosition(row: Int, col: Int): String {
+fun getStringPosition(
+    row: Int,
+    col: Int,
+): String {
     return String(charArrayOf(col.colToChar(), row.digitToChar()))
 }
 
