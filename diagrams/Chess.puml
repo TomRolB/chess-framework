@@ -12,7 +12,7 @@ enum Player {
 }
 
 class Game {
-    - gameRules: GameRules
+    - gameRules: WinCondition
     - gameBoard: GameBoard
     - validator: MoveValidator
     - currentTurn: Player
@@ -20,7 +20,7 @@ class Game {
     + movePiece(String from, String to)
 }
 
-interface GameRules {
+interface WinCondition {
     + isPieceMovable(String position): boolean
     + isMoveValid(String from, String to): boolean
     + playerReachedWinCondition(Player player)
@@ -30,7 +30,8 @@ interface GameRules {
 interface GameBoard {
     + isOccupied(String position): boolean
     + getPieceAt(String position): Piece
-    + setPieceAt(String position, Piece piece)
+    + setPieceAt(String position, Piece piece): GameBoard
+    + detPieceAt(String position): GameBoard
     + positionExists(String position): boolean
     + containsPieceOfPlayer(String position, Player player): boolean
     + getAllPiecesOfPlayer(Player player): Iterable<Piece>
@@ -47,9 +48,13 @@ class HashGameBoard implements GameBoard {
     - validator: PositionValidator
     + isOccupied(String position): boolean
     + getPieceAt(String position): Piece
+    + detPieceAt(String position, Piece piece): GameBoard
+    + detPieceAt(String position): GameBoard
     + positionExists(String position): boolean
     + containsPieceOfPlayer(String position, Player player): boolean
     + getAllPiecesOfPlayer(Player player): Iterable<Piece>
+    + unpackPosition(position: String): RowAndCol
+    + getRowAsWhite(position: String, player: Player): Int
 }
 
 interface PositionValidator {
@@ -57,9 +62,11 @@ interface PositionValidator {
     + positionExists(): boolean
 }
 
-class SquaredBoardValidator implements PositionValidator {
+class RectangleBoardValidator implements PositionValidator {
     - numOfRows: int
     + positionExists(): boolean
+    + getRowAsWhite(): Int
+    + unpackPosition(position: String): RowAndCol
 }
 
 'class Square {
@@ -103,11 +110,10 @@ class SquaredBoardValidator implements PositionValidator {
 '
 '
 
-class Play {
+class Play implements Action {
     - board: GameBoard
     - actions: Iterable<Action>
-    + getActions(): Iterable<Action>
-    + executeActions(): void
+    + execute(): void
 }
 
 interface Action {
@@ -137,25 +143,46 @@ class Promote implements Action {
 }
 
 class Piece {
-    - board: GameBoard
-    ' There would be no consistency-circularity issues with the field above, since it's final
-    ' - ruleset: MoveRuleSet
     - player: Player
     - rules: PieceRules
     + getPlayer(): Player
-'    + rulesAreViolated(): boolean
-    + isPlayValid(String from, String to)
-    + getValidPlays(): Set<Play>
+    + getRules(): PieceRules
 }
 
 interface PieceRules {
     + isPlayValid(): boolean
     + getValidPlays(): Set<Play>
+    + getPlayIfValid() Play
 }
 
-class PathValidator {
-    + isPathClear(Player player, String from, String to): boolean
+class KingPieceRules implements PieceRules {
+    - attr...
+    + isPlayValid(): boolean
+    + getValidPlays(): Set<Play>
+    + getPlayIfValid() Play
+    + isChecked(board: GameBoard): Boolean
+}
+
+enum Path {
+    VERTICAL_AND_HORIZONTAL,
+    DIAGONAL,
+    ANY_STRAIGHT_LINE,
+    L_SHAPED
+
+    + isViolated(moveData: MovementData): Boolean
+    + isPathBlocked(moveData: MovementData, board: GameBoard): boolean
     ' Checks whether something is blocking the path between a piece and a position.
+}
+
+class MovementData {
+    + from: String
+    + to: String
+    + fromRow: Int
+    + fromCol: Int
+    + toRow: Int
+    + toCol: Int
+    + rowDelta: Int
+    + colDelta: Int
 }
 
 'enum StandardPiece {
@@ -188,22 +215,25 @@ class PathValidator {
 '    move(Square): void
 '}
 
-Game --> GameRules
+Game --> WinCondition
 Game -> GameBoard
-'MoveValidator -> GameRules
+'MoveValidator -> WinCondition
 
-GameRules -> GameBoard
+WinCondition -> GameBoard
 GameBoard -> Piece
 HashGameBoard --> PositionValidator
 'Piece -> MoveRuleSet
 'RuleSet -> Rule
 'Piece -> Rule
-Piece -> Player
-Piece --> PieceRules
-Piece --> PathValidator
+Piece --> Player
+Piece -> PieceRules
+PieceRules --> Path
 Game -> Player
-Piece -> Play
-Play -> Action
+PieceRules -> Play
+Play --> Action
+Play --> GameBoard
+
+
 
 'TODO: The fact that you cannot take your own pieces is a general rule. Check and checkmate are, too; even board-limit rules. Think about which general rules could be represented and how.
 
