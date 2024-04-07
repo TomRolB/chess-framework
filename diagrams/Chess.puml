@@ -117,21 +117,21 @@ class Play implements Action {
 }
 
 interface Action {
-    + execute()
-    ' Maybe this could simply be a Runnable
+    + execute(): GameBoard
 }
 
 class Move implements Action {
     - from: String
     - to: String
     - board: GameBoard
-    + execute()
+    - pieceNextTurn: Piece
+    + execute(): GameBoard
 }
 
 class Take implements Action {
     - position: String
     - board: GameBoard
-    + execute()
+    + execute(): GameBoard
     ' TODO: Sometimes moving our piece implicitly includes taking the rival's piece (we reassign the latter's board position to the former, so the reference is replaced). Think about this.
 }
 
@@ -139,7 +139,7 @@ class Promote implements Action {
     - position: String
     - promotionPiece: Class
     - board: GameBoard
-    + execute()
+    + execute(): GameBoard
 }
 
 class Piece {
@@ -156,7 +156,7 @@ interface PieceRules {
 }
 
 class KingPieceRules implements PieceRules {
-    - attr...
+    - player: Player
     + isPlayValid(): boolean
     + getValidPlays(): Set<Play>
     + getPlayIfValid() Play
@@ -215,23 +215,24 @@ class MovementData {
 '    move(Square): void
 '}
 
-Game --> WinCondition
-Game -> GameBoard
+Game *--> WinCondition
+Game *-> GameBoard
 'MoveValidator -> WinCondition
 
-WinCondition -> GameBoard
-GameBoard -> Piece
-HashGameBoard --> PositionValidator
+WinCondition o-> GameBoard
+GameBoard *-> Piece
+HashGameBoard *--> PositionValidator
 'Piece -> MoveRuleSet
 'RuleSet -> Rule
 'Piece -> Rule
-Piece --> Player
-Piece -> PieceRules
+Piece *-> Player
+Piece *-> PieceRules
 PieceRules --> Path
-Game -> Player
+Game *-> Player
 PieceRules -> Play
-Play --> Action
-Play --> GameBoard
+Play *--> Action
+Play *--> GameBoard
+Path -> MovementData
 
 
 
