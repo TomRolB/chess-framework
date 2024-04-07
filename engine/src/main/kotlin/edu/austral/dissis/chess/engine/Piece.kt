@@ -1,5 +1,7 @@
 package edu.austral.dissis.chess.engine
 
+import kotlin.math.absoluteValue
+
 class Piece(val player: Player, val rules: PieceRules) {
     fun isPlayValid(
         from: String,
@@ -252,11 +254,11 @@ class QueenPieceRules : PieceRules {
         val moveData = MovementData(from, to, board)
 
         return when {
-            Path.ANY_STRAIGHT.isViolated(moveData) -> {
+            Path.ANY_STRAIGHT_LINE.isViolated(moveData) -> {
                 println("A queen cannot move this way")
                 null
             }
-            Path.ANY_STRAIGHT.isPathBlocked(moveData, board) -> {
+            Path.ANY_STRAIGHT_LINE.isPathBlocked(moveData, board) -> {
                 println("Cannot move there: the path is blocked")
                 null
             }
@@ -287,11 +289,68 @@ class KnightPieceRules : PieceRules {
         val moveData = MovementData(from, to, board)
 
         return when {
-            Path.L_SHAPE.isViolated(moveData) -> {
+            Path.L_SHAPED.isViolated(moveData) -> {
                 println("A bishop cannot move this way")
                 null
             }
             else -> Play(listOf(Move(from, to, board)), board)
         }
+    }
+}
+
+class KingPieceRules(val player: Player) : PieceRules {
+    override fun isPlayValid(
+        from: String,
+        to: String,
+    ): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getValidPlays(): Set<Play> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPlayIfValid(
+        board: GameBoard,
+        from: String,
+        to: String,
+    ): Play? {
+        val moveData = MovementData(from, to, board)
+        return when {
+            !isMovementLogical(moveData) -> {
+                println("The king cannot move this way")
+                null
+            }
+            becomesChecked(board, moveData) -> {
+                println("Invalid movement: the king would become checked")
+                null
+            }
+            else -> Play(listOf(Move(from, to, board)), board)
+        }
+    }
+
+    fun isChecked(board: GameBoard): Boolean {
+        val kingPosition = board.getKingPosition(player)
+
+        // Return true if any enemy piece can perform a Take action on the King
+        return board.getAllPositionsOfPlayer(!player).any {
+            val enemyPosition: String = it
+            val enemyPiece: Piece = board.getPieceAt(enemyPosition)!!
+            val kingCapture: Play? = enemyPiece.rules.getPlayIfValid(board, enemyPosition, kingPosition)
+
+            kingCapture != null
+        }
+    }
+
+    private fun becomesChecked(
+        board: GameBoard,
+        moveData: MovementData,
+    ): Boolean {
+        val futureBoard: GameBoard = Move(moveData.from, moveData.to, board).execute()
+        return this.isChecked(futureBoard)
+    }
+
+    private fun isMovementLogical(moveData: MovementData): Boolean {
+        return moveData.rowDelta.absoluteValue <= 1 || moveData.colDelta.absoluteValue <= 1
     }
 }

@@ -6,32 +6,30 @@ import kotlin.math.sign
 enum class Path {
     VERTICAL_AND_HORIZONTAL,
     DIAGONAL,
-    ANY_STRAIGHT,
-    L_SHAPE,
+    ANY_STRAIGHT_LINE,
+    L_SHAPED,
     ;
-
-    // TODO: Yes, names are horrible. Change them.
 
     fun isViolated(moveData: MovementData): Boolean {
         return when (this) {
             VERTICAL_AND_HORIZONTAL -> {
-                val movedVertically: Boolean = (moveData.rowDelta != 0)
-                val movedHorizontally: Boolean = (moveData.colDelta != 0)
+                val movedVertically = (moveData.rowDelta != 0)
+                val movedHorizontally = (moveData.colDelta != 0)
                 val movedBothWays = (movedVertically && movedHorizontally)
 
                 movedBothWays
             }
             DIAGONAL -> {
-                val movedDiagonally: Boolean = moveData.rowDelta.absoluteValue == moveData.colDelta.absoluteValue
+                val movedDiagonally = moveData.rowDelta.absoluteValue == moveData.colDelta.absoluteValue
 
                 !movedDiagonally
             }
-            ANY_STRAIGHT -> {
+            ANY_STRAIGHT_LINE -> {
                 val noStraightLine = VERTICAL_AND_HORIZONTAL.isViolated(moveData) && DIAGONAL.isViolated(moveData)
 
                 noStraightLine
             }
-            L_SHAPE -> {
+            L_SHAPED -> {
                 val absRowDelta = moveData.rowDelta.absoluteValue
                 val absColDelta = moveData.colDelta.absoluteValue
                 val movedInL = (absRowDelta == 1 && absColDelta == 2) || (absRowDelta == 2 && absColDelta == 1)
@@ -46,7 +44,7 @@ enum class Path {
         board: GameBoard,
     ): Boolean {
         return when (this) {
-            VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT -> {
+            VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT_LINE -> {
                 val rowIncrement = moveData.rowDelta.sign
                 val colIncrement = moveData.colDelta.sign
 
@@ -69,7 +67,7 @@ enum class Path {
                 anyPieceBlocking
             }
 
-            L_SHAPE -> false
+            L_SHAPED -> false
         }
     }
 }
