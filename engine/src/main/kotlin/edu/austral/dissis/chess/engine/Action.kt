@@ -40,6 +40,10 @@ class Move : Action {
 
         return gameBoardAfter
     }
+
+    fun asPlay(): Play {
+        return Play(listOf(this), board)
+    }
 }
 
 // class Take(val position: String, val board: GameBoard) : Action {

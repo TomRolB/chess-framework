@@ -12,7 +12,7 @@ enum Player {
 }
 
 class Game {
-    - gameRules: WinCondition
+    - gameRules: GameRules
     - gameBoard: GameBoard
     - validator: MoveValidator
     - currentTurn: Player
@@ -20,7 +20,16 @@ class Game {
     + movePiece(String from, String to)
 }
 
-interface WinCondition {
+interface InputProvider {
+    + requestPlayerMove(player: Player): String
+}
+
+interface TurnManager {
+    + getTurn(): Player
+    + nextTurn(): TurnManager
+}
+
+interface GameRules {
     + isPieceMovable(String position): boolean
     + isMoveValid(String from, String to): boolean
     + playerReachedWinCondition(Player player)
@@ -215,11 +224,14 @@ class MovementData {
 '    move(Square): void
 '}
 
-Game *--> WinCondition
+Game *--> GameRules
 Game *-> GameBoard
-'MoveValidator -> WinCondition
+Game *-> TurnManager
+Game *-> Player
+Game *-> InputProvider
+'MoveValidator -> GameRules
 
-WinCondition o-> GameBoard
+GameRules o-> GameBoard
 GameBoard *-> Piece
 HashGameBoard *--> PositionValidator
 'Piece -> MoveRuleSet
@@ -228,7 +240,6 @@ HashGameBoard *--> PositionValidator
 Piece *-> Player
 Piece *-> PieceRules
 PieceRules --> Path
-Game *-> Player
 PieceRules -> Play
 Play *--> Action
 Play *--> GameBoard

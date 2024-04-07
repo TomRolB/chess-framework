@@ -1,7 +1,5 @@
 package edu.austral.dissis.chess.engine
 
-import kotlin.math.absoluteValue
-
 class Piece(val player: Player, val rules: PieceRules) {
     fun isPlayValid(
         from: String,
@@ -10,9 +8,9 @@ class Piece(val player: Player, val rules: PieceRules) {
         return rules.isPlayValid(from, to)
     }
 
-    fun getValidPlays(): Set<Play> {
-        return rules.getValidPlays()
-    }
+//    fun getValidPlays(): Set<Play> {
+//        return rules.getValidPlays()
+//    }
 
 //    fun getPlayIfValid(from: String, to: String): Play? {
 //        return rules.getPlayIfValid(from, to)
@@ -25,7 +23,10 @@ interface PieceRules {
         to: String,
     ): Boolean
 
-    fun getValidPlays(): Set<Play>
+    fun getValidPlays(
+        board: GameBoard,
+        position: String,
+    ): Iterable<Play>
 
     fun getPlayIfValid(
         board: GameBoard,
@@ -38,6 +39,7 @@ class PawnPieceRules : PieceRules {
     private val player: Player
     private val hasEverMoved: Boolean
     private val hasJustMovedTwoPlaces: Boolean
+    private val increments = listOf(1 to 1, 0 to 1, -1 to 1, 0 to 2)
 
     enum class State {
         MOVED,
@@ -71,8 +73,15 @@ class PawnPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getValidPlays(): Set<Play> {
-        TODO("Not yet implemented")
+    override fun getValidPlays(
+        board: GameBoard,
+        position: String,
+    ): Iterable<Play> {
+        val (row, col) = board.unpackPosition(position)
+
+        return increments
+            .map { getStringPosition(row + it.first, col + it.second) }
+            .mapNotNull { getPlayIfValid(board, position, it) }
     }
 
     override fun getPlayIfValid(
@@ -147,6 +156,7 @@ class PawnPieceRules : PieceRules {
 }
 
 class RookPieceRules : PieceRules {
+    private val moveType = MoveType.VERTICAL_AND_HORIZONTAL
     private val player: Player
     private val hasEverMoved: Boolean
 
@@ -167,8 +177,13 @@ class RookPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getValidPlays(): Set<Play> {
-        TODO("Not yet implemented")
+    override fun getValidPlays(
+        board: GameBoard,
+        position: String,
+    ): Iterable<Play> {
+        return moveType
+            .getPossiblePositions(board, position)
+            .map { Play(listOf(Move(position, it, board)), board) }
     }
 
     override fun getPlayIfValid(
@@ -179,11 +194,11 @@ class RookPieceRules : PieceRules {
         val moveData = MovementData(from, to, board)
 
         return when {
-            Path.VERTICAL_AND_HORIZONTAL.isViolated(moveData) -> {
+            moveType.isViolated(moveData) -> {
                 println("A tower cannot move this way")
                 null
             }
-            Path.VERTICAL_AND_HORIZONTAL.isPathBlocked(moveData, board) -> {
+            moveType.isPathBlocked(moveData, board) -> {
                 println("Cannot move there: the path is blocked")
                 null
             }
@@ -193,13 +208,15 @@ class RookPieceRules : PieceRules {
                 Play(listOf(Move(from, to, board, pieceNextTurn)), board)
             }
             else -> {
-                Play(listOf(Move(from, to, board)), board)
+                Move(from, to, board).asPlay()
             }
         }
     }
 }
 
 class BishopPieceRules : PieceRules {
+    val moveType = MoveType.DIAGONAL
+
     override fun isPlayValid(
         from: String,
         to: String,
@@ -207,8 +224,13 @@ class BishopPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getValidPlays(): Set<Play> {
-        TODO("Not yet implemented")
+    override fun getValidPlays(
+        board: GameBoard,
+        position: String,
+    ): Iterable<Play> {
+        return moveType
+            .getPossiblePositions(board, position)
+            .map { Play(listOf(Move(position, it, board)), board) }
     }
 
     override fun getPlayIfValid(
@@ -219,22 +241,24 @@ class BishopPieceRules : PieceRules {
         val moveData = MovementData(from, to, board)
 
         return when {
-            Path.DIAGONAL.isViolated(moveData) -> {
+            moveType.isViolated(moveData) -> {
                 println("A bishop cannot move this way")
                 null
             }
-            Path.DIAGONAL.isPathBlocked(moveData, board) -> {
+            moveType.isPathBlocked(moveData, board) -> {
                 println("Cannot move there: the path is blocked")
                 null
             }
             else -> {
-                Play(listOf(Move(from, to, board)), board)
+                Move(from, to, board).asPlay()
             }
         }
     }
 }
 
 class QueenPieceRules : PieceRules {
+    val moveType = MoveType.DIAGONAL
+
     override fun isPlayValid(
         from: String,
         to: String,
@@ -242,8 +266,13 @@ class QueenPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getValidPlays(): Set<Play> {
-        TODO("Not yet implemented")
+    override fun getValidPlays(
+        board: GameBoard,
+        position: String,
+    ): Iterable<Play> {
+        return moveType
+            .getPossiblePositions(board, position)
+            .map { Play(listOf(Move(position, it, board)), board) }
     }
 
     override fun getPlayIfValid(
@@ -254,22 +283,24 @@ class QueenPieceRules : PieceRules {
         val moveData = MovementData(from, to, board)
 
         return when {
-            Path.ANY_STRAIGHT_LINE.isViolated(moveData) -> {
+            MoveType.ANY_STRAIGHT_LINE.isViolated(moveData) -> {
                 println("A queen cannot move this way")
                 null
             }
-            Path.ANY_STRAIGHT_LINE.isPathBlocked(moveData, board) -> {
+            MoveType.ANY_STRAIGHT_LINE.isPathBlocked(moveData, board) -> {
                 println("Cannot move there: the path is blocked")
                 null
             }
             else -> {
-                Play(listOf(Move(from, to, board)), board)
+                Move(from, to, board).asPlay()
             }
         }
     }
 }
 
 class KnightPieceRules : PieceRules {
+    val moveType = MoveType.L_SHAPED
+
     override fun isPlayValid(
         from: String,
         to: String,
@@ -277,8 +308,13 @@ class KnightPieceRules : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getValidPlays(): Set<Play> {
-        TODO("Not yet implemented")
+    override fun getValidPlays(
+        board: GameBoard,
+        position: String,
+    ): Iterable<Play> {
+        return moveType
+            .getPossiblePositions(board, position)
+            .map { Move(position, it, board).asPlay() }
     }
 
     override fun getPlayIfValid(
@@ -289,16 +325,18 @@ class KnightPieceRules : PieceRules {
         val moveData = MovementData(from, to, board)
 
         return when {
-            Path.L_SHAPED.isViolated(moveData) -> {
+            moveType.isViolated(moveData) -> {
                 println("A bishop cannot move this way")
                 null
             }
-            else -> Play(listOf(Move(from, to, board)), board)
+            else -> Move(from, to, board).asPlay()
         }
     }
 }
 
 class KingPieceRules(val player: Player) : PieceRules {
+    val moveType = MoveType.ADJACENT_SQUARE
+
     override fun isPlayValid(
         from: String,
         to: String,
@@ -306,8 +344,17 @@ class KingPieceRules(val player: Player) : PieceRules {
         TODO("Not yet implemented")
     }
 
-    override fun getValidPlays(): Set<Play> {
-        TODO("Not yet implemented")
+    override fun getValidPlays(
+        board: GameBoard,
+        position: String,
+    ): Iterable<Play> {
+        return moveType
+            .getPossiblePositions(board, position)
+            .filter {
+                val moveData = MovementData(position, it, board)
+                !becomesChecked(board, moveData)
+            }
+            .map { Move(position, it, board).asPlay() }
     }
 
     override fun getPlayIfValid(
@@ -317,7 +364,7 @@ class KingPieceRules(val player: Player) : PieceRules {
     ): Play? {
         val moveData = MovementData(from, to, board)
         return when {
-            !isMovementLogical(moveData) -> {
+            moveType.isViolated(moveData) -> {
                 println("The king cannot move this way")
                 null
             }
@@ -325,32 +372,80 @@ class KingPieceRules(val player: Player) : PieceRules {
                 println("Invalid movement: the king would become checked")
                 null
             }
-            else -> Play(listOf(Move(from, to, board)), board)
+            else -> Move(from, to, board).asPlay()
         }
     }
-
-    fun isChecked(board: GameBoard): Boolean {
-        val kingPosition = board.getKingPosition(player)
-
-        // Return true if any enemy piece can perform a Take action on the King
-        return board.getAllPositionsOfPlayer(!player).any {
-            val enemyPosition: String = it
-            val enemyPiece: Piece = board.getPieceAt(enemyPosition)!!
-            val kingCapture: Play? = enemyPiece.rules.getPlayIfValid(board, enemyPosition, kingPosition)
-
-            kingCapture != null
-        }
-    }
-
+    
     private fun becomesChecked(
         board: GameBoard,
         moveData: MovementData,
     ): Boolean {
         val futureBoard: GameBoard = Move(moveData.from, moveData.to, board).execute()
-        return this.isChecked(futureBoard)
+        return isChecked(futureBoard, player)
     }
 
-    private fun isMovementLogical(moveData: MovementData): Boolean {
-        return moveData.rowDelta.absoluteValue <= 1 || moveData.colDelta.absoluteValue <= 1
+    companion object {
+        val possibleIncrements = listOf(
+            1 to 0, 1 to 1, 0 to 1, -1 to 1,
+            -1 to 0, -1 to -1, 0 to -1, -1 to 1
+        )
+
+        fun isChecked(board: GameBoard, player: Player): Boolean {
+            val kingPosition = board.getKingPosition(player)
+
+            // Return true if any enemy piece can perform a Take action on the King
+            return board.getAllPositionsOfPlayer(!player).any {
+                val enemyPosition: String = it
+                val enemyPiece: Piece = board.getPieceAt(enemyPosition)!!
+                val kingCapture: Play? = enemyPiece.rules.getPlayIfValid(board, enemyPosition, kingPosition)
+
+                kingCapture != null
+            }
+        }
+
+        //        fun willBeChecked(board: GameBoard, player: Player): Boolean {
+//            val kingPosition = board.getKingPosition(player)
+//
+//            return getPossibleFuturePositions(board, player, kingPosition)
+//                .all {
+//                    val futureBoard = Play(listOf(Move(kingPosition, it, board)), board).execute()
+//                    isChecked(futureBoard, player)
+//                }
+//        }
+        fun willBeChecked(board: GameBoard, player: Player): Boolean {
+            return board.getAllPositionsOfPlayer(player).all {
+                val piece = board.getPieceAt(it)!!
+                allMovementsEndInCheck(board, piece, it)
+            }
+        }
+
+        private fun allMovementsEndInCheck(board: GameBoard, piece: Piece, position: String): Boolean {
+            return piece.rules.getValidPlays(board, position).all {
+                val futureBoard = it.execute()
+                isChecked(futureBoard, piece.player)
+            }
+        }
+
+        private fun getPossibleFuturePositions(board: GameBoard, player: Player, kingPosition: String): Iterable<String> {
+            val (row, col) = board.unpackPosition(kingPosition)
+
+            return possibleIncrements
+                .map { getStringPosition(row + it.first, col + it.second) }
+                .filter { board.positionExists(it) && !board.containsPieceOfPlayer(it, player) }
+        }
+
+        fun getPlayerState(board: GameBoard, player: Player): PlayerState {
+            val isChecked: Int = if (isChecked(board, player)) 1 else 0
+            val willBeChecked: Int = if (willBeChecked(board, player)) 1 else 0
+            val combinedStatus: Int = isChecked * 2 + willBeChecked
+
+            return when (combinedStatus) {
+                0 -> PlayerState.NORMAL
+                3 -> PlayerState.CHECKED
+                1 -> PlayerState.STALEMATE
+                2 -> PlayerState.CHECKMATE
+                else -> throw IllegalStateException("Invalid combined status")
+            }
+        }
     }
 }

@@ -508,24 +508,20 @@ class KingMovementTest {
     fun `black king is not checked by ally rook`() {
         game.movePiece("b8", "b6")
 
-        val rules: KingPieceRules = blackKing.rules as KingPieceRules
-
         assertEquals(blackRook.rules.javaClass, game.gameBoard.getPieceAt("b6")!!.rules.javaClass)
         assertEquals(blackRook.player, game.gameBoard.getPieceAt("b6")!!.player)
         assertEquals(blackKing, game.gameBoard.getPieceAt("f6"))
-        assertEquals(false, rules.isChecked(game.gameBoard))
+        assertEquals(false, KingPieceRules.isChecked(game.gameBoard, Player.BLACK))
     }
 
     @Test
     fun `white king is checked by enemy rook`() {
         game.movePiece("b8", "b3")
 
-        val rules: KingPieceRules = whiteKing.rules as KingPieceRules
-
         assertEquals(blackRook.rules.javaClass, game.gameBoard.getPieceAt("b3")!!.rules.javaClass)
         assertEquals(blackRook.player, game.gameBoard.getPieceAt("b3")!!.player)
         assertEquals(whiteKing, game.gameBoard.getPieceAt("c3"))
-        assertEquals(true, rules.isChecked(game.gameBoard))
+        assertEquals(true, KingPieceRules.isChecked(game.gameBoard, Player.WHITE))
     }
 
     @Test

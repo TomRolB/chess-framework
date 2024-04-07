@@ -1,10 +1,41 @@
 package edu.austral.dissis.chess.engine
 
-fun main() {
-    TODO("Main game declaration (although this may be simulated in tests, actually)")
-}
+class Game(private val gameRules: GameRules,
+           var gameBoard: GameBoard,
+           private val turnManager: TurnManager,
+           private val inputProvider: PlayerInputProvider) {
+    fun run() {
+        while (true) {
+            val playerOnTurn: Player = turnManager.getTurn()
 
-class Game(private val gameRules: GameRules, var gameBoard: GameBoard) {
+            //TODO: is player checked? On stalemate? On checkmate? Win condition?
+            // Problem: I actually cannot call isChecked() at WinCondition.
+            // I would like to have the game state (normal, check, stalemate, checkmate)
+            // here, since there are some operations which need it.
+
+            val playerState: PlayerState = KingPieceRules.getPlayerState(gameBoard, playerOnTurn)
+
+            when (playerState) {
+                PlayerState.NORMAL -> TODO()
+                PlayerState.CHECKED -> TODO()
+                PlayerState.STALEMATE -> {
+                    println()
+                }
+                PlayerState.CHECKMATE -> TODO()
+            }
+
+            while (true) {
+                val (from, to) = inputProvider.requestPlayerMove(playerOnTurn)
+                try {
+                    movePiece(from, to)
+                } catch (e: IllegalArgumentException) {
+                    continue
+                }
+                break
+            }
+        }
+    }
+
     fun movePiece(
         from: String,
         to: String,
@@ -47,4 +78,33 @@ interface GameRules {
     fun playerReachedWinCondition(player: Player): Boolean
 
     fun playerIsChecked(player: Player): Boolean
+}
+
+interface TurnManager {
+    fun getTurn(): Player
+    fun nextTurn(): TurnManager
+}
+
+class OneToOneTurnManager: TurnManager {
+    private val currentTurn: Player
+
+    constructor () {
+        this.currentTurn = Player.WHITE
+    }
+
+    private constructor(player: Player) {
+        this.currentTurn = player
+    }
+
+    override fun getTurn(): Player {
+        return currentTurn
+    }
+
+    override fun nextTurn(): TurnManager {
+        return OneToOneTurnManager(!currentTurn)
+    }
+}
+
+interface PlayerInputProvider {
+    fun requestPlayerMove(player: Player): Pair<String, String>
 }

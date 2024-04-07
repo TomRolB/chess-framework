@@ -13,6 +13,13 @@ enum class Player {
     }
 }
 
+enum class PlayerState {
+    NORMAL,
+    CHECKED,
+    STALEMATE,
+    CHECKMATE
+}
+
 operator fun Player.not(): Player {
     return when (this) {
         Player.BLACK -> Player.WHITE
