@@ -1,36 +1,65 @@
 package edu.austral.dissis.chess.engine
 
-class Game(private val gameRules: GameRules,
-           var gameBoard: GameBoard,
-           private val turnManager: TurnManager,
-           private val inputProvider: PlayerInputProvider) {
+// Game implementation which can be tested.
+// There are some reasons we need a separate implementation:
+//      1. The movement tests were defined to use movePiece(),
+//         which no longer is necessary. However, replacing
+//         movePiece() will need a great deal of refactoring
+//      2. 'board' should be private, but this makes it
+//          impossible to perform any test
+//      3. We add the variables 'winner' and 'endedOnTie'
+//         to actually know whether the game ended and how
+
+class TestableGame(private val gameRules: GameRules,
+                   var board: GameBoard,
+                   private var turnManager: TurnManager,
+                   private val inputProvider: PlayerInputProvider) {
+    var winner: Player? = null
+    var endedOnTie = false
+
     fun run() {
+        // TODO: Modularize. The problem with this method is that
+        //  some things are very difficult to handle apart.
+
         while (true) {
             val playerOnTurn: Player = turnManager.getTurn()
 
-            //TODO: is player checked? On stalemate? On checkmate? Win condition?
-            // Problem: I actually cannot call isChecked() at WinCondition.
-            // I would like to have the game state (normal, check, stalemate, checkmate)
-            // here, since there are some operations which need it.
+            val playerState: PlayerState = KingPieceRules.getPlayerState(board, playerOnTurn)
 
-            val playerState: PlayerState = KingPieceRules.getPlayerState(gameBoard, playerOnTurn)
+            if (gameRules.playerReachedWinCondition(!playerOnTurn, playerState)) {
+                println("${!playerOnTurn} wins!")
+                winner = !playerOnTurn
+                return
+            }
 
-            when (playerState) {
-                PlayerState.NORMAL -> TODO()
-                PlayerState.CHECKED -> TODO()
-                PlayerState.STALEMATE -> {
-                    println()
-                }
-                PlayerState.CHECKMATE -> TODO()
+            if (gameRules.wasTieReached(!playerOnTurn, playerState)) {
+                println("It's a tie!")
+                endedOnTie = true
+                return
             }
 
             while (true) {
                 val (from, to) = inputProvider.requestPlayerMove(playerOnTurn)
-                try {
-                    movePiece(from, to)
-                } catch (e: IllegalArgumentException) {
+
+                if (!gameRules.isMoveValid(board, from, to)) continue
+
+                val piece = board.getPieceAt(from)
+                val play = piece!!.rules.getPlayIfValid(board, from, to)
+                if (play == null) {
+                    println("This movement is not valid")
                     continue
                 }
+
+                val gameBoardAfterPlay = play.execute()
+
+                if (KingPieceRules.isChecked(gameBoardAfterPlay, playerOnTurn)) {
+                    println("Invalid movement: this would leave your king checked")
+                    continue
+                }
+
+                board = gameBoardAfterPlay
+                turnManager = turnManager.nextTurn()
+
                 break
             }
         }
@@ -40,18 +69,16 @@ class Game(private val gameRules: GameRules,
         from: String,
         to: String,
     ) {
-        require(gameBoard.positionExists(from)) { "Invalid board position" }
+        require(board.positionExists(from)) { "Invalid board position" }
 
-        val piece = gameBoard.getPieceAt(from)
+        val piece = board.getPieceAt(from)
         require(piece != null) { "There is no piece at this position" }
 
-        require(gameRules.isPieceMovable(from)) { "This piece is not movable" }
-
-        val play = piece.rules.getPlayIfValid(gameBoard, from, to)
+        val play = piece.rules.getPlayIfValid(board, from, to)
         require(play != null) { "This movement is not valid" }
 
         val gameBoardAfterPlay = play.execute()
-        gameBoard = gameBoardAfterPlay
+        board = gameBoardAfterPlay
     }
 }
 
@@ -61,23 +88,77 @@ interface GameRules {
             // Determines if, given the circumstances, the piece can be moved.
             // Typically, a piece cannot be moved when the king is checked,
             // unless its movements cancels the check.
+
+            // Although, in the end, I think I will need to plug in these rules
+            // into each PieceRules instance
         )
     }
 
     fun isMoveValid(
+    //    TODO(
+    //     One of the purposes of isMoveValid() is to check if we have gone off-limits
+    //      We must check as well the piece isn't staying on site
+    //      And if there is a piece belonging to the same player at "to".
+    //      Although, in the end, I think I will need to plug in these rules
+    //      into each PieceRules instance
+    //    )
+        board: GameBoard,
         from: String,
         to: String,
-    ): Boolean {
-        TODO(
-            //  One of the purposes of isMoveValid() is to check if we have gone off-limits
-            //  We must check as well the piece isn't staying on site
-            //  And if there is a piece belonging to the same player at "to"
-        )
-    }
+    ): Boolean
 
-    fun playerReachedWinCondition(player: Player): Boolean
+    fun playerReachedWinCondition(player: Player, enemyState: PlayerState): Boolean
+    fun wasTieReached(playerOnTurn: Player, enemyState: PlayerState): Boolean
 
     fun playerIsChecked(player: Player): Boolean
+}
+
+class StandardGameRules : GameRules {
+    override fun isMoveValid(board: GameBoard, from: String, to: String): Boolean {
+        if (from == to) {
+            println("'from' and 'to' must be different")
+            return false
+        }
+        if (!board.positionExists(from)) {
+            println("Invalid board position: '${from}'")
+            return false
+        }
+        if (!board.positionExists(to)) {
+            println("Invalid board position: '${to}'")
+            return false
+        }
+
+        val piece = board.getPieceAt(from)
+        if (piece == null) {
+            println("There is no piece at this position")
+            return false
+        }
+
+//            if (gameRules.isPieceMovable(from)) {
+//                println("This piece is not movable")
+//                return false
+//            }
+
+        if (board.containsPieceOfPlayer(to, piece.player)) {
+            println("Cannot move to square containing ally piece")
+            return false
+        }
+
+        return true
+    }
+
+    override fun playerReachedWinCondition(player: Player, enemyState: PlayerState): Boolean {
+        return enemyState == PlayerState.CHECKMATE
+    }
+
+    override fun wasTieReached(playerOnTurn: Player, enemyState: PlayerState): Boolean {
+        return enemyState == PlayerState.STALEMATE
+    }
+
+    override fun playerIsChecked(player: Player): Boolean {
+        TODO("Not yet implemented")
+    }
+
 }
 
 interface TurnManager {

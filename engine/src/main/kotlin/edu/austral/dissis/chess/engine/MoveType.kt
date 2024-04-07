@@ -40,8 +40,10 @@ enum class MoveType {
                 !movedInL
             }
             ADJACENT_SQUARE -> {
-                return moveData.rowDelta.absoluteValue <= 1
-                        || moveData.colDelta.absoluteValue <= 1
+                val movedToAdjSquare =  moveData.rowDelta.absoluteValue <= 1
+                                        || moveData.colDelta.absoluteValue <= 1
+
+                !movedToAdjSquare
             }
         }
     }

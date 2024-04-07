@@ -172,6 +172,13 @@ class KingPieceRules implements PieceRules {
     + isChecked(board: GameBoard): Boolean
 }
 
+enum PlayerState {
+    NORMAL,
+    CHECKED
+    STALEMATE
+    CHECKMATE
+}
+
 enum Path {
     VERTICAL_AND_HORIZONTAL,
     DIAGONAL,

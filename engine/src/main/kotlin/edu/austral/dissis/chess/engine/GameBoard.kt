@@ -19,7 +19,7 @@ interface GameBoard {
         player: Player,
     ): Boolean
 
-    fun getAllPositionsOfPlayer(player: Player): Iterable<String>
+    fun getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<String>
 
     fun unpackPosition(position: String): RowAndCol
 
@@ -130,10 +130,13 @@ class HashGameBoard : GameBoard {
         return piece.player == player
     }
 
-    override fun getAllPositionsOfPlayer(player: Player): Iterable<String> {
+    override fun getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<String> {
         return boardMap.keys.filter {
             val position: String = it
-            boardMap[position]!!.player == player
+            val piece = boardMap[position]!!
+
+            if (includeKing) piece.player == player
+            else piece.player == player && (piece.rules !is KingPieceRules)
         }
     }
 
@@ -172,7 +175,8 @@ interface PositionValidator {
 class RectangleBoardValidator(private val numberRows: Int, private val numberCols: Int) : PositionValidator {
     override fun positionExists(position: String): Boolean {
         val (row, col) = unpackPosition(position)
-        return (row <= numberRows) && (col <= numberCols)
+        return (0 < row) && (row <= numberRows)
+                && (0 < col) && (col <= numberCols)
     }
 
     override fun getRowAsWhite(

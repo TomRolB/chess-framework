@@ -205,7 +205,7 @@ class RookPieceRules : PieceRules {
             !hasEverMoved -> {
                 val rulesNextTurn = RookPieceRules(player, true)
                 val pieceNextTurn = Piece(player, rulesNextTurn)
-                Play(listOf(Move(from, to, board, pieceNextTurn)), board)
+                Move(from, to, board, pieceNextTurn).asPlay()
             }
             else -> {
                 Move(from, to, board).asPlay()
@@ -393,8 +393,10 @@ class KingPieceRules(val player: Player) : PieceRules {
         fun isChecked(board: GameBoard, player: Player): Boolean {
             val kingPosition = board.getKingPosition(player)
 
-            // Return true if any enemy piece can perform a Take action on the King
-            return board.getAllPositionsOfPlayer(!player).any {
+            // Return true if any enemy piece "can capture" the King
+            // We don't include the enemy king, since the kings cannot
+            // check each other
+            return board.getAllPositionsOfPlayer(!player, false).any {
                 val enemyPosition: String = it
                 val enemyPiece: Piece = board.getPieceAt(enemyPosition)!!
                 val kingCapture: Play? = enemyPiece.rules.getPlayIfValid(board, enemyPosition, kingPosition)
@@ -413,7 +415,7 @@ class KingPieceRules(val player: Player) : PieceRules {
 //                }
 //        }
         fun willBeChecked(board: GameBoard, player: Player): Boolean {
-            return board.getAllPositionsOfPlayer(player).all {
+            return board.getAllPositionsOfPlayer(player, true).all {
                 val piece = board.getPieceAt(it)!!
                 allMovementsEndInCheck(board, piece, it)
             }
@@ -441,9 +443,9 @@ class KingPieceRules(val player: Player) : PieceRules {
 
             return when (combinedStatus) {
                 0 -> PlayerState.NORMAL
-                3 -> PlayerState.CHECKED
+                2 -> PlayerState.CHECKED
                 1 -> PlayerState.STALEMATE
-                2 -> PlayerState.CHECKMATE
+                3 -> PlayerState.CHECKMATE
                 else -> throw IllegalStateException("Invalid combined status")
             }
         }
