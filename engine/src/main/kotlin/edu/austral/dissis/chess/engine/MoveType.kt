@@ -41,7 +41,7 @@ enum class MoveType {
             }
             ADJACENT_SQUARE -> {
                 val movedToAdjSquare =  moveData.rowDelta.absoluteValue <= 1
-                                        || moveData.colDelta.absoluteValue <= 1
+                                        && moveData.colDelta.absoluteValue <= 1
 
                 !movedToAdjSquare
             }
@@ -87,7 +87,7 @@ enum class MoveType {
             VERTICAL_AND_HORIZONTAL -> listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
             DIAGONAL -> listOf(1 to 1, -1 to 1, -1 to -1, 1 to -1)
             ANY_STRAIGHT_LINE -> {
-                getIncrements() + getIncrements()
+                VERTICAL_AND_HORIZONTAL.getIncrements() + DIAGONAL.getIncrements()
             }
             L_SHAPED -> listOf(
                 2 to 1, 1 to 2, -2 to 1, -1 to 2,
@@ -127,6 +127,9 @@ enum class MoveType {
 
         val rowIncrement = increments.first
         val colIncrement = increments.second
+
+        row += rowIncrement
+        col += colIncrement
 
         var result: MutableList<String> = mutableListOf()
 

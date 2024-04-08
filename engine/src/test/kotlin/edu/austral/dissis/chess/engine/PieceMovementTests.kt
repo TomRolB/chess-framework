@@ -542,7 +542,7 @@ class NoRules : GameRules {
         return true
     }
 
-    override fun isMoveValid(board: GameBoard, from: String, to: String): Boolean {
+    override fun isMoveValid(board: GameBoard, player: Player, from: String, to: String): Boolean {
         return true
     }
 

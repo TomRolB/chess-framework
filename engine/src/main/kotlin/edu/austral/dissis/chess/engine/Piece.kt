@@ -230,7 +230,9 @@ class BishopPieceRules : PieceRules {
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
-            .map { Play(listOf(Move(position, it, board)), board) }
+            .map {
+                Play(listOf(Move(position, it, board)), board)
+            }
     }
 
     override fun getPlayIfValid(

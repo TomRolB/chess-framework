@@ -41,7 +41,7 @@ class TestableGame(private val gameRules: GameRules,
             while (true) {
                 val (from, to) = inputProvider.requestPlayerMove(playerOnTurn)
 
-                if (!gameRules.isMoveValid(board, from, to)) continue
+                if (!gameRules.isMoveValid(board, playerOnTurn, from, to)) continue
 
                 val piece = board.getPieceAt(from)
                 val play = piece!!.rules.getPlayIfValid(board, from, to)
@@ -95,16 +95,11 @@ interface GameRules {
     }
 
     fun isMoveValid(
-    //    TODO(
-    //     One of the purposes of isMoveValid() is to check if we have gone off-limits
-    //      We must check as well the piece isn't staying on site
-    //      And if there is a piece belonging to the same player at "to".
-    //      Although, in the end, I think I will need to plug in these rules
-    //      into each PieceRules instance
-    //    )
         board: GameBoard,
+        player: Player,
         from: String,
-        to: String,
+        to: String
+
     ): Boolean
 
     fun playerReachedWinCondition(player: Player, enemyState: PlayerState): Boolean
@@ -114,7 +109,7 @@ interface GameRules {
 }
 
 class StandardGameRules : GameRules {
-    override fun isMoveValid(board: GameBoard, from: String, to: String): Boolean {
+    override fun isMoveValid(board: GameBoard, player: Player, from: String, to: String): Boolean {
         if (from == to) {
             println("'from' and 'to' must be different")
             return false
@@ -128,16 +123,12 @@ class StandardGameRules : GameRules {
             return false
         }
 
-        val piece = board.getPieceAt(from)
-        if (piece == null) {
-            println("There is no piece at this position")
+        if (!board.containsPieceOfPlayer(from, player)) {
+            println("This position does not hold any piece of yours")
             return false
         }
 
-//            if (gameRules.isPieceMovable(from)) {
-//                println("This piece is not movable")
-//                return false
-//            }
+        val piece = board.getPieceAt(from)!!
 
         if (board.containsPieceOfPlayer(to, piece.player)) {
             println("Cannot move to square containing ally piece")
