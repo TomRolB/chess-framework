@@ -1,7 +1,6 @@
 package edu.austral.dissis.chess.engine
-import org.junit.jupiter.api.Assertions.assertEquals
 
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -10,11 +9,6 @@ import java.util.*
 
 class GameFlowTests {
     val validator = RectangleBoardValidator(8, 8)
-
-    @BeforeEach
-    fun setUp() {
-
-    }
 
     @Test
     fun `checkmate by black tower and black queen`() {

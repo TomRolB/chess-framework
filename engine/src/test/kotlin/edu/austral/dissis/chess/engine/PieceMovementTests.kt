@@ -41,7 +41,8 @@ class PawnMovementTests {
         game.movePiece("c2", "d1")
 
         assertEquals(null, game.board.getPieceAt("c2"))
-        assertEquals(blackPawn, game.board.getPieceAt("d1"))
+        assertEquals(true, game.board.getPieceAt("d1")!!.rules is PawnPieceRules)
+        assertEquals(Player.BLACK, game.board.getPieceAt("d1")!!.player)
     }
 
     @Test
@@ -49,7 +50,8 @@ class PawnMovementTests {
         game.movePiece("d1", "c2")
 
         assertEquals(null, game.board.getPieceAt("d1"))
-        assertEquals(whitePawn, game.board.getPieceAt("c2"))
+        assertEquals(true, game.board.getPieceAt("c2")!!.rules is PawnPieceRules)
+        assertEquals(Player.WHITE, game.board.getPieceAt("c2")!!.player)
     }
 
     @Test
@@ -65,7 +67,8 @@ class PawnMovementTests {
     fun `white pawn can move ahead`() {
         game.movePiece("d1", "d2")
 
-        assertEquals(whitePawn, game.board.getPieceAt("d2"))
+        assertEquals(true, game.board.getPieceAt("d2")!!.rules is PawnPieceRules)
+        assertEquals(Player.WHITE, game.board.getPieceAt("d2")!!.player)
         assertEquals(null, game.board.getPieceAt("d1"))
         assertEquals(blackPawn, game.board.getPieceAt("c2"))
     }

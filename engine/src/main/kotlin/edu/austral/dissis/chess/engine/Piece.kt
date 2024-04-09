@@ -61,7 +61,7 @@ class PawnPieceRules : PieceRules {
             }
             State.MOVED_TWO_PLACES -> {
                 this.hasEverMoved = true
-                this.hasJustMovedTwoPlaces = false
+                this.hasJustMovedTwoPlaces = true
             }
         }
     }
@@ -114,7 +114,7 @@ class PawnPieceRules : PieceRules {
             return null
         }
 
-        val rulesNextTurn = PawnPieceRules(player, State.MOVED)
+        val rulesNextTurn = PawnPieceRules(player, State.MOVED_TWO_PLACES)
         val pieceNextTurn = Piece(player, rulesNextTurn)
         return Play(listOf(Move(moveData.from, moveData.to, board, pieceNextTurn)), board)
     }
@@ -136,14 +136,18 @@ class PawnPieceRules : PieceRules {
                 if (board.isOccupied(moveData.to)) {
                     null
                 } else {
-                    Play(listOf(Move(moveData.from, moveData.to, board)), board)
+                    val rulesNextTurn = PawnPieceRules(player, State.MOVED)
+                    val pieceNextTurn = Piece(player, rulesNextTurn)
+                    Move(moveData.from, moveData.to, board, pieceNextTurn).asPlay()
                 }
             }
             1, -1 -> {
-                if (!board.containsPieceOfPlayer(moveData.to, !player)) {
-                    null
+                if (board.containsPieceOfPlayer(moveData.to, !player)) {
+                    val rulesNextTurn = PawnPieceRules(player, State.MOVED)
+                    val pieceNextTurn = Piece(player, rulesNextTurn)
+                    Move(moveData.from, moveData.to, board, pieceNextTurn).asPlay()
                 } else {
-                    Play(listOf(Move(moveData.from, moveData.to, board)), board)
+                    enPassantIfValid(board, moveData)
                 }
             }
 
@@ -152,6 +156,25 @@ class PawnPieceRules : PieceRules {
                 null
             }
         }
+    }
+
+    private fun enPassantIfValid(board: GameBoard, moveData: MovementData): Play? {
+        val enemyPawnPosition = getStringPosition(moveData.fromRow, moveData.toCol)
+        if (!board.containsPieceOfPlayer(enemyPawnPosition, !player)) return null
+
+        val enemyPawn = board.getPieceAt(enemyPawnPosition)!!
+        if (enemyPawn.rules !is PawnPieceRules) return null
+
+        val enemyRules = enemyPawn.rules as PawnPieceRules
+        if (!enemyRules.hasJustMovedTwoPlaces) return null
+
+        return Play(
+            listOf(
+                Move(moveData.from, moveData.to, board),
+                Take(enemyPawnPosition, board)
+            ),
+            board
+        )
     }
 }
 

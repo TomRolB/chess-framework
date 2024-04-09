@@ -2,13 +2,25 @@ package edu.austral.dissis.chess.engine
 
 interface Action {
     fun execute(): GameBoard
+    fun setBoard(board: GameBoard): Action
 }
 
 class Play(private val actions: Iterable<Action>, private val board: GameBoard) : Action {
     override fun execute(): GameBoard {
-        var gameBoardAfter = board
-        for (action in actions) gameBoardAfter = action.execute()
-        return gameBoardAfter
+//        var gameBoardAfter = board
+//        for (action in actions) {
+//            action.javaClass.getConstructor().newInstance()
+//            gameBoardAfter = action.execute()
+//        }
+//        return gameBoardAfter
+
+        return actions
+            .reduce { action, next -> next.setBoard(action.execute()) }
+            .execute()
+    }
+
+    override fun setBoard(board: GameBoard): Action {
+        return Play(actions, board)
     }
 }
 
@@ -41,17 +53,27 @@ class Move : Action {
         return gameBoardAfter
     }
 
+    override fun setBoard(board: GameBoard): Action {
+        return Move(from, to, board, pieceNextTurn)
+    }
+
     fun asPlay(): Play {
         return Play(listOf(this), board)
     }
 }
 
-// class Take(val position: String, val board: GameBoard) : Action {
-//    override fun execute(): GameBoard {
-//        val gameBoardAfter = board.delPieceAt(position)
-//        return gameBoardAfter
-//    }
-// }
+
+
+ class Take(val position: String, val board: GameBoard) : Action {
+     override fun execute(): GameBoard {
+        val gameBoardAfter = board.delPieceAt(position)
+        return gameBoardAfter
+     }
+
+     override fun setBoard(board: GameBoard): Action {
+         return Take(position, board)
+     }
+ }
 
 // TODO: Promote
 // class Promote(val position: String, val board: GameBoard, val promotionPieceRules: PieceRules) : Action {
