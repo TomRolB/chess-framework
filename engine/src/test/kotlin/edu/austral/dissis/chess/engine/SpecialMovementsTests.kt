@@ -38,4 +38,28 @@ class SpecialMovementsTests {
         assertEquals(null, game.board.getPieceAt("c4"))
         assertEquals(null, game.board.getPieceAt("d4"))
     }
+
+    @Test
+    fun `pawn promotes to queen`() {
+        val whitePawn = Piece(Player.WHITE, PawnPieceRules(Player.WHITE))
+        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
+        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+
+        val pieces = listOf(
+            "a7" to whitePawn, "a1" to whiteKing, "h8" to blackKing
+        )
+
+        val provider = BufferedInputProvider()
+        provider.addMove(Player.WHITE, "a7", "a8")
+        provider.addPromotion(Player.WHITE, QueenPieceRules())
+
+        val board = HashGameBoard.build(validator, pieces, "a1", "h8")
+        val game = TestableGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+
+        assertThrows<NoSuchElementException> { game.run() }
+
+        assertEquals(true, game.board.getPieceAt("a8")!!.rules is QueenPieceRules)
+        assertEquals(Player.WHITE, game.board.getPieceAt("a8")!!.player)
+        assertEquals(null, game.board.getPieceAt("a7"))
+    }
 }

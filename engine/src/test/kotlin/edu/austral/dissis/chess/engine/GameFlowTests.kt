@@ -88,6 +88,7 @@ class GameFlowTests {
 class BufferedInputProvider: PlayerInputProvider {
     val moves: Queue<Pair<String, String>> = LinkedList()
     val players: Queue<Player> = LinkedList()
+    val promotions: Queue<PieceRules> = LinkedList()
 
     override fun requestPlayerMove(player: Player): Pair<String, String> {
         if (players.remove() != player) {
@@ -97,6 +98,14 @@ class BufferedInputProvider: PlayerInputProvider {
         return moves.remove()
     }
 
+    override fun requestPromotionPiece(player: Player): PieceRules {
+        if (players.remove() != player) {
+            throw IllegalStateException("The next move wasn't meant for the $player player")
+        }
+
+        return promotions.remove()
+    }
+
     fun addMove(player: Player, from: String, to: String) {
         moves.add(from to to)
         players.add(player)
@@ -104,5 +113,10 @@ class BufferedInputProvider: PlayerInputProvider {
 
     fun isEmpty(): Boolean {
         return moves.isEmpty()
+    }
+
+    fun addPromotion(player: Player, pieceRules: PieceRules) {
+        promotions.add(pieceRules)
+        players.add(player)
     }
 }

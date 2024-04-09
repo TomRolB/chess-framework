@@ -52,12 +52,16 @@ class TestableGame(private val gameRules: GameRules,
 
                 val gameBoardAfterPlay = play.execute()
 
+                // TODO: make this optional (in the extinction variant,
+                //  there is no check)
                 if (KingPieceRules.isChecked(gameBoardAfterPlay, playerOnTurn)) {
                     println("Invalid movement: this would leave your king checked")
                     continue
                 }
 
-                board = gameBoardAfterPlay
+                val gameBoardAfterProcedures = gameRules.runPostPlayProcedures(gameBoardAfterPlay, piece, to, inputProvider)
+
+                board = gameBoardAfterProcedures
                 turnManager = turnManager.nextTurn()
 
                 break
@@ -106,9 +110,12 @@ interface GameRules {
     fun wasTieReached(playerOnTurn: Player, enemyState: PlayerState): Boolean
 
     fun playerIsChecked(player: Player): Boolean
+    fun runPostPlayProcedures(board: GameBoard, piece: Piece, finalPosition: String, inputProvider: PlayerInputProvider): GameBoard
 }
 
 class StandardGameRules : GameRules {
+
+
     override fun isMoveValid(board: GameBoard, player: Player, from: String, to: String): Boolean {
         if (from == to) {
             println("'from' and 'to' must be different")
@@ -150,6 +157,25 @@ class StandardGameRules : GameRules {
         TODO("Not yet implemented")
     }
 
+    override fun runPostPlayProcedures(
+        board: GameBoard,
+        piece: Piece,
+        finalPosition: String,
+        inputProvider: PlayerInputProvider,
+    ): GameBoard {
+        val (_, col) = board.unpackPosition(finalPosition)
+        val rowAsWhite: Int = board.getRowAsWhite(finalPosition, piece.player)
+        val positionAsWhite = getStringPosition(rowAsWhite, col)
+
+        if (piece.rules is PawnPieceRules && board.isPositionOnUpperLimit(positionAsWhite)) {
+            val promotionPieceRules = inputProvider.requestPromotionPiece(piece.player)
+            val promotionPiece = Piece(piece.player, promotionPieceRules)
+
+            return board.setPieceAt(finalPosition, promotionPiece)
+        }
+        else return board
+    }
+
 }
 
 interface TurnManager {
@@ -179,4 +205,5 @@ class OneToOneTurnManager: TurnManager {
 
 interface PlayerInputProvider {
     fun requestPlayerMove(player: Player): Pair<String, String>
+    fun requestPromotionPiece(player: Player): PieceRules
 }

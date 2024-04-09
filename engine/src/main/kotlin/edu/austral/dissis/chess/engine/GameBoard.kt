@@ -13,6 +13,7 @@ interface GameBoard {
     fun delPieceAt(position: String): GameBoard
 
     fun positionExists(position: String): Boolean
+    fun isPositionOnUpperLimit(position: String): Boolean
 
     fun containsPieceOfPlayer(
         position: String,
@@ -122,6 +123,10 @@ class HashGameBoard : GameBoard {
         return validator.positionExists(position)
     }
 
+    override fun isPositionOnUpperLimit(position: String): Boolean {
+        return validator.isPositionOnLastRow(position)
+    }
+
     override fun containsPieceOfPlayer(
         position: String,
         player: Player,
@@ -170,6 +175,8 @@ interface PositionValidator {
         position: String,
         player: Player,
     ): Int
+
+    fun isPositionOnLastRow(position: String): Boolean
 }
 
 class RectangleBoardValidator(private val numberRows: Int, private val numberCols: Int) : PositionValidator {
@@ -183,9 +190,14 @@ class RectangleBoardValidator(private val numberRows: Int, private val numberCol
         position: String,
         player: Player,
     ): Int {
-        if (player == Player.WHITE) return position[1].charToCol()
+        if (player == Player.WHITE) return position[1].digitToInt()
 
-        return numberRows - position[1].charToCol() + 1
+        return numberRows - position[1].digitToInt() + 1
+    }
+
+    override fun isPositionOnLastRow(position: String): Boolean {
+        val (row, col) = unpackPosition(position)
+        return row == numberRows
     }
 
     override fun unpackPosition(position: String): RowAndCol {

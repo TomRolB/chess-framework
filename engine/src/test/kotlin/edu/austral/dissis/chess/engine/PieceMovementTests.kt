@@ -560,6 +560,15 @@ class NoRules : GameRules {
     override fun playerIsChecked(player: Player): Boolean {
         return false
     }
+
+    override fun runPostPlayProcedures(
+        board: GameBoard,
+        piece: Piece,
+        finalPosition: String,
+        inputProvider: PlayerInputProvider,
+    ): GameBoard {
+        return board
+    }
 }
 
 class NoManager: TurnManager {
@@ -576,5 +585,9 @@ class NoManager: TurnManager {
 class NoProvider : PlayerInputProvider {
     override fun requestPlayerMove(player: Player): Pair<String, String> {
         return Pair("", "")
+    }
+
+    override fun requestPromotionPiece(player: Player): PieceRules {
+        return QueenPieceRules()
     }
 }
