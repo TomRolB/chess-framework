@@ -136,8 +136,9 @@ enum class MoveType {
         while (true) {
             val reachablePos: String = getStringPosition(row, col)
 
-            // We'll only add the position if it exists and does not hold
-            // a piece of the same player
+            // We'll only add the position if it exists, does not hold
+            // a piece of the same player and does not imply a move
+            // that would leave our king checked
             if (!board.positionExists(reachablePos)
                 || board.containsPieceOfPlayer(reachablePos, player)) break
 

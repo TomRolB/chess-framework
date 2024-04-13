@@ -2,6 +2,7 @@ package edu.austral.dissis.chess.engine
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 // This class tests different checkmate and
@@ -13,7 +14,7 @@ class GameFlowTests {
     @Test
     fun `checkmate by black tower and black queen`() {
         val blackRook = Piece(Player.BLACK, RookPieceRules(Player.BLACK))
-        val blackQueen = Piece(Player.BLACK, QueenPieceRules())
+        val blackQueen = Piece(Player.BLACK, QueenPieceRules(Player.BLACK))
         val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
         val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
 
@@ -36,7 +37,7 @@ class GameFlowTests {
     @Test
     fun `stalemate by black tower and black queen`() {
         val blackRook = Piece(Player.BLACK, RookPieceRules(Player.BLACK))
-        val blackQueen = Piece(Player.BLACK, QueenPieceRules())
+        val blackQueen = Piece(Player.BLACK, QueenPieceRules(Player.BLACK))
         val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
         val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
 
@@ -58,7 +59,7 @@ class GameFlowTests {
 
     @Test
     fun `black bishop saves check but ends in checkmate`() {
-        val blackBishop = Piece(Player.BLACK, BishopPieceRules())
+        val blackBishop = Piece(Player.BLACK, BishopPieceRules(Player.BLACK))
         val blackPawn1 = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         val blackPawn2 = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         val whiteRook = Piece(Player.WHITE, RookPieceRules(Player.WHITE))
@@ -83,6 +84,38 @@ class GameFlowTests {
         assertEquals(Player.WHITE, game.winner)
         assertEquals(true, provider.isEmpty()) // All moves should have been executed
     }
+
+    @Test
+    fun `white bishop cannot expose its king`() {
+        val blackRook = Piece(Player.BLACK, RookPieceRules(Player.BLACK))
+        val whiteBishop = Piece(Player.WHITE, BishopPieceRules(Player.WHITE))
+        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
+        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
+
+        val provider = BufferedInputProvider()
+        provider.addMove(Player.WHITE,"c2", "g6")
+
+        val pieces = listOf(
+            "g2" to blackRook, "c2" to whiteBishop, "b2" to whiteKing, "g7" to blackKing
+        )
+
+        val board = HashGameBoard.build(validator, pieces, "b2", "g7")
+        val game = TestableGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+
+        assertThrows<NoSuchElementException> { game.run() }
+
+        assertEquals(blackRook, game.board.getPieceAt("g2"))
+        assertEquals(whiteBishop, game.board.getPieceAt("c2"))
+        assertEquals(whiteKing, game.board.getPieceAt("b2"))
+        assertEquals(blackKing, game.board.getPieceAt("g7"))
+        assertEquals(true, provider.isEmpty()) // All moves should have been executed
+    }
+
+    //TODO: Test you cannot move a piece if that would leave your king checked
+    //TODO: Test a complex situation, where a king appears to be on checkmate,
+    // but actually there's an enemy piece which is not blocking a possible
+    // move from the enemy king, since that would leave its own king checked
+
 }
 
 class BufferedInputProvider: PlayerInputProvider {

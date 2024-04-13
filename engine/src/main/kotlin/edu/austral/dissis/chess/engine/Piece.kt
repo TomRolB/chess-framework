@@ -82,6 +82,10 @@ class PawnPieceRules : PieceRules {
         return increments
             .map { getStringPosition(row + it.first, col + it.second) }
             .mapNotNull { getPlayIfValid(board, position, it) }
+            .filter {
+                val futureBoard = it.execute()
+                !KingPieceRules.isChecked(futureBoard, player)
+            }
     }
 
     override fun getPlayIfValid(
@@ -207,6 +211,10 @@ class RookPieceRules : PieceRules {
         return moveType
             .getPossiblePositions(board, position)
             .map { Play(listOf(Move(position, it, board)), board) }
+            .filter {
+                val futureBoard = it.execute()
+                !KingPieceRules.isChecked(futureBoard, player)
+            }
     }
 
     override fun getPlayIfValid(
@@ -237,7 +245,7 @@ class RookPieceRules : PieceRules {
     }
 }
 
-class BishopPieceRules : PieceRules {
+class BishopPieceRules(val player: Player) : PieceRules {
     val moveType = MoveType.DIAGONAL
 
     override fun isPlayValid(
@@ -255,6 +263,10 @@ class BishopPieceRules : PieceRules {
             .getPossiblePositions(board, position)
             .map {
                 Play(listOf(Move(position, it, board)), board)
+            }
+            .filter {
+                val futureBoard = it.execute()
+                !KingPieceRules.isChecked(futureBoard, player)
             }
     }
 
@@ -281,7 +293,7 @@ class BishopPieceRules : PieceRules {
     }
 }
 
-class QueenPieceRules : PieceRules {
+class QueenPieceRules(val player: Player) : PieceRules {
     val moveType = MoveType.DIAGONAL
 
     override fun isPlayValid(
@@ -298,6 +310,10 @@ class QueenPieceRules : PieceRules {
         return moveType
             .getPossiblePositions(board, position)
             .map { Play(listOf(Move(position, it, board)), board) }
+            .filter {
+                val futureBoard = it.execute()
+                !KingPieceRules.isChecked(futureBoard, player)
+            }
     }
 
     override fun getPlayIfValid(
@@ -323,7 +339,7 @@ class QueenPieceRules : PieceRules {
     }
 }
 
-class KnightPieceRules : PieceRules {
+class KnightPieceRules(val player: Player) : PieceRules {
     val moveType = MoveType.L_SHAPED
 
     override fun isPlayValid(
@@ -340,6 +356,10 @@ class KnightPieceRules : PieceRules {
         return moveType
             .getPossiblePositions(board, position)
             .map { Move(position, it, board).asPlay() }
+            .filter {
+                val futureBoard = it.execute()
+                !KingPieceRules.isChecked(futureBoard, player)
+            }
     }
 
     override fun getPlayIfValid(
@@ -375,11 +395,16 @@ class KingPieceRules(val player: Player) : PieceRules {
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
-            .filter {
-                val moveData = MovementData(position, it, board)
-                !becomesChecked(board, moveData)
-            }
+//            .filter {
+//                val moveData = MovementData(position, it, board)
+//                !becomesChecked(board, moveData)
+////                throw RuntimeException("This actually unveils a problem: are we checking on EVERY piece this condition? I.e., a possible move leaving our king checked. Also, this is generating the future move twice (becomesChecked needs to create the future board)")
+//            }
             .map { Move(position, it, board).asPlay() }
+            .filter {
+                val futureBoard = it.execute()
+                !KingPieceRules.isChecked(futureBoard, player)
+            }
     }
 
     override fun getPlayIfValid(
@@ -390,17 +415,27 @@ class KingPieceRules(val player: Player) : PieceRules {
         val moveData = MovementData(from, to, board)
         return when {
             moveType.isViolated(moveData) -> {
-                println("The king cannot move this way")
                 null
+//                castlingIfValid(from, to, board)
             }
-            becomesChecked(board, moveData) -> {
-                println("Invalid movement: the king would become checked")
-                null
-            }
+// This is actually verified at Game
+//            becomesChecked(board, moveData) -> {
+//                println("Invalid movement: the king would become checked")
+//                null
+//            }
             else -> Move(from, to, board).asPlay()
         }
     }
-    
+
+//    private fun castlingIfValid(from: String, to: String, board: GameBoard): Play? {
+//        return when {
+//            //1. Neither the king nor the rook has previously moved.
+//            //2. There are no pieces between the king and the rook.
+//            //3. The king is not currently in check.
+//            //4. The king does not pass through or finish on a square that is attacked by an enemy piece.
+//        }
+//    }
+
     private fun becomesChecked(
         board: GameBoard,
         moveData: MovementData,
