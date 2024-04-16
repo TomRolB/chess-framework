@@ -10,10 +10,55 @@ package edu.austral.dissis.chess.engine
 //      3. We add the variables 'winner' and 'endedOnTie'
 //         to actually know whether the game ended and how
 
-class TestableGame(private val gameRules: GameRules,
-                   var board: GameBoard,
-                   private var turnManager: TurnManager,
-                   private val inputProvider: PlayerInputProvider) {
+class Game(private val gameRules: GameRules,
+                       var board: GameBoard) {
+    var winner: Player? = null
+    var endedOnTie = false
+
+    fun movePiece(from: String, to: String, playerOnTurn: Player): MoveResult {
+        if (!gameRules.isMoveValid(board, playerOnTurn, from, to)) return
+
+        val piece = board.getPieceAt(from)
+        val play = piece!!.rules.getPlayIfValid(board, from, to)
+        if (play == null) {
+            println("This movement does not abide by the piece's rules")
+            return
+        }
+
+        val gameBoardAfterPlay = play.execute()
+
+        // TODO: make this optional (in the extinction variant,
+        //  there is no check). Actually, should be a post-play procedure
+        if (KingPieceRules.isChecked(gameBoardAfterPlay, playerOnTurn)) {
+            println("Invalid movement: this would leave your king checked")
+            return
+        }
+
+        val gameBoardAfterProcedures = gameRules.runPostPlayProcedures(gameBoardAfterPlay, piece, to, inputProvider)
+
+        board = gameBoardAfterProcedures
+
+
+        val playerState: PlayerState = KingPieceRules.getPlayerState(board, playerOnTurn)
+
+        if (gameRules.playerReachedWinCondition(!playerOnTurn, playerState)) {
+            println("${!playerOnTurn} wins!")
+            winner = !playerOnTurn
+            return
+        }
+
+        if (gameRules.wasTieReached(!playerOnTurn, playerState)) {
+            println("It's a tie!")
+            endedOnTie = true
+            return
+        }
+    }
+}
+
+class TurnManagingGame(private val gameRules: GameRules,
+                       var board: GameBoard,
+                       private var turnManager: TurnManager,
+                       private val inputProvider: PlayerInputProvider) {
     var winner: Player? = null
     var endedOnTie = false
 

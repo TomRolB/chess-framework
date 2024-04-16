@@ -27,7 +27,7 @@ class GameFlowTests {
         )
 
         val board = HashGameBoard.build(validator, pieces, "c1", "d8")
-        val game = TestableGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
 
         game.run()
 
@@ -50,7 +50,7 @@ class GameFlowTests {
         )
 
         val board = HashGameBoard.build(validator, pieces, "c1", "d8")
-        val game = TestableGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
 
         game.run()
 
@@ -77,7 +77,7 @@ class GameFlowTests {
         )
 
         val board = HashGameBoard.build(validator, pieces, "b2", "h8")
-        val game = TestableGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
 
         game.run()
 
@@ -100,7 +100,7 @@ class GameFlowTests {
         )
 
         val board = HashGameBoard.build(validator, pieces, "b2", "g7")
-        val game = TestableGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
 
         assertThrows<NoSuchElementException> { game.run() }
 

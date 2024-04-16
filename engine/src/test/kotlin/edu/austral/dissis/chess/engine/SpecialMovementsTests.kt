@@ -1,7 +1,6 @@
 package edu.austral.dissis.chess.engine
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
@@ -28,7 +27,7 @@ class SpecialMovementsTests {
         provider.addMove(Player.BLACK, "d4", "c3")
 
         val board = HashGameBoard.build(validator, pieces, "a1", "h8")
-        val game = TestableGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
 
         assertThrows<NoSuchElementException> { game.run() }
 
@@ -54,7 +53,7 @@ class SpecialMovementsTests {
         provider.addPromotion(Player.WHITE, QueenPieceRules(Player.WHITE))
 
         val board = HashGameBoard.build(validator, pieces, "a1", "h8")
-        val game = TestableGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
 
         assertThrows<NoSuchElementException> { game.run() }
 

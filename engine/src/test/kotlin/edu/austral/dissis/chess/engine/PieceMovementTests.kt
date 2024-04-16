@@ -12,7 +12,7 @@ class PawnMovementTests {
 
     private lateinit var list: List<Pair<String, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TestableGame
+    private lateinit var game: TurnManagingGame
     private lateinit var whitePawn: Piece
     private lateinit var blackPawn: Piece
     private lateinit var whiteKing: Piece
@@ -27,7 +27,7 @@ class PawnMovementTests {
 
         list = listOf("d1" to whitePawn, "c2" to blackPawn, "h1" to whiteKing, "h8" to blackKing)
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "h1", "h8")
-        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
+        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
@@ -103,7 +103,7 @@ class PawnMovementTests {
 class RookMovementTest {
     private lateinit var list: List<Pair<String, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TestableGame
+    private lateinit var game: TurnManagingGame
     private lateinit var closestPawn: Piece
     private lateinit var blockedPawn: Piece
     private lateinit var whiteRook: Piece
@@ -120,7 +120,7 @@ class RookMovementTest {
 
         list = listOf("b4" to closestPawn, "b6" to blockedPawn, "b2" to whiteRook, "h1" to whiteKing, "h8" to blackKing)
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "h1", "h8")
-        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
+        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
@@ -189,7 +189,7 @@ class RookMovementTest {
 class BishopMovementTest {
     private lateinit var list: List<Pair<String, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TestableGame
+    private lateinit var game: TurnManagingGame
     private lateinit var closestPawn: Piece
     private lateinit var blockedPawn: Piece
     private lateinit var whiteBishop: Piece
@@ -206,7 +206,7 @@ class BishopMovementTest {
 
         list = listOf("d4" to closestPawn, "c3" to blockedPawn, "g7" to whiteBishop, "h1" to whiteKing, "a8" to blackKing)
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "h1", "a8")
-        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
+        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
@@ -271,7 +271,7 @@ class BishopMovementTest {
 class QueenMovementTest {
     private lateinit var list: List<Pair<String, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TestableGame
+    private lateinit var game: TurnManagingGame
     private lateinit var horizontalPawn: Piece
     private lateinit var unreachablePawn: Piece
     private lateinit var diagonalPawn: Piece
@@ -298,7 +298,7 @@ class QueenMovementTest {
                 "h8" to blackKing,
             )
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "h1", "h8")
-        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
+        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
@@ -379,7 +379,7 @@ class QueenMovementTest {
 class KnightMovementTest {
     private lateinit var list: List<Pair<String, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TestableGame
+    private lateinit var game: TurnManagingGame
     private lateinit var horizontalPawn: Piece
     private lateinit var verticalPawn: Piece
     private lateinit var takeablePawn: Piece
@@ -406,7 +406,7 @@ class KnightMovementTest {
                 "h8" to blackKing,
             )
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "a1", "h8")
-        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
+        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
@@ -465,7 +465,7 @@ class KnightMovementTest {
 class KingMovementTest {
     private lateinit var list: List<Pair<String, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TestableGame
+    private lateinit var game: TurnManagingGame
     private lateinit var blackRook: Piece
     private lateinit var whiteKing: Piece
     private lateinit var blackKing: Piece
@@ -478,7 +478,7 @@ class KingMovementTest {
 
         list = listOf("b8" to blackRook, "c3" to whiteKing, "f6" to blackKing)
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "c3", "f6")
-        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
+        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test

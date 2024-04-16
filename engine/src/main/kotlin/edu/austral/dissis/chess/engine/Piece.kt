@@ -172,6 +172,18 @@ class PawnPieceRules : PieceRules {
         val enemyRules = enemyPawn.rules as PawnPieceRules
         if (!enemyRules.hasJustMovedTwoPlaces) return null
 
+//        try {
+//            BooleanChain
+//                .check()
+//                .instantiate()
+//                .check()
+//                .instantiate()
+//                .check()
+//                .instantiate()
+//        } catch (Exception e) {
+//
+//        }
+
         return Play(
             listOf(
                 Move(moveData.from, moveData.to, board),
