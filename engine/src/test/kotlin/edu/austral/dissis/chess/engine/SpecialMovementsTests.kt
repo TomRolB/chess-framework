@@ -19,23 +19,23 @@ class SpecialMovementsTests {
         val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
 
         val pieces = listOf(
-            "c2" to whitePawn, "d4" to blackPawn, "a1" to whiteKing, "h8" to blackKing
+            Position(2, 3) to whitePawn, Position(4, 4) to blackPawn, Position(1, 1) to whiteKing, Position(8, 8) to blackKing
         )
 
         val provider = BufferedInputProvider()
-        provider.addMove(Player.WHITE, "c2", "c4")
-        provider.addMove(Player.BLACK, "d4", "c3")
+        provider.addMove(Player.WHITE, Position(2, 3), Position(4, 3))
+        provider.addMove(Player.BLACK, Position(4, 4), Position(3, 3))
 
-        val board = HashGameBoard.build(validator, pieces, "a1", "h8")
-        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val board = HashGameBoard.build(validator, pieces, Position(1, 1), Position(8, 8))
+        val game = TestableGame(TestableStandardGameRules(), board, OneToOneTurnManager(), provider)
 
         assertThrows<NoSuchElementException> { game.run() }
 
-        assertEquals(true, game.board.getPieceAt("c3")!!.rules is PawnPieceRules)
-        assertEquals(Player.BLACK, game.board.getPieceAt("c3")!!.player)
-        assertEquals(null, game.board.getPieceAt("c2"))
-        assertEquals(null, game.board.getPieceAt("c4"))
-        assertEquals(null, game.board.getPieceAt("d4"))
+        assertEquals(true, game.board.getPieceAt(Position(3, 3))!!.rules is PawnPieceRules)
+        assertEquals(Player.BLACK, game.board.getPieceAt(Position(3, 3))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(2, 3)))
+        assertEquals(null, game.board.getPieceAt(Position(4, 3)))
+        assertEquals(null, game.board.getPieceAt(Position(4, 4)))
     }
 
     @Test
@@ -45,20 +45,20 @@ class SpecialMovementsTests {
         val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
 
         val pieces = listOf(
-            "a7" to whitePawn, "a1" to whiteKing, "h8" to blackKing
+            Position(7, 1) to whitePawn, Position(1, 1) to whiteKing, Position(8, 8) to blackKing
         )
 
         val provider = BufferedInputProvider()
-        provider.addMove(Player.WHITE, "a7", "a8")
+        provider.addMove(Player.WHITE, Position(7, 1), Position(8, 1))
         provider.addPromotion(Player.WHITE, QueenPieceRules(Player.WHITE))
 
-        val board = HashGameBoard.build(validator, pieces, "a1", "h8")
-        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val board = HashGameBoard.build(validator, pieces, Position(1, 1), Position(8, 8))
+        val game = TestableGame(TestableStandardGameRules(), board, OneToOneTurnManager(), provider)
 
         assertThrows<NoSuchElementException> { game.run() }
 
-        assertEquals(true, game.board.getPieceAt("a8")!!.rules is QueenPieceRules)
-        assertEquals(Player.WHITE, game.board.getPieceAt("a8")!!.player)
-        assertEquals(null, game.board.getPieceAt("a7"))
+        assertEquals(true, game.board.getPieceAt(Position(8, 1))!!.rules is QueenPieceRules)
+        assertEquals(Player.WHITE, game.board.getPieceAt(Position(8, 1))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(7, 1)))
     }
 }

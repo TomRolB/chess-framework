@@ -1,50 +1,53 @@
 package edu.austral.dissis.chess.engine
 
-interface GameBoard {
-    fun isOccupied(position: String): Boolean
+data class Position(val row: Int, val col: Int) {
 
-    fun getPieceAt(position: String): Piece?
+}
+
+interface GameBoard {
+    fun isOccupied(position: Position): Boolean
+
+    fun getPieceAt(position: Position): Piece?
 
     fun setPieceAt(
-        position: String,
+        position: Position,
         piece: Piece,
     ): GameBoard
 
-    fun delPieceAt(position: String): GameBoard
+    fun delPieceAt(position: Position): GameBoard
 
-    fun positionExists(position: String): Boolean
-    fun isPositionOnUpperLimit(position: String): Boolean
+    fun positionExists(position: Position): Boolean
+    fun isPositionOnUpperLimit(position: Position): Boolean
 
     fun containsPieceOfPlayer(
-        position: String,
+        position: Position,
         player: Player,
     ): Boolean
 
-    fun getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<String>
+    fun getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<Position>
 
-    fun unpackPosition(position: String): RowAndCol
 
     fun getRowAsWhite(
-        position: String,
+        position: Position,
         player: Player,
     ): Int
 
-    fun getKingPosition(player: Player): String
+    fun getKingPosition(player: Player): Position
 }
 
 class HashGameBoard : GameBoard {
     private val validator: PositionValidator
-    private val boardMap: Map<String, Piece>
+    private val boardMap: Map<Position, Piece>
 
-    private val whiteKingPosition: String
-    private val blackKingPosition: String
+    private val whiteKingPosition: Position
+    private val blackKingPosition: Position
 
     companion object {
         fun build(
             validator: PositionValidator,
-            pieces: List<Pair<String, Piece>>,
-            whiteKingPosition: String,
-            blackKingPosition: String,
+            pieces: List<Pair<Position, Piece>>,
+            whiteKingPosition: Position,
+            blackKingPosition: Position,
         ): HashGameBoard {
             return HashGameBoard(validator, pieces.toMap(), whiteKingPosition, blackKingPosition)
         }
@@ -52,9 +55,9 @@ class HashGameBoard : GameBoard {
 
     private constructor(
         validator: PositionValidator,
-        boardMap: Map<String, Piece>,
-        whiteKingPosition: String,
-        blackKingPosition: String,
+        boardMap: Map<Position, Piece>,
+        whiteKingPosition: Position,
+        blackKingPosition: Position,
     ) {
         this.validator = validator
         this.boardMap = boardMap
@@ -73,21 +76,21 @@ class HashGameBoard : GameBoard {
         this.blackKingPosition = blackKingPosition
     }
 
-//    constructor(validator: PositionValidator, boardMap: Map<String, Piece>) {
+//    constructor(validator: PositionValidator, boardMap: Map<Position, Piece>) {
 //        this.validator = validator
 //        this.boardMap = boardMap
 //    }
 
-    override fun isOccupied(position: String): Boolean {
+    override fun isOccupied(position: Position): Boolean {
         return boardMap[position] != null
     }
 
-    override fun getPieceAt(position: String): Piece? {
+    override fun getPieceAt(position: Position): Piece? {
         return boardMap[position]
     }
 
     override fun setPieceAt(
-        position: String,
+        position: Position,
         piece: Piece,
     ): HashGameBoard {
         val newMap = boardMap + (position to piece)
@@ -105,7 +108,7 @@ class HashGameBoard : GameBoard {
         return HashGameBoard(validator, newMap, newWhiteKingPosition, newBlackKingPosition)
     }
 
-    override fun delPieceAt(position: String): HashGameBoard {
+    override fun delPieceAt(position: Position): HashGameBoard {
         // TODO: This should actually be a impossible situation,
         //  since there should never be a delPieceAt() for the king.
         //  Should we keep this or erase it?
@@ -113,31 +116,31 @@ class HashGameBoard : GameBoard {
             "A king cannot be deleted"
         }
 
-        val newMap: HashMap<String, Piece> = HashMap(boardMap)
+        val newMap: HashMap<Position, Piece> = HashMap(boardMap)
         newMap.remove(position)
 
         return HashGameBoard(validator, newMap, whiteKingPosition, blackKingPosition)
     }
 
-    override fun positionExists(position: String): Boolean {
+    override fun positionExists(position: Position): Boolean {
         return validator.positionExists(position)
     }
 
-    override fun isPositionOnUpperLimit(position: String): Boolean {
+    override fun isPositionOnUpperLimit(position: Position): Boolean {
         return validator.isPositionOnLastRow(position)
     }
 
     override fun containsPieceOfPlayer(
-        position: String,
+        position: Position,
         player: Player,
     ): Boolean {
         val piece = getPieceAt(position) ?: return false
         return piece.player == player
     }
 
-    override fun getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<String> {
+    override fun getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<Position> {
         return boardMap.keys.filter {
-            val position: String = it
+            val position: Position = it
             val piece = boardMap[position]!!
 
             if (includeKing) piece.player == player
@@ -145,18 +148,14 @@ class HashGameBoard : GameBoard {
         }
     }
 
-    override fun unpackPosition(position: String): RowAndCol {
-        return validator.unpackPosition(position)
-    }
-
     override fun getRowAsWhite(
-        position: String,
+        position: Position,
         player: Player,
     ): Int {
         return validator.getRowAsWhite(position, player)
     }
 
-    override fun getKingPosition(player: Player): String {
+    override fun getKingPosition(player: Player): Position {
         return when (player) {
             Player.WHITE -> whiteKingPosition
             Player.BLACK -> blackKingPosition
@@ -167,42 +166,33 @@ class HashGameBoard : GameBoard {
 data class RowAndCol(val row: Int, val col: Int)
 
 interface PositionValidator {
-    fun positionExists(position: String): Boolean
-
-    fun unpackPosition(position: String): RowAndCol
+    fun positionExists(position: Position): Boolean
 
     fun getRowAsWhite(
-        position: String,
+        position: Position,
         player: Player,
     ): Int
 
-    fun isPositionOnLastRow(position: String): Boolean
+    fun isPositionOnLastRow(position: Position): Boolean
 }
 
 class RectangleBoardValidator(private val numberRows: Int, private val numberCols: Int) : PositionValidator {
-    override fun positionExists(position: String): Boolean {
-        val (row, col) = unpackPosition(position)
+    override fun positionExists(position: Position): Boolean {
+        val (row, col) = position
         return (0 < row) && (row <= numberRows)
                 && (0 < col) && (col <= numberCols)
     }
 
     override fun getRowAsWhite(
-        position: String,
+        position: Position,
         player: Player,
     ): Int {
-        if (player == Player.WHITE) return position[1].digitToInt()
+        if (player == Player.WHITE) return position.row
 
-        return numberRows - position[1].digitToInt() + 1
+        return numberRows - position.row + 1
     }
 
-    override fun isPositionOnLastRow(position: String): Boolean {
-        val (row, col) = unpackPosition(position)
-        return row == numberRows
-    }
-
-    override fun unpackPosition(position: String): RowAndCol {
-        val col: Int = position[0].charToCol()
-        val row: Int = position[1].digitToInt()
-        return RowAndCol(row, col)
+    override fun isPositionOnLastRow(position: Position): Boolean {
+        return position.row == numberRows
     }
 }

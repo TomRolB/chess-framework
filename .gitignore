@@ -6,3 +6,4 @@ build
 
 gradle.properties
 /problems and todo.txt
+/engine/src/main/kotlin/edu/austral/dissis/chess/engine/experimental/

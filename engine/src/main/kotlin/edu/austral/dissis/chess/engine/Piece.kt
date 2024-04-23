@@ -2,8 +2,8 @@ package edu.austral.dissis.chess.engine
 
 class Piece(val player: Player, val rules: PieceRules) {
     fun isPlayValid(
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Boolean {
         return rules.isPlayValid(from, to)
     }
@@ -12,26 +12,26 @@ class Piece(val player: Player, val rules: PieceRules) {
 //        return rules.getValidPlays()
 //    }
 
-//    fun getPlayIfValid(from: String, to: String): Play? {
+//    fun getPlayIfValid(from: Position, to: Position): Play? {
 //        return rules.getPlayIfValid(from, to)
 //    }
 }
 
 interface PieceRules {
     fun isPlayValid(
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Boolean
 
     fun getValidPlays(
         board: GameBoard,
-        position: String,
+        position: Position,
     ): Iterable<Play>
 
     fun getPlayIfValid(
         board: GameBoard,
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Play?
 }
 
@@ -67,20 +67,20 @@ class PawnPieceRules : PieceRules {
     }
 
     override fun isPlayValid(
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Boolean {
         TODO("Not yet implemented")
     }
 
     override fun getValidPlays(
         board: GameBoard,
-        position: String,
+        position: Position,
     ): Iterable<Play> {
-        val (row, col) = board.unpackPosition(position)
+        val (row, col) = position
 
         return increments
-            .map { getStringPosition(row + it.first, col + it.second) }
+            .map { Position(row + it.first, col + it.second) }
             .mapNotNull { getPlayIfValid(board, position, it) }
             .filter {
                 val futureBoard = it.execute()
@@ -90,8 +90,8 @@ class PawnPieceRules : PieceRules {
 
     override fun getPlayIfValid(
         board: GameBoard,
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Play? {
         // In this case, moveData is always created from
         // WHITE's point of view, to avoid splitting rules
@@ -127,7 +127,7 @@ class PawnPieceRules : PieceRules {
         board: GameBoard,
         moveData: MovementData,
     ): Boolean {
-        val front: String = getStringPosition(moveData.fromCol, moveData.fromRow + 1)
+        val front = Position(moveData.fromCol, moveData.fromRow + 1)
         return board.isOccupied(moveData.to) || board.isOccupied(front)
     }
 
@@ -162,8 +162,27 @@ class PawnPieceRules : PieceRules {
         }
     }
 
+//    private fun safeGetPieceOfColor(piece: Piece, player: Player): Piece? =
+//        if (piece.player == player) piece else null
+//
+//    private fun safeGetPieceOfTypePawn(piece: Piece): Piece? =
+//        if (piece.rules !is PawnPieceRules) piece else null
+
     private fun enPassantIfValid(board: GameBoard, moveData: MovementData): Play? {
-        val enemyPawnPosition = getStringPosition(moveData.fromRow, moveData.toCol)
+//      TOPO'S PATTERN
+
+//        val enemyPawnPosition = getStringPosition(moveData.fromRow, moveData.toCol)
+//        board.getPieceAt(enemyPawnPosition)
+//            ?.let { safeGetPieceOfColor(it, !player) }
+//            ?.let { safeGetPieceOfTypePawn(it) }
+
+//        val enemyPawn = pieceAt!!
+//        if (enemyPawn.rules !is PawnPieceRules) return null
+//
+//        val enemyRules = enemyPawn.rules as PawnPieceRules
+//        if (!enemyRules.hasJustMovedTwoPlaces) return null
+
+        val enemyPawnPosition = Position(moveData.fromRow, moveData.toCol)
         if (!board.containsPieceOfPlayer(enemyPawnPosition, !player)) return null
 
         val enemyPawn = board.getPieceAt(enemyPawnPosition)!!
@@ -171,6 +190,15 @@ class PawnPieceRules : PieceRules {
 
         val enemyRules = enemyPawn.rules as PawnPieceRules
         if (!enemyRules.hasJustMovedTwoPlaces) return null
+
+
+
+
+
+
+
+
+
 
 //        try {
 //            BooleanChain
@@ -210,15 +238,15 @@ class RookPieceRules : PieceRules {
     }
 
     override fun isPlayValid(
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Boolean {
         TODO("Not yet implemented")
     }
 
     override fun getValidPlays(
         board: GameBoard,
-        position: String,
+        position: Position,
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
@@ -231,8 +259,8 @@ class RookPieceRules : PieceRules {
 
     override fun getPlayIfValid(
         board: GameBoard,
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Play? {
         val moveData = MovementData(from, to, board)
 
@@ -261,15 +289,15 @@ class BishopPieceRules(val player: Player) : PieceRules {
     val moveType = MoveType.DIAGONAL
 
     override fun isPlayValid(
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Boolean {
         TODO("Not yet implemented")
     }
 
     override fun getValidPlays(
         board: GameBoard,
-        position: String,
+        position: Position,
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
@@ -284,8 +312,8 @@ class BishopPieceRules(val player: Player) : PieceRules {
 
     override fun getPlayIfValid(
         board: GameBoard,
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Play? {
         val moveData = MovementData(from, to, board)
 
@@ -309,15 +337,15 @@ class QueenPieceRules(val player: Player) : PieceRules {
     val moveType = MoveType.DIAGONAL
 
     override fun isPlayValid(
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Boolean {
         TODO("Not yet implemented")
     }
 
     override fun getValidPlays(
         board: GameBoard,
-        position: String,
+        position: Position,
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
@@ -330,8 +358,8 @@ class QueenPieceRules(val player: Player) : PieceRules {
 
     override fun getPlayIfValid(
         board: GameBoard,
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Play? {
         val moveData = MovementData(from, to, board)
 
@@ -355,15 +383,15 @@ class KnightPieceRules(val player: Player) : PieceRules {
     val moveType = MoveType.L_SHAPED
 
     override fun isPlayValid(
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Boolean {
         TODO("Not yet implemented")
     }
 
     override fun getValidPlays(
         board: GameBoard,
-        position: String,
+        position: Position,
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
@@ -376,8 +404,8 @@ class KnightPieceRules(val player: Player) : PieceRules {
 
     override fun getPlayIfValid(
         board: GameBoard,
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Play? {
         val moveData = MovementData(from, to, board)
 
@@ -395,15 +423,15 @@ class KingPieceRules(val player: Player) : PieceRules {
     val moveType = MoveType.ADJACENT_SQUARE
 
     override fun isPlayValid(
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Boolean {
         TODO("Not yet implemented")
     }
 
     override fun getValidPlays(
         board: GameBoard,
-        position: String,
+        position: Position,
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
@@ -421,8 +449,8 @@ class KingPieceRules(val player: Player) : PieceRules {
 
     override fun getPlayIfValid(
         board: GameBoard,
-        from: String,
-        to: String,
+        from: Position,
+        to: Position,
     ): Play? {
         val moveData = MovementData(from, to, board)
         return when {
@@ -439,7 +467,7 @@ class KingPieceRules(val player: Player) : PieceRules {
         }
     }
 
-//    private fun castlingIfValid(from: String, to: String, board: GameBoard): Play? {
+//    private fun castlingIfValid(from: Position, to: Position, board: GameBoard): Play? {
 //        return when {
 //            //1. Neither the king nor the rook has previously moved.
 //            //2. There are no pieces between the king and the rook.
@@ -469,7 +497,7 @@ class KingPieceRules(val player: Player) : PieceRules {
             // We don't include the enemy king, since the kings cannot
             // check each other
             return board.getAllPositionsOfPlayer(!player, false).any {
-                val enemyPosition: String = it
+                val enemyPosition: Position = it
                 val enemyPiece: Piece = board.getPieceAt(enemyPosition)!!
                 val kingCapture: Play? = enemyPiece.rules.getPlayIfValid(board, enemyPosition, kingPosition)
 
@@ -493,18 +521,18 @@ class KingPieceRules(val player: Player) : PieceRules {
             }
         }
 
-        private fun allMovementsEndInCheck(board: GameBoard, piece: Piece, position: String): Boolean {
+        private fun allMovementsEndInCheck(board: GameBoard, piece: Piece, position: Position): Boolean {
             return piece.rules.getValidPlays(board, position).all {
                 val futureBoard = it.execute()
                 isChecked(futureBoard, piece.player)
             }
         }
 
-        private fun getPossibleFuturePositions(board: GameBoard, player: Player, kingPosition: String): Iterable<String> {
-            val (row, col) = board.unpackPosition(kingPosition)
+        private fun getPossibleFuturePositions(board: GameBoard, player: Player, kingPosition: Position): Iterable<Position> {
+            val (row, col) = kingPosition
 
             return possibleIncrements
-                .map { getStringPosition(row + it.first, col + it.second) }
+                .map { Position(row + it.first, col + it.second) }
                 .filter { board.positionExists(it) && !board.containsPieceOfPlayer(it, player) }
         }
 

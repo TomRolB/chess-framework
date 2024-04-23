@@ -10,9 +10,9 @@ class PawnMovementTests {
     // We are not interested on the game,
     // so we define classes such as NoRules.
 
-    private lateinit var list: List<Pair<String, Piece>>
+    private lateinit var list: List<Pair<Position, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TurnManagingGame
+    private lateinit var game: TestableGame
     private lateinit var whitePawn: Piece
     private lateinit var blackPawn: Piece
     private lateinit var whiteKing: Piece
@@ -25,9 +25,9 @@ class PawnMovementTests {
         whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
         blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
 
-        list = listOf("d1" to whitePawn, "c2" to blackPawn, "h1" to whiteKing, "h8" to blackKing)
-        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "h1", "h8")
-        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
+        list = listOf(Position(1, 4) to whitePawn, Position(2, 3) to blackPawn, Position(1, 8) to whiteKing, Position(8, 8) to blackKing)
+        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(1, 8), Position(8, 8))
+        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
@@ -35,75 +35,75 @@ class PawnMovementTests {
         val whitePawn = Piece(Player.WHITE, PawnPieceRules(Player.WHITE))
         val blackPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
 
-        game.board = game.board.setPieceAt("d1", whitePawn)
-        game.board = game.board.setPieceAt("c2", blackPawn)
+        game.board = game.board.setPieceAt(Position(1, 4), whitePawn)
+        game.board = game.board.setPieceAt(Position(2, 3), blackPawn)
 
-        game.movePiece("c2", "d1")
+        game.movePiece(Position(2, 3), Position(1, 4))
 
-        assertEquals(null, game.board.getPieceAt("c2"))
-        assertEquals(true, game.board.getPieceAt("d1")!!.rules is PawnPieceRules)
-        assertEquals(Player.BLACK, game.board.getPieceAt("d1")!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(2, 3)))
+        assertEquals(true, game.board.getPieceAt(Position(1, 4))!!.rules is PawnPieceRules)
+        assertEquals(Player.BLACK, game.board.getPieceAt(Position(1, 4))!!.player)
     }
 
     @Test
     fun `white pawn can take diagonally`() {
-        game.movePiece("d1", "c2")
+        game.movePiece(Position(1, 4), Position(2, 3))
 
-        assertEquals(null, game.board.getPieceAt("d1"))
-        assertEquals(true, game.board.getPieceAt("c2")!!.rules is PawnPieceRules)
-        assertEquals(Player.WHITE, game.board.getPieceAt("c2")!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(1, 4)))
+        assertEquals(true, game.board.getPieceAt(Position(2, 3))!!.rules is PawnPieceRules)
+        assertEquals(Player.WHITE, game.board.getPieceAt(Position(2, 3))!!.player)
     }
 
     @Test
     fun `white pawn cannot move anywhere`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("d1", "a8") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(1, 4), Position(8, 1)) }
 
-        assertEquals(whitePawn, game.board.getPieceAt("d1"))
-        assertEquals(null, game.board.getPieceAt("a8"))
-        assertEquals(blackPawn, game.board.getPieceAt("c2"))
+        assertEquals(whitePawn, game.board.getPieceAt(Position(1, 4)))
+        assertEquals(null, game.board.getPieceAt(Position(8, 1)))
+        assertEquals(blackPawn, game.board.getPieceAt(Position(2, 3)))
     }
 
     @Test
     fun `white pawn can move ahead`() {
-        game.movePiece("d1", "d2")
+        game.movePiece(Position(1, 4), Position(2, 4))
 
-        assertEquals(true, game.board.getPieceAt("d2")!!.rules is PawnPieceRules)
-        assertEquals(Player.WHITE, game.board.getPieceAt("d2")!!.player)
-        assertEquals(null, game.board.getPieceAt("d1"))
-        assertEquals(blackPawn, game.board.getPieceAt("c2"))
+        assertEquals(true, game.board.getPieceAt(Position(2, 4))!!.rules is PawnPieceRules)
+        assertEquals(Player.WHITE, game.board.getPieceAt(Position(2, 4))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(1, 4)))
+        assertEquals(blackPawn, game.board.getPieceAt(Position(2, 3)))
     }
 
     @Test
     fun `white pawn cannot move to the other diagonal`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("d1", "e2") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(1, 4), Position(2, 5)) }
 
-        assertEquals(whitePawn, game.board.getPieceAt("d1"))
-        assertEquals(null, game.board.getPieceAt("e2"))
-        assertEquals(blackPawn, game.board.getPieceAt("c2"))
+        assertEquals(whitePawn, game.board.getPieceAt(Position(1, 4)))
+        assertEquals(null, game.board.getPieceAt(Position(2, 5)))
+        assertEquals(blackPawn, game.board.getPieceAt(Position(2, 3)))
     }
 
     @Test
     fun `white moves two spaces but then cannot again`() {
-        game.movePiece("d1", "d3")
+        game.movePiece(Position(1, 4), Position(3, 4))
 
-        assertEquals(whitePawn.rules.javaClass, game.board.getPieceAt("d3")!!.rules.javaClass)
-        assertEquals(whitePawn.player, game.board.getPieceAt("d3")!!.player)
-        assertEquals(null, game.board.getPieceAt("d1"))
-        assertEquals(blackPawn, game.board.getPieceAt("c2"))
+        assertEquals(whitePawn.rules.javaClass, game.board.getPieceAt(Position(3, 4))!!.rules.javaClass)
+        assertEquals(whitePawn.player, game.board.getPieceAt(Position(3, 4))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(1, 4)))
+        assertEquals(blackPawn, game.board.getPieceAt(Position(2, 3)))
 
-        assertThrows<IllegalArgumentException> { game.movePiece("d3", "d5") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(3, 4), Position(5, 4)) }
 
-        assertEquals(whitePawn.rules.javaClass, game.board.getPieceAt("d3")!!.rules.javaClass)
-        assertEquals(whitePawn.player, game.board.getPieceAt("d3")!!.player)
-        assertEquals(null, game.board.getPieceAt("d5"))
-        assertEquals(blackPawn, game.board.getPieceAt("c2"))
+        assertEquals(whitePawn.rules.javaClass, game.board.getPieceAt(Position(3, 4))!!.rules.javaClass)
+        assertEquals(whitePawn.player, game.board.getPieceAt(Position(3, 4))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(5, 4)))
+        assertEquals(blackPawn, game.board.getPieceAt(Position(2, 3)))
     }
 }
 
 class RookMovementTest {
-    private lateinit var list: List<Pair<String, Piece>>
+    private lateinit var list: List<Pair<Position, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TurnManagingGame
+    private lateinit var game: TestableGame
     private lateinit var closestPawn: Piece
     private lateinit var blockedPawn: Piece
     private lateinit var whiteRook: Piece
@@ -118,78 +118,78 @@ class RookMovementTest {
         whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
         blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
 
-        list = listOf("b4" to closestPawn, "b6" to blockedPawn, "b2" to whiteRook, "h1" to whiteKing, "h8" to blackKing)
-        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "h1", "h8")
-        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
+        list = listOf(Position(4, 2) to closestPawn, Position(6, 2) to blockedPawn, Position(2, 2) to whiteRook, Position(1, 8) to whiteKing, Position(8, 8) to blackKing)
+        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(1, 8), Position(8, 8))
+        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
     fun `rook takes closest pawn`() {
-        game.movePiece("b2", "b4")
+        game.movePiece(Position(2, 2), Position(4, 2))
 
-        assertEquals(whiteRook.rules.javaClass, game.board.getPieceAt("b4")!!.rules.javaClass)
-        assertEquals(whiteRook.player, game.board.getPieceAt("b4")!!.player)
-        assertEquals(null, game.board.getPieceAt("b2"))
-        assertEquals(blockedPawn, game.board.getPieceAt("b6"))
+        assertEquals(whiteRook.rules.javaClass, game.board.getPieceAt(Position(4, 2))!!.rules.javaClass)
+        assertEquals(whiteRook.player, game.board.getPieceAt(Position(4, 2))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(2, 2)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(6, 2)))
     }
 
     @Test
     fun `rook cannot take blocked pawn`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("b2", "b6") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(2, 2), Position(6, 2)) }
 
-        assertEquals(whiteRook, game.board.getPieceAt("b2"))
-        assertEquals(closestPawn, game.board.getPieceAt("b4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("b6"))
+        assertEquals(whiteRook, game.board.getPieceAt(Position(2, 2)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 2)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(6, 2)))
     }
 
     @Test
     fun `rook can move back`() {
-        game.movePiece("b2", "b1")
+        game.movePiece(Position(2, 2), Position(1, 2))
 
-        assertEquals(whiteRook.rules.javaClass, game.board.getPieceAt("b1")!!.rules.javaClass)
-        assertEquals(whiteRook.player, game.board.getPieceAt("b1")!!.player)
-        assertEquals(null, game.board.getPieceAt("b2"))
-        assertEquals(closestPawn, game.board.getPieceAt("b4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("b6"))
+        assertEquals(whiteRook.rules.javaClass, game.board.getPieceAt(Position(1, 2))!!.rules.javaClass)
+        assertEquals(whiteRook.player, game.board.getPieceAt(Position(1, 2))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(2, 2)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 2)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(6, 2)))
     }
 
     @Test
     fun `rook can move right`() {
-        game.movePiece("b2", "a2")
+        game.movePiece(Position(2, 2), Position(2, 1))
 
-        assertEquals(whiteRook.rules.javaClass, game.board.getPieceAt("a2")!!.rules.javaClass)
-        assertEquals(whiteRook.player, game.board.getPieceAt("a2")!!.player)
-        assertEquals(null, game.board.getPieceAt("b2"))
-        assertEquals(closestPawn, game.board.getPieceAt("b4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("b6"))
+        assertEquals(whiteRook.rules.javaClass, game.board.getPieceAt(Position(2, 1))!!.rules.javaClass)
+        assertEquals(whiteRook.player, game.board.getPieceAt(Position(2, 1))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(2, 2)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 2)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(6, 2)))
     }
 
     @Test
     fun `rook can move left`() {
-        game.movePiece("b2", "h2")
+        game.movePiece(Position(2, 2), Position(2, 8))
 
-        assertEquals(whiteRook.rules.javaClass, game.board.getPieceAt("h2")!!.rules.javaClass)
-        assertEquals(whiteRook.player, game.board.getPieceAt("h2")!!.player)
-        assertEquals(null, game.board.getPieceAt("b2"))
-        assertEquals(closestPawn, game.board.getPieceAt("b4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("b6"))
+        assertEquals(whiteRook.rules.javaClass, game.board.getPieceAt(Position(2, 8))!!.rules.javaClass)
+        assertEquals(whiteRook.player, game.board.getPieceAt(Position(2, 8))!!.player)
+        assertEquals(null, game.board.getPieceAt(Position(2, 2)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 2)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(6, 2)))
     }
 
     @Test
     fun `rook cannot move diagonally`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("b2", "d4") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(2, 2), Position(4, 4)) }
 
-        assertEquals(whiteRook, game.board.getPieceAt("b2"))
-        assertEquals(null, game.board.getPieceAt("d4"))
-        assertEquals(closestPawn, game.board.getPieceAt("b4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("b6"))
+        assertEquals(whiteRook, game.board.getPieceAt(Position(2, 2)))
+        assertEquals(null, game.board.getPieceAt(Position(4, 4)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 2)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(6, 2)))
     }
 }
 
 class BishopMovementTest {
-    private lateinit var list: List<Pair<String, Piece>>
+    private lateinit var list: List<Pair<Position, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TurnManagingGame
+    private lateinit var game: TestableGame
     private lateinit var closestPawn: Piece
     private lateinit var blockedPawn: Piece
     private lateinit var whiteBishop: Piece
@@ -204,74 +204,74 @@ class BishopMovementTest {
         whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
         blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
 
-        list = listOf("d4" to closestPawn, "c3" to blockedPawn, "g7" to whiteBishop, "h1" to whiteKing, "a8" to blackKing)
-        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "h1", "a8")
-        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
+        list = listOf(Position(4, 4) to closestPawn, Position(3, 3) to blockedPawn, Position(7, 7) to whiteBishop, Position(1, 8) to whiteKing, Position(8, 1) to blackKing)
+        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(1, 8), Position(8, 1))
+        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
     fun `bishop takes closest pawn`() {
-        game.movePiece("g7", "d4")
+        game.movePiece(Position(7, 7), Position(4, 4))
 
-        assertEquals(whiteBishop, game.board.getPieceAt("d4"))
-        assertEquals(null, game.board.getPieceAt("g7"))
-        assertEquals(blockedPawn, game.board.getPieceAt("c3"))
+        assertEquals(whiteBishop, game.board.getPieceAt(Position(4, 4)))
+        assertEquals(null, game.board.getPieceAt(Position(7, 7)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(3, 3)))
     }
 
     @Test
     fun `bishop cannot take blocked pawn`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("g7", "c3") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(7, 7), Position(3, 3)) }
 
-        assertEquals(whiteBishop, game.board.getPieceAt("g7"))
-        assertEquals(closestPawn, game.board.getPieceAt("d4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("c3"))
+        assertEquals(whiteBishop, game.board.getPieceAt(Position(7, 7)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 4)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(3, 3)))
     }
 
     @Test
     fun `bishop can move to corner`() {
-        game.movePiece("g7", "h8")
+        game.movePiece(Position(7, 7), Position(8, 8))
 
-        assertEquals(whiteBishop, game.board.getPieceAt("h8"))
-        assertEquals(null, game.board.getPieceAt("g7"))
-        assertEquals(closestPawn, game.board.getPieceAt("d4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("c3"))
+        assertEquals(whiteBishop, game.board.getPieceAt(Position(8, 8)))
+        assertEquals(null, game.board.getPieceAt(Position(7, 7)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 4)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(3, 3)))
     }
 
     @Test
     fun `bishop can move to the front and to the right`() {
-        game.movePiece("g7", "f8")
+        game.movePiece(Position(7, 7), Position(8, 6))
 
-        assertEquals(whiteBishop, game.board.getPieceAt("f8"))
-        assertEquals(null, game.board.getPieceAt("g7"))
-        assertEquals(closestPawn, game.board.getPieceAt("d4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("c3"))
+        assertEquals(whiteBishop, game.board.getPieceAt(Position(8, 6)))
+        assertEquals(null, game.board.getPieceAt(Position(7, 7)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 4)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(3, 3)))
     }
 
     @Test
     fun `bishop can move close to the first pawn`() {
-        game.movePiece("g7", "e5")
+        game.movePiece(Position(7, 7), Position(5, 5))
 
-        assertEquals(whiteBishop, game.board.getPieceAt("e5"))
-        assertEquals(null, game.board.getPieceAt("g7"))
-        assertEquals(closestPawn, game.board.getPieceAt("d4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("c3"))
+        assertEquals(whiteBishop, game.board.getPieceAt(Position(5, 5)))
+        assertEquals(null, game.board.getPieceAt(Position(7, 7)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 4)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(3, 3)))
     }
 
     @Test
     fun `bishop cannot move vertically`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("g7", "g2") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(7, 7), Position(2, 7)) }
 
-        assertEquals(whiteBishop, game.board.getPieceAt("g7"))
-        assertEquals(null, game.board.getPieceAt("g2"))
-        assertEquals(closestPawn, game.board.getPieceAt("d4"))
-        assertEquals(blockedPawn, game.board.getPieceAt("c3"))
+        assertEquals(whiteBishop, game.board.getPieceAt(Position(7, 7)))
+        assertEquals(null, game.board.getPieceAt(Position(2, 7)))
+        assertEquals(closestPawn, game.board.getPieceAt(Position(4, 4)))
+        assertEquals(blockedPawn, game.board.getPieceAt(Position(3, 3)))
     }
 }
 
 class QueenMovementTest {
-    private lateinit var list: List<Pair<String, Piece>>
+    private lateinit var list: List<Pair<Position, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TurnManagingGame
+    private lateinit var game: TestableGame
     private lateinit var horizontalPawn: Piece
     private lateinit var unreachablePawn: Piece
     private lateinit var diagonalPawn: Piece
@@ -290,96 +290,96 @@ class QueenMovementTest {
 
         list =
             listOf(
-                "b6" to horizontalPawn,
-                "b5" to unreachablePawn,
-                "b4" to diagonalPawn,
-                "d6" to whiteQueen,
-                "h1" to whiteKing,
-                "h8" to blackKing,
+                Position(6, 2) to horizontalPawn,
+                Position(5, 2) to unreachablePawn,
+                Position(4, 2) to diagonalPawn,
+                Position(6, 4) to whiteQueen,
+                Position(1, 8) to whiteKing,
+                Position(8, 8) to blackKing,
             )
-        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "h1", "h8")
-        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
+        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(1, 8), Position(8, 8))
+        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
     fun `queen takes pawn horizontally`() {
-        game.movePiece("d6", "b6")
+        game.movePiece(Position(6, 4), Position(6, 2))
 
-        assertEquals(whiteQueen, game.board.getPieceAt("b6"))
-        assertEquals(null, game.board.getPieceAt("d6"))
-        assertEquals(unreachablePawn, game.board.getPieceAt("b5"))
-        assertEquals(diagonalPawn, game.board.getPieceAt("b4"))
+        assertEquals(whiteQueen, game.board.getPieceAt(Position(6, 2)))
+        assertEquals(null, game.board.getPieceAt(Position(6, 4)))
+        assertEquals(unreachablePawn, game.board.getPieceAt(Position(5, 2)))
+        assertEquals(diagonalPawn, game.board.getPieceAt(Position(4, 2)))
     }
 
     @Test
     fun `queen cannot take unreachable pawn`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("d6", "b5") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(6, 4), Position(5, 2)) }
 
-        assertEquals(whiteQueen, game.board.getPieceAt("d6"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("b6"))
-        assertEquals(unreachablePawn, game.board.getPieceAt("b5"))
-        assertEquals(diagonalPawn, game.board.getPieceAt("b4"))
+        assertEquals(whiteQueen, game.board.getPieceAt(Position(6, 4)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(6, 2)))
+        assertEquals(unreachablePawn, game.board.getPieceAt(Position(5, 2)))
+        assertEquals(diagonalPawn, game.board.getPieceAt(Position(4, 2)))
     }
 
     @Test
     fun `queen takes pawn diagonally`() {
-        game.movePiece("d6", "b4")
+        game.movePiece(Position(6, 4), Position(4, 2))
 
-        assertEquals(whiteQueen, game.board.getPieceAt("b4"))
-        assertEquals(null, game.board.getPieceAt("d6"))
-        assertEquals(unreachablePawn, game.board.getPieceAt("b5"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("b6"))
+        assertEquals(whiteQueen, game.board.getPieceAt(Position(4, 2)))
+        assertEquals(null, game.board.getPieceAt(Position(6, 4)))
+        assertEquals(unreachablePawn, game.board.getPieceAt(Position(5, 2)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(6, 2)))
     }
 
     @Test
     fun `queen can move back`() {
-        game.movePiece("d6", "d1")
+        game.movePiece(Position(6, 4), Position(1, 4))
 
-        assertEquals(whiteQueen, game.board.getPieceAt("d1"))
-        assertEquals(null, game.board.getPieceAt("d6"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("b6"))
-        assertEquals(unreachablePawn, game.board.getPieceAt("b5"))
-        assertEquals(diagonalPawn, game.board.getPieceAt("b4"))
+        assertEquals(whiteQueen, game.board.getPieceAt(Position(1, 4)))
+        assertEquals(null, game.board.getPieceAt(Position(6, 4)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(6, 2)))
+        assertEquals(unreachablePawn, game.board.getPieceAt(Position(5, 2)))
+        assertEquals(diagonalPawn, game.board.getPieceAt(Position(4, 2)))
     }
 
     @Test
     fun `queen can move to the front and to the left`() {
-        game.movePiece("d6", "e7")
+        game.movePiece(Position(6, 4), Position(7, 5))
 
-        assertEquals(whiteQueen, game.board.getPieceAt("e7"))
-        assertEquals(null, game.board.getPieceAt("d6"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("b6"))
-        assertEquals(unreachablePawn, game.board.getPieceAt("b5"))
-        assertEquals(diagonalPawn, game.board.getPieceAt("b4"))
+        assertEquals(whiteQueen, game.board.getPieceAt(Position(7, 5)))
+        assertEquals(null, game.board.getPieceAt(Position(6, 4)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(6, 2)))
+        assertEquals(unreachablePawn, game.board.getPieceAt(Position(5, 2)))
+        assertEquals(diagonalPawn, game.board.getPieceAt(Position(4, 2)))
     }
 
     @Test
     fun `queen cannot jump pawn diagonally`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("d6", "a3") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(6, 4), Position(3, 1)) }
 
-        assertEquals(whiteQueen, game.board.getPieceAt("d6"))
-        assertEquals(null, game.board.getPieceAt("a3"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("b6"))
-        assertEquals(unreachablePawn, game.board.getPieceAt("b5"))
-        assertEquals(diagonalPawn, game.board.getPieceAt("b4"))
+        assertEquals(whiteQueen, game.board.getPieceAt(Position(6, 4)))
+        assertEquals(null, game.board.getPieceAt(Position(3, 1)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(6, 2)))
+        assertEquals(unreachablePawn, game.board.getPieceAt(Position(5, 2)))
+        assertEquals(diagonalPawn, game.board.getPieceAt(Position(4, 2)))
     }
 
     @Test
     fun `queen cannot move like knight`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("d6", "e4") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(6, 4), Position(4, 5)) }
 
-        assertEquals(whiteQueen, game.board.getPieceAt("d6"))
-        assertEquals(null, game.board.getPieceAt("e4"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("b6"))
-        assertEquals(unreachablePawn, game.board.getPieceAt("b5"))
-        assertEquals(diagonalPawn, game.board.getPieceAt("b4"))
+        assertEquals(whiteQueen, game.board.getPieceAt(Position(6, 4)))
+        assertEquals(null, game.board.getPieceAt(Position(4, 5)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(6, 2)))
+        assertEquals(unreachablePawn, game.board.getPieceAt(Position(5, 2)))
+        assertEquals(diagonalPawn, game.board.getPieceAt(Position(4, 2)))
     }
 }
 
 class KnightMovementTest {
-    private lateinit var list: List<Pair<String, Piece>>
+    private lateinit var list: List<Pair<Position, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TurnManagingGame
+    private lateinit var game: TestableGame
     private lateinit var horizontalPawn: Piece
     private lateinit var verticalPawn: Piece
     private lateinit var takeablePawn: Piece
@@ -398,74 +398,74 @@ class KnightMovementTest {
 
         list =
             listOf(
-                "f3" to horizontalPawn,
-                "f5" to takeablePawn,
-                "g4" to verticalPawn,
-                "g3" to whiteKnight,
-                "a1" to whiteKing,
-                "h8" to blackKing,
+                Position(3, 6) to horizontalPawn,
+                Position(5, 6) to takeablePawn,
+                Position(4, 7) to verticalPawn,
+                Position(3, 7) to whiteKnight,
+                Position(1, 1) to whiteKing,
+                Position(8, 8) to blackKing,
             )
-        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "a1", "h8")
-        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
+        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(1, 1), Position(8, 8))
+        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
     fun `knight takes pawn moving in an L shape`() {
-        game.movePiece("g3", "f5")
+        game.movePiece(Position(3, 7), Position(5, 6))
 
-        assertEquals(whiteKnight, game.board.getPieceAt("f5"))
-        assertEquals(null, game.board.getPieceAt("g3"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("f3"))
-        assertEquals(verticalPawn, game.board.getPieceAt("g4"))
+        assertEquals(whiteKnight, game.board.getPieceAt(Position(5, 6)))
+        assertEquals(null, game.board.getPieceAt(Position(3, 7)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(3, 6)))
+        assertEquals(verticalPawn, game.board.getPieceAt(Position(4, 7)))
     }
 
     @Test
     fun `knight cannot take pawn horizontally`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("g3", "f3") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(3, 7), Position(3, 6)) }
 
-        assertEquals(whiteKnight, game.board.getPieceAt("g3"))
-        assertEquals(verticalPawn, game.board.getPieceAt("g4"))
-        assertEquals(takeablePawn, game.board.getPieceAt("f5"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("f3"))
+        assertEquals(whiteKnight, game.board.getPieceAt(Position(3, 7)))
+        assertEquals(verticalPawn, game.board.getPieceAt(Position(4, 7)))
+        assertEquals(takeablePawn, game.board.getPieceAt(Position(5, 6)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(3, 6)))
     }
 
     @Test
     fun `knight cannot take pawn vertically`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("g3", "g4") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(3, 7), Position(4, 7)) }
 
-        assertEquals(whiteKnight, game.board.getPieceAt("g3"))
-        assertEquals(verticalPawn, game.board.getPieceAt("g4"))
-        assertEquals(takeablePawn, game.board.getPieceAt("f5"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("f3"))
+        assertEquals(whiteKnight, game.board.getPieceAt(Position(3, 7)))
+        assertEquals(verticalPawn, game.board.getPieceAt(Position(4, 7)))
+        assertEquals(takeablePawn, game.board.getPieceAt(Position(5, 6)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(3, 6)))
     }
 
     @Test
     fun `knight can jump over pawn in L shape`() {
-        game.movePiece("g3", "e4")
+        game.movePiece(Position(3, 7), Position(4, 5))
 
-        assertEquals(whiteKnight, game.board.getPieceAt("e4"))
-        assertEquals(null, game.board.getPieceAt("g3"))
-        assertEquals(verticalPawn, game.board.getPieceAt("g4"))
-        assertEquals(takeablePawn, game.board.getPieceAt("f5"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("f3"))
+        assertEquals(whiteKnight, game.board.getPieceAt(Position(4, 5)))
+        assertEquals(null, game.board.getPieceAt(Position(3, 7)))
+        assertEquals(verticalPawn, game.board.getPieceAt(Position(4, 7)))
+        assertEquals(takeablePawn, game.board.getPieceAt(Position(5, 6)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(3, 6)))
     }
 
     @Test
     fun `knight cannot jump over pawn horizontally`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("g3", "e3") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(3, 7), Position(3, 5)) }
 
-        assertEquals(whiteKnight, game.board.getPieceAt("g3"))
-        assertEquals(null, game.board.getPieceAt("e3"))
-        assertEquals(verticalPawn, game.board.getPieceAt("g4"))
-        assertEquals(takeablePawn, game.board.getPieceAt("f5"))
-        assertEquals(horizontalPawn, game.board.getPieceAt("f3"))
+        assertEquals(whiteKnight, game.board.getPieceAt(Position(3, 7)))
+        assertEquals(null, game.board.getPieceAt(Position(3, 5)))
+        assertEquals(verticalPawn, game.board.getPieceAt(Position(4, 7)))
+        assertEquals(takeablePawn, game.board.getPieceAt(Position(5, 6)))
+        assertEquals(horizontalPawn, game.board.getPieceAt(Position(3, 6)))
     }
 }
 
 class KingMovementTest {
-    private lateinit var list: List<Pair<String, Piece>>
+    private lateinit var list: List<Pair<Position, Piece>>
     private lateinit var board: HashGameBoard
-    private lateinit var game: TurnManagingGame
+    private lateinit var game: TestableGame
     private lateinit var blackRook: Piece
     private lateinit var whiteKing: Piece
     private lateinit var blackKing: Piece
@@ -476,58 +476,58 @@ class KingMovementTest {
         whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
         blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
 
-        list = listOf("b8" to blackRook, "c3" to whiteKing, "f6" to blackKing)
-        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, "c3", "f6")
-        game = TurnManagingGame(NoRules(), board, NoManager(), NoProvider())
+        list = listOf(Position(8, 2) to blackRook, Position(3, 3) to whiteKing, Position(6, 6) to blackKing)
+        board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(3, 3), Position(6, 6))
+        game = TestableGame(NoRules(), board, NoManager(), NoProvider())
     }
 
     @Test
     fun `black king cannot move two squares`() {
-        assertThrows<IllegalArgumentException> { game.movePiece("f6", "f4") }
+        assertThrows<IllegalArgumentException> { game.movePiece(Position(6, 6), Position(4, 6)) }
 
-        assertEquals(blackKing, game.board.getPieceAt("f6"))
-        assertEquals(null, game.board.getPieceAt("f4"))
-        assertEquals(whiteKing, game.board.getPieceAt("c3"))
-        assertEquals(blackRook, game.board.getPieceAt("b8"))
+        assertEquals(blackKing, game.board.getPieceAt(Position(6, 6)))
+        assertEquals(null, game.board.getPieceAt(Position(4, 6)))
+        assertEquals(whiteKing, game.board.getPieceAt(Position(3, 3)))
+        assertEquals(blackRook, game.board.getPieceAt(Position(8, 2)))
     }
 
     @Test
     fun `black king can move left`() {
-        game.movePiece("f6", "e6")
+        game.movePiece(Position(6, 6), Position(6, 5))
 
-        assertEquals(blackKing, game.board.getPieceAt("e6"))
-        assertEquals(null, game.board.getPieceAt("f6"))
-        assertEquals(whiteKing, game.board.getPieceAt("c3"))
-        assertEquals(blackRook, game.board.getPieceAt("b8"))
+        assertEquals(blackKing, game.board.getPieceAt(Position(6, 5)))
+        assertEquals(null, game.board.getPieceAt(Position(6, 6)))
+        assertEquals(whiteKing, game.board.getPieceAt(Position(3, 3)))
+        assertEquals(blackRook, game.board.getPieceAt(Position(8, 2)))
     }
 
     @Test
     fun `white king can move up and to the right`() {
-        game.movePiece("c3", "d2")
+        game.movePiece(Position(3, 3), Position(2, 4))
 
-        assertEquals(whiteKing, game.board.getPieceAt("d2"))
-        assertEquals(null, game.board.getPieceAt("c3"))
-        assertEquals(blackKing, game.board.getPieceAt("f6"))
-        assertEquals(blackRook, game.board.getPieceAt("b8"))
+        assertEquals(whiteKing, game.board.getPieceAt(Position(2, 4)))
+        assertEquals(null, game.board.getPieceAt(Position(3, 3)))
+        assertEquals(blackKing, game.board.getPieceAt(Position(6, 6)))
+        assertEquals(blackRook, game.board.getPieceAt(Position(8, 2)))
     }
 
     @Test
     fun `black king is not checked by ally rook`() {
-        game.movePiece("b8", "b6")
+        game.movePiece(Position(8, 2), Position(6, 2))
 
-        assertEquals(blackRook.rules.javaClass, game.board.getPieceAt("b6")!!.rules.javaClass)
-        assertEquals(blackRook.player, game.board.getPieceAt("b6")!!.player)
-        assertEquals(blackKing, game.board.getPieceAt("f6"))
+        assertEquals(blackRook.rules.javaClass, game.board.getPieceAt(Position(6, 2))!!.rules.javaClass)
+        assertEquals(blackRook.player, game.board.getPieceAt(Position(6, 2))!!.player)
+        assertEquals(blackKing, game.board.getPieceAt(Position(6, 6)))
         assertEquals(false, KingPieceRules.isChecked(game.board, Player.BLACK))
     }
 
     @Test
     fun `white king is checked by enemy rook`() {
-        game.movePiece("b8", "b3")
+        game.movePiece(Position(8, 2), Position(3, 2))
 
-        assertEquals(blackRook.rules.javaClass, game.board.getPieceAt("b3")!!.rules.javaClass)
-        assertEquals(blackRook.player, game.board.getPieceAt("b3")!!.player)
-        assertEquals(whiteKing, game.board.getPieceAt("c3"))
+        assertEquals(blackRook.rules.javaClass, game.board.getPieceAt(Position(3, 2))!!.rules.javaClass)
+        assertEquals(blackRook.player, game.board.getPieceAt(Position(3, 2))!!.player)
+        assertEquals(whiteKing, game.board.getPieceAt(Position(3, 3)))
         assertEquals(true, KingPieceRules.isChecked(game.board, Player.WHITE))
     }
 
@@ -537,21 +537,21 @@ class KingMovementTest {
     //  are using game.movePiece()
 //    @Test
 //    fun `white king cannot move if it would become checked`() {
-//        assertThrows<IllegalArgumentException> { game.movePiece("c3", "b3") }
+//        assertThrows<IllegalArgumentException> { game.movePiece(Position(3, 3), Position(3, 2)) }
 //
-//        assertEquals(whiteKing, game.board.getPieceAt("c3"))
-//        assertEquals(null, game.board.getPieceAt("b3"))
+//        assertEquals(whiteKing, game.board.getPieceAt(Position(3, 3)))
+//        assertEquals(null, game.board.getPieceAt(Position(3, 2)))
 //
 //        assertEquals(true, KingPieceRules.isChecked(game.board, Player.WHITE))
 //    }
 }
 
 class NoRules : GameRules {
-    override fun isPieceMovable(position: String): Boolean {
+    override fun isPieceMovable(position: Position): Boolean {
         return true
     }
 
-    override fun isMoveValid(board: GameBoard, player: Player, from: String, to: String): Boolean {
+    override fun isMoveValid(board: GameBoard, player: Player, from: Position, to: Position): Boolean {
         return true
     }
 
@@ -567,12 +567,7 @@ class NoRules : GameRules {
         return false
     }
 
-    override fun runPostPlayProcedures(
-        board: GameBoard,
-        piece: Piece,
-        finalPosition: String,
-        inputProvider: PlayerInputProvider,
-    ): GameBoard {
+    override fun runPostPlayProcedures(board: GameBoard, piece: Piece, finalPosition: Position): GameBoard {
         return board
     }
 }
@@ -589,8 +584,8 @@ class NoManager: TurnManager {
 }
 
 class NoProvider : PlayerInputProvider {
-    override fun requestPlayerMove(player: Player): Pair<String, String> {
-        return Pair("", "")
+    override fun requestPlayerMove(player: Player): Pair<Position, Position> {
+        return Pair(Position(0, 0), Position(0, 1))
     }
 
     override fun requestPromotionPiece(player: Player): PieceRules {

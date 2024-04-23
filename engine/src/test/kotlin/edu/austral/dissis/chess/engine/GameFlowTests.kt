@@ -19,15 +19,15 @@ class GameFlowTests {
         val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
 
         val provider = BufferedInputProvider()
-        provider.addMove(Player.WHITE, "c1", "d1")
-        provider.addMove(Player.BLACK,"h7", "b1")
+        provider.addMove(Player.WHITE, Position(1, 3), Position(1, 4))
+        provider.addMove(Player.BLACK,Position(7, 8), Position(1, 2))
 
         val pieces = listOf(
-            "a2" to blackRook, "h7" to blackQueen,"c1" to whiteKing, "d8" to blackKing
+            Position(2, 1) to blackRook, Position(7, 8) to blackQueen,Position(1, 3) to whiteKing, Position(8, 4) to blackKing
         )
 
-        val board = HashGameBoard.build(validator, pieces, "c1", "d8")
-        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val board = HashGameBoard.build(validator, pieces, Position(1, 3), Position(8, 4))
+        val game = TestableGame(TestableStandardGameRules(), board, OneToOneTurnManager(), provider)
 
         game.run()
 
@@ -42,15 +42,15 @@ class GameFlowTests {
         val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
 
         val provider = BufferedInputProvider()
-        provider.addMove(Player.WHITE,"c1", "d1")
-        provider.addMove(Player.BLACK,"c6", "c3")
+        provider.addMove(Player.WHITE,Position(1, 3), Position(1, 4))
+        provider.addMove(Player.BLACK,Position(6, 3), Position(3, 3))
 
         val pieces = listOf(
-            "a2" to blackRook, "c6" to blackQueen,"c1" to whiteKing, "d8" to blackKing
+            Position(2, 1) to blackRook, Position(6, 3) to blackQueen,Position(1, 3) to whiteKing, Position(8, 4) to blackKing
         )
 
-        val board = HashGameBoard.build(validator, pieces, "c1", "d8")
-        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val board = HashGameBoard.build(validator, pieces, Position(1, 3), Position(8, 4))
+        val game = TestableGame(TestableStandardGameRules(), board, OneToOneTurnManager(), provider)
 
         game.run()
 
@@ -67,17 +67,17 @@ class GameFlowTests {
         val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
 
         val provider = BufferedInputProvider()
-        provider.addMove(Player.WHITE, "a7", "a8")
-        provider.addMove(Player.BLACK, "h4", "d8")
-        provider.addMove(Player.WHITE, "a8", "d8")
+        provider.addMove(Player.WHITE, Position(7, 1), Position(8, 1))
+        provider.addMove(Player.BLACK, Position(4, 8), Position(8, 4))
+        provider.addMove(Player.WHITE, Position(8, 1), Position(8, 4))
 
         val pieces = listOf(
-            "h4" to blackBishop, "h7" to blackPawn1, "g7" to blackPawn2,
-            "a7" to whiteRook, "b2" to whiteKing, "h8" to blackKing
+            Position(4, 8) to blackBishop, Position(7, 8) to blackPawn1, Position(7, 7) to blackPawn2,
+            Position(7, 1) to whiteRook, Position(2, 2) to whiteKing, Position(8, 8) to blackKing
         )
 
-        val board = HashGameBoard.build(validator, pieces, "b2", "h8")
-        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val board = HashGameBoard.build(validator, pieces, Position(2, 2), Position(8, 8))
+        val game = TestableGame(TestableStandardGameRules(), board, OneToOneTurnManager(), provider)
 
         game.run()
 
@@ -93,21 +93,21 @@ class GameFlowTests {
         val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
 
         val provider = BufferedInputProvider()
-        provider.addMove(Player.WHITE,"c2", "g6")
+        provider.addMove(Player.WHITE,Position(2, 3), Position(6, 7))
 
         val pieces = listOf(
-            "g2" to blackRook, "c2" to whiteBishop, "b2" to whiteKing, "g7" to blackKing
+            Position(2, 7) to blackRook, Position(2, 3) to whiteBishop, Position(2, 2) to whiteKing, Position(7, 7) to blackKing
         )
 
-        val board = HashGameBoard.build(validator, pieces, "b2", "g7")
-        val game = TurnManagingGame(StandardGameRules(), board, OneToOneTurnManager(), provider)
+        val board = HashGameBoard.build(validator, pieces, Position(2, 2), Position(7, 7))
+        val game = TestableGame(TestableStandardGameRules(), board, OneToOneTurnManager(), provider)
 
         assertThrows<NoSuchElementException> { game.run() }
 
-        assertEquals(blackRook, game.board.getPieceAt("g2"))
-        assertEquals(whiteBishop, game.board.getPieceAt("c2"))
-        assertEquals(whiteKing, game.board.getPieceAt("b2"))
-        assertEquals(blackKing, game.board.getPieceAt("g7"))
+        assertEquals(blackRook, game.board.getPieceAt(Position(2, 7)))
+        assertEquals(whiteBishop, game.board.getPieceAt(Position(2, 3)))
+        assertEquals(whiteKing, game.board.getPieceAt(Position(2, 2)))
+        assertEquals(blackKing, game.board.getPieceAt(Position(7, 7)))
         assertEquals(true, provider.isEmpty()) // All moves should have been executed
     }
 
@@ -119,11 +119,11 @@ class GameFlowTests {
 }
 
 class BufferedInputProvider: PlayerInputProvider {
-    val moves: Queue<Pair<String, String>> = LinkedList()
+    val moves: Queue<Pair<Position, Position>> = LinkedList()
     val players: Queue<Player> = LinkedList()
     val promotions: Queue<PieceRules> = LinkedList()
 
-    override fun requestPlayerMove(player: Player): Pair<String, String> {
+    override fun requestPlayerMove(player: Player): Pair<Position, Position> {
         if (players.remove() != player) {
             throw IllegalStateException("The next move wasn't meant for the $player player")
         }
@@ -139,7 +139,7 @@ class BufferedInputProvider: PlayerInputProvider {
         return promotions.remove()
     }
 
-    fun addMove(player: Player, from: String, to: String) {
+    fun addMove(player: Player, from: Position, to: Position) {
         moves.add(from to to)
         players.add(player)
     }

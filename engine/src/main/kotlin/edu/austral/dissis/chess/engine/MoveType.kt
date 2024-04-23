@@ -63,7 +63,7 @@ enum class MoveType {
                 var anyPieceBlocking = false
 
                 while (!(row == moveData.toRow && col == moveData.toCol)) {
-                    val position: String = getStringPosition(row, col)
+                    val position = Position(row, col)
                     if (board.isOccupied(position)) {
                         anyPieceBlocking = true
                         break
@@ -101,18 +101,18 @@ enum class MoveType {
         }
     }
 
-    fun getPossiblePositions(board: GameBoard, position: String): Iterable<String> {
+    fun getPossiblePositions(board: GameBoard, position: Position): Iterable<Position> {
         return when (this) {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT_LINE -> {
                 this.getIncrements()
                     .flatMap { getLineOfPositions(board, position, it) }
             }
             L_SHAPED, ADJACENT_SQUARE -> {
-                val (row, col) = board.unpackPosition(position)
+                val (row, col) = position
                 val player = board.getPieceAt(position)!!.player
 
                 this.getIncrements()
-                    .map { getStringPosition(row + it.first, col + it.second) }
+                    .map { Position(row + it.first, col + it.second) }
                     .filter{
                         board.positionExists(it)
                         && !board.containsPieceOfPlayer(it, player)
@@ -121,8 +121,8 @@ enum class MoveType {
         }
     }
 
-    private fun getLineOfPositions(board: GameBoard, position: String, increments: Pair<Int, Int>): List<String> {
-        var (row, col) = board.unpackPosition(position)
+    private fun getLineOfPositions(board: GameBoard, position: Position, increments: Pair<Int, Int>): List<Position> {
+        var (row, col) = position
         val player = board.getPieceAt(position)!!.player
 
         val rowIncrement = increments.first
@@ -131,10 +131,10 @@ enum class MoveType {
         row += rowIncrement
         col += colIncrement
 
-        var result: MutableList<String> = mutableListOf()
+        var result: MutableList<Position> = mutableListOf()
 
         while (true) {
-            val reachablePos: String = getStringPosition(row, col)
+            val reachablePos= Position(row, col)
 
             // We'll only add the position if it exists, does not hold
             // a piece of the same player and does not imply a move

@@ -5,7 +5,7 @@ interface Action {
     fun setBoard(board: GameBoard): Action
 }
 
-class Play(private val actions: Iterable<Action>, private val board: GameBoard) : Action {
+class Play(val actions: Iterable<Action>, private val board: GameBoard) : Action {
     override fun execute(): GameBoard {
 //        var gameBoardAfter = board
 //        for (action in actions) {
@@ -25,19 +25,19 @@ class Play(private val actions: Iterable<Action>, private val board: GameBoard) 
 }
 
 class Move : Action {
-    private val from: String
-    private val to: String
-    private val board: GameBoard
-    private val pieceNextTurn: Piece
+    val from: Position
+    val to: Position
+    val board: GameBoard
+    val pieceNextTurn: Piece
 
-    constructor(from: String, to: String, board: GameBoard) {
+    constructor(from: Position, to: Position, board: GameBoard) {
         this.from = from
         this.to = to
         this.board = board
         this.pieceNextTurn = board.getPieceAt(from)!! // At this point, we've made all necessary checks
     }
 
-    constructor(from: String, to: String, board: GameBoard, pieceNextTurn: Piece) {
+    constructor(from: Position, to: Position, board: GameBoard, pieceNextTurn: Piece) {
         this.from = from
         this.to = to
         this.board = board
@@ -64,7 +64,7 @@ class Move : Action {
 
 
 
- class Take(val position: String, val board: GameBoard) : Action {
+ class Take(val position: Position, val board: GameBoard) : Action {
      override fun execute(): GameBoard {
         val gameBoardAfter = board.delPieceAt(position)
         return gameBoardAfter
@@ -76,7 +76,7 @@ class Move : Action {
  }
 
 // TODO: Promote
-// class Promote(val position: String, val board: GameBoard, val promotionPieceRules: PieceRules) : Action {
+// class Promote(val position: Position, val board: GameBoard, val promotionPieceRules: PieceRules) : Action {
 //    override fun execute() {
 //        val player = board.getPieceAt(position)
 //        board.setPieceAt(position, Piece(player, promotionPieceRules))

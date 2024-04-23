@@ -7,6 +7,10 @@ fun getStringPosition(
     return String(charArrayOf(col.colToChar(), row.digitToChar()))
 }
 
+fun stringToPosition(position: String): Position {
+    return Position(position[1].digitToInt(), position[0].charToCol())
+}
+
 fun Char.charToCol(): Int {
     return this.code - 'a'.code + 1
 }
@@ -16,8 +20,8 @@ fun Int.colToChar(): Char {
 }
 
 class MovementData {
-    val from: String
-    val to: String
+    val from: Position
+    val to: Position
 
     val fromRow: Int
     val fromCol: Int
@@ -28,15 +32,15 @@ class MovementData {
     val rowDelta: Int
     val colDelta: Int
 
-    constructor(from: String, to: String, board: GameBoard) {
+    constructor(from: Position, to: Position, board: GameBoard) {
         this.from = from
         this.to = to
 
-        val fromRowAndCol = board.unpackPosition(from)
+        val fromRowAndCol = from
         this.fromRow = fromRowAndCol.row
         this.fromCol = fromRowAndCol.col
 
-        val toRowAndCol = board.unpackPosition(to)
+        val toRowAndCol = to
         this.toRow = toRowAndCol.row
         this.toCol = toRowAndCol.col
 
@@ -44,15 +48,15 @@ class MovementData {
         this.colDelta = toCol - fromCol
     }
 
-    constructor(from: String, to: String, board: GameBoard, player: Player) {
+    constructor(from: Position, to: Position, board: GameBoard, player: Player) {
         this.from = from
         this.to = to
 
-        val fromRowAndCol = board.unpackPosition(from)
+        val fromRowAndCol = from
         this.fromRow = fromRowAndCol.row
         this.fromCol = fromRowAndCol.col
 
-        val toRowAndCol = board.unpackPosition(to)
+        val toRowAndCol = to
         this.toRow = toRowAndCol.row
         this.toCol = toRowAndCol.col
 
