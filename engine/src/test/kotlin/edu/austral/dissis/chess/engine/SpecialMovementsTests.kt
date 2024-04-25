@@ -50,7 +50,6 @@ class SpecialMovementsTests {
 
         val provider = BufferedInputProvider()
         provider.addMove(Player.WHITE, Position(7, 1), Position(8, 1))
-        provider.addPromotion(Player.WHITE, QueenPieceRules(Player.WHITE))
 
         val board = HashGameBoard.build(validator, pieces, Position(1, 1), Position(8, 8))
         val game = TestableGame(TestableStandardGameRules(), board, OneToOneTurnManager(), provider)

@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine
 
-interface Action {
+sealed interface Action {
     fun execute(): GameBoard
     fun setBoard(board: GameBoard): Action
 }
@@ -62,8 +62,6 @@ class Move : Action {
     }
 }
 
-
-
  class Take(val position: Position, val board: GameBoard) : Action {
      override fun execute(): GameBoard {
         val gameBoardAfter = board.delPieceAt(position)
@@ -74,11 +72,3 @@ class Move : Action {
          return Take(position, board)
      }
  }
-
-// TODO: Promote
-// class Promote(val position: Position, val board: GameBoard, val promotionPieceRules: PieceRules) : Action {
-//    override fun execute() {
-//        val player = board.getPieceAt(position)
-//        board.setPieceAt(position, Piece(player, promotionPieceRules))
-//    }
-// }
