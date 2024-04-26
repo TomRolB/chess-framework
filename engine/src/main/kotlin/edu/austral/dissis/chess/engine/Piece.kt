@@ -1,21 +1,6 @@
 package edu.austral.dissis.chess.engine
 
-class Piece(val player: Player, val rules: PieceRules) {
-    fun isPlayValid(
-        from: Position,
-        to: Position,
-    ): Boolean {
-        return rules.isPlayValid(from, to)
-    }
-
-//    fun getValidPlays(): Set<Play> {
-//        return rules.getValidPlays()
-//    }
-
-//    fun getPlayIfValid(from: Position, to: Position): Play? {
-//        return rules.getPlayIfValid(from, to)
-//    }
-}
+data class Piece(val player: Player, val rules: PieceRules)
 
 interface PieceRules {
     fun isPlayValid(

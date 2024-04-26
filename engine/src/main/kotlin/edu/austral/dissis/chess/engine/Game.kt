@@ -1,8 +1,8 @@
 package edu.austral.dissis.chess.engine
 
-class Game(private val gameRules: GameRules,
-           private var board: GameBoard,
-           private val turnManager: TurnManager) {
+class Game(val gameRules: GameRules,
+           var board: GameBoard,
+           val turnManager: TurnManager) {
 
     fun movePiece(from: Position, to: Position): Pair<Play?, EngineResult> {
         val playerOnTurn: Player = turnManager.getTurn()
@@ -174,7 +174,7 @@ interface GameRules {
 }
 
 class TestableStandardGameRules : GameRules {
-
+    //TODO: Why kept as "Testable"?
 
     override fun isMoveValid(board: GameBoard, player: Player, from: Position, to: Position): Boolean {
         if (from == to) {

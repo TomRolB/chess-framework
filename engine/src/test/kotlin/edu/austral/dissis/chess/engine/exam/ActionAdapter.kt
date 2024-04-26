@@ -1,19 +1,15 @@
-package edu.austral.dissis.chess.engine.exam;
+package edu.austral.dissis.chess.engine.exam
 
 import edu.austral.dissis.chess.engine.Action
 import edu.austral.dissis.chess.engine.Move
-import edu.austral.dissis.chess.engine.Play;
+import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Take
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPosition
 
-class ActionAdapter private constructor() {
-    // Make it singleton, since this class hold no state at all
-    companion object {
-        var instance: ActionAdapter? = null
-        fun getInstance(): ActionAdapter {
-            return instance ?: ActionAdapter().also { instance = it }
-        }
+class ActionAdapter(private val pieceAdapter: PieceAdapter) {
+    fun applyPlay(testBoard: TestBoard, play: Play?): TestBoard {
+        return if (play == null) testBoard else adapt(play, testBoard).execute()
     }
 
     private fun adapt(action: Action, testBoard: TestBoard) : AdaptedAction {
@@ -24,24 +20,25 @@ class ActionAdapter private constructor() {
         }
     }
 
-    fun adapt(move: Move, testBoard: TestBoard) : AdaptedMove {
+    private fun adapt(move: Move, testBoard: TestBoard) : AdaptedMove {
         val from = TestPosition(move.from.row, move.from.col)
         val to = TestPosition(move.to.row, move.to.col)
+        val pieceNextTurn = pieceAdapter.adapt(move.pieceNextTurn)
 
-        return AdaptedMove(from, to, testBoard, /* adapted move.pieceNextTurn */)
+        return AdaptedMove(from, to, testBoard, pieceNextTurn)
     }
 
-    fun adapt(play: Play, testBoard: TestBoard): AdaptedPlay {
+    private fun adapt(play: Play, testBoard: TestBoard): AdaptedPlay {
         val adaptedActions = play.actions
             .map { adapt(it, testBoard) }
 
-        return AdaptedPlay(adaptedActions, testBoard)
+        return AdaptedPlay(adaptedActions)
     }
 
+    private fun adapt(take: Take, testBoard: TestBoard): AdaptedTake {
+        val position = TestPosition(take.position.row, take.position.col)
 
-
-    fun applyPlay(testBoard: TestBoard, play: Play?): TestBoard {
-        return if (play == null) testBoard else adapt(play, testBoard).execute()
+        return AdaptedTake(position, testBoard)
     }
 }
 

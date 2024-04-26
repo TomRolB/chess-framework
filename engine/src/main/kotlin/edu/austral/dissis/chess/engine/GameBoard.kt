@@ -39,6 +39,7 @@ class HashGameBoard : GameBoard {
     private val validator: PositionValidator
     private val boardMap: Map<Position, Piece>
 
+    //TODO: may replace by something better. Maybe we can proxy HashGameBoard and add these positions as proxy methods
     private val whiteKingPosition: Position
     private val blackKingPosition: Position
 

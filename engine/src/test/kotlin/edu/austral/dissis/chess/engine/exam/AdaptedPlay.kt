@@ -1,6 +1,5 @@
 package edu.austral.dissis.chess.engine.exam
 
-import edu.austral.dissis.chess.engine.*
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPiece
 import edu.austral.dissis.chess.test.TestPosition
@@ -12,7 +11,7 @@ sealed interface AdaptedAction {
     fun setBoard(newBoard: TestBoard): AdaptedAction
 }
 
-class AdaptedPlay(val actions: Iterable<AdaptedAction>, private val board: TestBoard) : AdaptedAction {
+class AdaptedPlay(private val actions: Iterable<AdaptedAction>) : AdaptedAction {
     override fun execute(): TestBoard {
         return actions
             .reduce { action, next -> next.setBoard(action.execute()) }
@@ -20,12 +19,12 @@ class AdaptedPlay(val actions: Iterable<AdaptedAction>, private val board: TestB
     }
 
     override fun setBoard(newBoard: TestBoard): AdaptedPlay {
-        return AdaptedPlay(actions, newBoard)
+        return AdaptedPlay(actions)
     }
 
 }
 
-class AdaptedMove(val from: TestPosition, val to: TestPosition, val board: TestBoard, val pieceNextTurn: TestPiece) : AdaptedAction {
+class AdaptedMove(private val from: TestPosition, val to: TestPosition, private val board: TestBoard, private val pieceNextTurn: TestPiece) : AdaptedAction {
     override fun execute(): TestBoard {
         val piecesAfter =
             board.pieces
@@ -40,7 +39,7 @@ class AdaptedMove(val from: TestPosition, val to: TestPosition, val board: TestB
     }
 }
 
-class AdaptedTake(val position: TestPosition, val board: TestBoard) : AdaptedAction {
+class AdaptedTake(private val position: TestPosition, private val board: TestBoard) : AdaptedAction {
     override fun execute(): TestBoard {
         val piecesAfter = board.pieces.minus(position)
         return TestBoard(board.size, piecesAfter)
