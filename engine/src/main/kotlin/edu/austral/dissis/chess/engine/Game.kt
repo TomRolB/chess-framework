@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.engine
 
 class Game(val gameRules: GameRules,
            var board: GameBoard,
-           val turnManager: TurnManager) {
+           var turnManager: TurnManager) {
 
     fun movePiece(from: Position, to: Position): Pair<Play?, EngineResult> {
         val playerOnTurn: Player = turnManager.getTurn()
@@ -30,7 +30,7 @@ class Game(val gameRules: GameRules,
         val gameBoardAfterProcedures = gameRules.runPostPlayProcedures(gameBoardAfterPlay, piece, to)
 
         board = gameBoardAfterProcedures
-
+        turnManager = turnManager.nextTurn()
 
         val playerState: PlayerState = KingPieceRules.getPlayerState(board, playerOnTurn)
 
@@ -191,7 +191,7 @@ class TestableStandardGameRules : GameRules {
         }
 
         if (!board.containsPieceOfPlayer(from, player)) {
-            println("This position does not hold any piece of yours")
+            println("This position does not hold any piece of yours (player: $player)")
             return false
         }
 

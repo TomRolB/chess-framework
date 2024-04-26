@@ -3,7 +3,6 @@ package edu.austral.dissis.chess.engine.exam
 import edu.austral.dissis.chess.engine.*
 import edu.austral.dissis.chess.engine.EngineResult.*
 import edu.austral.dissis.chess.test.TestBoard
-import edu.austral.dissis.chess.test.TestPiece
 import edu.austral.dissis.chess.test.TestPosition
 import edu.austral.dissis.chess.test.game.*
 
@@ -18,10 +17,10 @@ class AdapterTestGameRunner : TestGameRunner {
     private lateinit var testBoard: TestBoard
 
     // Lazy constructor to initialize game once withBoard() is called
-    constructor(pieceTypes: Map<Piece, TestPiece>,
+    constructor(pieceAdapter: PieceAdapter,
                 gameRules: GameRules,
                 turnManager: TurnManager) {
-        this.pieceAdapter = PieceAdapter(pieceTypes)
+        this.pieceAdapter = pieceAdapter
         this.actionAdapter = ActionAdapter(pieceAdapter)
         this.gameRules = gameRules
         this.turnManager = turnManager

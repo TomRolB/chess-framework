@@ -15,24 +15,24 @@ class Exam {
 
         return GameTester(
             AdapterTestGameRunner(
-                pieceTypes = getPieceTypes(),
+                pieceAdapter = PieceAdapter(getPieceTypes()),
                 gameRules = TestableStandardGameRules(),
                 turnManager = OneToOneTurnManager()
             )
         ).test()
     }
 
-    private fun getPieceTypes(): Map<Piece, TestPiece> {
+    private fun getPieceTypes(): Map<() -> Piece, TestPiece> {
         return listOf(Player.WHITE, Player.BLACK)
             .zip(listOf('W', 'B'))
             .flatMap {
                 listOf(
-                    Piece(it.first, PawnPieceRules(it.first)) to TestPiece('P', it.second),
-                    Piece(it.first, RookPieceRules(it.first)) to TestPiece('R', it.second),
-                    Piece(it.first, BishopPieceRules(it.first)) to TestPiece('B', it.second),
-                    Piece(it.first, QueenPieceRules(it.first)) to TestPiece('Q', it.second),
-                    Piece(it.first, KnightPieceRules(it.first)) to TestPiece('N', it.second),
-                    Piece(it.first, KingPieceRules(it.first)) to TestPiece('K', it.second)
+                    { Piece(it.first, PawnPieceRules(it.first)) } to TestPiece('P', it.second),
+                    { Piece(it.first, RookPieceRules(it.first)) } to TestPiece('R', it.second),
+                    { Piece(it.first, BishopPieceRules(it.first)) } to TestPiece('B', it.second),
+                    { Piece(it.first, QueenPieceRules(it.first)) } to TestPiece('Q', it.second),
+                    { Piece(it.first, KnightPieceRules(it.first)) } to TestPiece('N', it.second),
+                    { Piece(it.first, KingPieceRules(it.first)) } to TestPiece('K', it.second)
                 )
             }
             .toMap()

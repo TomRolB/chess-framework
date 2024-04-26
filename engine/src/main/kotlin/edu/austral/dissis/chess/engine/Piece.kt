@@ -1,6 +1,28 @@
 package edu.austral.dissis.chess.engine
 
-data class Piece(val player: Player, val rules: PieceRules)
+// Our engine is not interested in whether two pieces of the same
+// type are different objects or not: the pieces are immutable,
+// and the engine identifies the difference in positions merely
+// from the game board.
+
+// The only thing to consider is having separate states for these
+// pieces, which is achieved with different PieceRules instantiations.
+
+// Therefore, we use a data class, to allow hashmap usage.
+data class Piece(val player: Player, val rules: PieceRules) {
+    override fun toString(): String {
+        return "$player, $rules"
+    }
+
+    override fun hashCode(): Int {
+        return (player to rules::class).hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other is Piece
+                && this.hashCode() == other.hashCode()
+    }
+}
 
 interface PieceRules {
     fun isPlayValid(
@@ -121,6 +143,8 @@ class PawnPieceRules : PieceRules {
         moveData: MovementData,
     ): Play? {
         return when (moveData.colDelta) {
+            // TODO: Replaceable by a map of deltas, which takes you
+            //  to the conditions related to the delta in question
             0 -> {
                 if (board.isOccupied(moveData.to)) {
                     null
@@ -319,7 +343,7 @@ class BishopPieceRules(val player: Player) : PieceRules {
 }
 
 class QueenPieceRules(val player: Player) : PieceRules {
-    val moveType = MoveType.DIAGONAL
+    val moveType = MoveType.ANY_STRAIGHT_LINE
 
     override fun isPlayValid(
         from: Position,
@@ -349,11 +373,11 @@ class QueenPieceRules(val player: Player) : PieceRules {
         val moveData = MovementData(from, to, board)
 
         return when {
-            MoveType.ANY_STRAIGHT_LINE.isViolated(moveData) -> {
+            moveType.isViolated(moveData) -> {
                 println("A queen cannot move this way")
                 null
             }
-            MoveType.ANY_STRAIGHT_LINE.isPathBlocked(moveData, board) -> {
+            moveType.isPathBlocked(moveData, board) -> {
                 println("Cannot move there: the path is blocked")
                 null
             }

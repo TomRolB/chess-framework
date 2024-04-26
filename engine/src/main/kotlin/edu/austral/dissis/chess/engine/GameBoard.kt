@@ -40,6 +40,7 @@ class HashGameBoard : GameBoard {
     private val boardMap: Map<Position, Piece>
 
     //TODO: may replace by something better. Maybe we can proxy HashGameBoard and add these positions as proxy methods
+    //TODO: or actually, could simply inherit. This is the only case where inheritance might come in handy
     private val whiteKingPosition: Position
     private val blackKingPosition: Position
 
