@@ -19,7 +19,9 @@ class Exam {
                 gameRules = TestableStandardGameRules(),
                 turnManager = OneToOneTurnManager()
             )
-        ).test()
+        )
+//            .test()
+            .debug("mate_pawn.md")
     }
 
     private fun getPieceTypes(): Map<() -> Piece, TestPiece> {

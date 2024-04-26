@@ -29,22 +29,22 @@ class Game(val gameRules: GameRules,
 
         val gameBoardAfterProcedures = gameRules.runPostPlayProcedures(gameBoardAfterPlay, piece, to)
 
-        board = gameBoardAfterProcedures
-        turnManager = turnManager.nextTurn()
+        val enemyPlayerState: PlayerState = KingPieceRules.getPlayerState(board, !playerOnTurn)
 
-        val playerState: PlayerState = KingPieceRules.getPlayerState(board, playerOnTurn)
-
-        if (gameRules.playerReachedWinCondition(!playerOnTurn, playerState)) {
+        if (gameRules.playerReachedWinCondition(!playerOnTurn, enemyPlayerState)) {
             println("${!playerOnTurn} wins!")
             return play to (
                 if (playerOnTurn == Player.WHITE) EngineResult.WHITE_WINS else EngineResult.BLACK_WINS
             )
         }
 
-        if (gameRules.wasTieReached(!playerOnTurn, playerState)) {
+        if (gameRules.wasTieReached(!playerOnTurn, enemyPlayerState)) {
             println("It's a tie!")
             return play to EngineResult.TIE
         }
+
+        board = gameBoardAfterProcedures
+        turnManager = turnManager.nextTurn()
 
         return play to EngineResult.VALID_MOVE
     }
