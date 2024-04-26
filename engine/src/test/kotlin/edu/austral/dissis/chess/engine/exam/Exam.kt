@@ -20,8 +20,8 @@ class Exam {
                 turnManager = OneToOneTurnManager()
             )
         )
-//            .test()
-            .debug("movements_pawn.md")
+            .test()
+//            .debug("movements_pawn.md")
     }
 
     private fun getPieceTypes(): Map<() -> Piece, TestPiece> {

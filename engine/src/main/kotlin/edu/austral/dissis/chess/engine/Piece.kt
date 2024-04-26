@@ -234,7 +234,7 @@ class PawnPieceRules : PieceRules {
 class RookPieceRules : PieceRules {
     private val moveType = MoveType.VERTICAL_AND_HORIZONTAL
     private val player: Player
-    private val hasEverMoved: Boolean
+    val hasEverMoved: Boolean
 
     constructor(player: Player) {
         this.player = player
@@ -243,7 +243,7 @@ class RookPieceRules : PieceRules {
 
     constructor(player: Player, hasEverMoved: Boolean) {
         this.player = player
-        this.hasEverMoved = true
+        this.hasEverMoved = hasEverMoved
     }
 
     override fun isPlayValid(
@@ -428,8 +428,26 @@ class KnightPieceRules(val player: Player) : PieceRules {
     }
 }
 
-class KingPieceRules(val player: Player) : PieceRules {
+class KingPieceRules : PieceRules {
+    val player: Player
     val moveType = MoveType.ADJACENT_SQUARE
+    val hasEverMoved: Boolean
+
+    constructor(player: Player) {
+        this.player = player
+        this.hasEverMoved = false
+    }
+
+    constructor(player: Player, hasEverMoved: Boolean) {
+        this.player = player
+        this.hasEverMoved = hasEverMoved
+    }
+
+    private fun asMoved(): Piece {
+        // Return this piece with hasEverMoved = true
+        return Piece(player, KingPieceRules(player, hasEverMoved = true))
+    }
+
 
     override fun isPlayValid(
         from: Position,
@@ -444,16 +462,23 @@ class KingPieceRules(val player: Player) : PieceRules {
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
-//            .filter {
-//                val moveData = MovementData(position, it, board)
-//                !becomesChecked(board, moveData)
-////                throw RuntimeException("This actually unveils a problem: are we checking on EVERY piece this condition? I.e., a possible move leaving our king checked. Also, this is generating the future move twice (becomesChecked needs to create the future board)")
-//            }
-            .map { Move(position, it, board).asPlay() }
+            .map {
+                val pieceNextTurn = Piece(player, KingPieceRules(player, hasEverMoved = true))
+                Move(position, it, board, pieceNextTurn).asPlay()
+            }
             .filter {
                 val futureBoard = it.execute()
                 !KingPieceRules.isChecked(futureBoard, player)
             }
+            .plus(
+                // Possible castling
+                listOf(
+                    Position(position.row, 3),
+                    Position(position.row, 7)
+                ).mapNotNull {
+                    getPlayIfValid(board, position, it)
+                }
+            )
     }
 
     override fun getPlayIfValid(
@@ -464,26 +489,85 @@ class KingPieceRules(val player: Player) : PieceRules {
         val moveData = MovementData(from, to, board)
         return when {
             moveType.isViolated(moveData) -> {
-                null
-//                castlingIfValid(from, to, board)
+                castlingIfValid(from, to, board)
             }
 // This is actually verified at Game
 //            becomesChecked(board, moveData) -> {
 //                println("Invalid movement: the king would become checked")
 //                null
 //            }
-            else -> Move(from, to, board).asPlay()
+            else -> {
+                val pieceNextTurn = Piece(player, KingPieceRules(player, hasEverMoved = true))
+                Move(from, to, board, pieceNextTurn).asPlay()
+            }
         }
     }
 
-//    private fun castlingIfValid(from: Position, to: Position, board: GameBoard): Play? {
-//        return when {
-//            //1. Neither the king nor the rook has previously moved.
-//            //2. There are no pieces between the king and the rook.
-//            //3. The king is not currently in check.
-//            //4. The king does not pass through or finish on a square that is attacked by an enemy piece.
-//        }
-//    }
+    private fun castlingIfValid(from: Position, to: Position, board: GameBoard): Play? {
+        // 1. Neither the king nor the rook have previously moved.
+        // 2. There are no pieces between the king and the rook.
+        // 3. The king is not currently in check.
+        // 4. The king does not pass through or finish on a square that is attacked by an enemy piece.
+
+        val isToValid: Boolean
+        val rookFrom: Position
+        val rookTo: Position
+        when (to.col) {
+            3 -> {
+                isToValid = true
+                rookFrom = Position(from.row, 1)
+                rookTo = Position(from.row, 4)
+            }
+            7 -> {
+                isToValid = true
+                rookFrom = Position(from.row, 8)
+                rookTo = Position(from.row, 6)
+            }
+            else -> {
+                isToValid = false
+                rookFrom = Position(0, 0) // Unreachable
+                rookTo = Position(0, 0) // Unreachable
+            }
+        }
+
+        val conditions = (
+            isToValid
+            && !hasEverMoved
+            && isRookAvailable(board, rookFrom, to)
+            && isPathSafe(from, to, board)
+            && isChecked(board, player)
+        )
+
+        val movedRook = Piece(player, RookPieceRules(player, hasEverMoved = true))
+        return Play(
+            listOf(
+                Move(from, to, board, pieceNextTurn = this.asMoved()),
+                Move(rookFrom, rookTo, board, pieceNextTurn = movedRook)
+            ),
+            board
+        )
+            .takeIf { conditions }
+    }
+
+    private fun isRookAvailable(
+        board: GameBoard,
+        rookPos: Position,
+        to: Position,
+    ) : Boolean {
+        return board.getPieceAt(rookPos).takeIf { board.containsPieceOfPlayer(to, player) }
+            ?.let { piece -> piece.rules.takeIf { it is RookPieceRules && !it.hasEverMoved } }
+            ?.let { true } ?: false
+    }
+
+    private fun isPathSafe(from: Position, to: Position, board: GameBoard): Boolean {
+        val positions =
+            if (to.col == 3) listOf(Position(from.row, 4), to)
+            else listOf(Position(from.row, 6, ))
+
+        return positions
+            .map { Move(from, it, board, pieceNextTurn = this.asMoved()).execute() }
+            .all { futureBoard -> !isChecked(futureBoard, player) }
+    }
 
     private fun becomesChecked(
         board: GameBoard,

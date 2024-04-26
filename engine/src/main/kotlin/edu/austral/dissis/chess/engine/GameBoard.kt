@@ -165,8 +165,6 @@ class HashGameBoard : GameBoard {
     }
 }
 
-data class RowAndCol(val row: Int, val col: Int)
-
 interface PositionValidator {
     fun positionExists(position: Position): Boolean
 
