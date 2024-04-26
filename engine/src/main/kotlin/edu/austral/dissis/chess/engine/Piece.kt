@@ -535,6 +535,7 @@ class KingPieceRules : PieceRules {
             && !hasEverMoved
             && isRookAvailable(board, rookFrom)
             && isPathSafe(from, to, board)
+            && isbColumnFree(board, rookFrom)
             && !isChecked(board, player)
         )
 
@@ -547,6 +548,13 @@ class KingPieceRules : PieceRules {
             board
         )
             .takeIf { conditions }
+    }
+
+    private fun isbColumnFree(board: GameBoard, rookFrom: Position): Boolean {
+        // When performing long castling, the king does not pass over
+        // the position in column b. However, it mustn't be blocked
+
+        return rookFrom.col != 1 || !board.isOccupied(Position(rookFrom.row, 2))
     }
 
     private fun isRookAvailable(
