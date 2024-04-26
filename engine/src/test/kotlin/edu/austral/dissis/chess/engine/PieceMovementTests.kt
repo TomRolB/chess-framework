@@ -22,8 +22,8 @@ class PawnMovementTests {
     fun setUp() {
         whitePawn = Piece(Player.WHITE, PawnPieceRules(Player.WHITE))
         blackPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
-        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         list = listOf(Position(1, 4) to whitePawn, Position(2, 3) to blackPawn, Position(1, 8) to whiteKing, Position(8, 8) to blackKing)
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(1, 8), Position(8, 8))
@@ -115,8 +115,8 @@ class RookMovementTest {
         closestPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         blockedPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         whiteRook = Piece(Player.WHITE, RookPieceRules(Player.WHITE))
-        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         list = listOf(Position(4, 2) to closestPawn, Position(6, 2) to blockedPawn, Position(2, 2) to whiteRook, Position(1, 8) to whiteKing, Position(8, 8) to blackKing)
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(1, 8), Position(8, 8))
@@ -201,8 +201,8 @@ class BishopMovementTest {
         closestPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         blockedPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         whiteBishop = Piece(Player.WHITE, BishopPieceRules(Player.WHITE))
-        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         list = listOf(Position(4, 4) to closestPawn, Position(3, 3) to blockedPawn, Position(7, 7) to whiteBishop, Position(1, 8) to whiteKing, Position(8, 1) to blackKing)
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(1, 8), Position(8, 1))
@@ -285,8 +285,8 @@ class QueenMovementTest {
         unreachablePawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         diagonalPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         whiteQueen = Piece(Player.WHITE, QueenPieceRules(Player.WHITE))
-        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         list =
             listOf(
@@ -393,8 +393,8 @@ class KnightMovementTest {
         takeablePawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         verticalPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         whiteKnight = Piece(Player.WHITE, KnightPieceRules(Player.WHITE))
-        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         list =
             listOf(
@@ -473,8 +473,8 @@ class KingMovementTest {
     @BeforeEach
     fun setUp() {
         blackRook = Piece(Player.BLACK, RookPieceRules(Player.BLACK))
-        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+        whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         list = listOf(Position(8, 2) to blackRook, Position(3, 3) to whiteKing, Position(6, 6) to blackKing)
         board = HashGameBoard.build(RectangleBoardValidator(8, 8), list, Position(3, 3), Position(6, 6))

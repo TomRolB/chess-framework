@@ -533,9 +533,9 @@ class KingPieceRules : PieceRules {
         val conditions = (
             isToValid
             && !hasEverMoved
-            && isRookAvailable(board, rookFrom, to)
+            && isRookAvailable(board, rookFrom)
             && isPathSafe(from, to, board)
-            && isChecked(board, player)
+            && !isChecked(board, player)
         )
 
         val movedRook = Piece(player, RookPieceRules(player, hasEverMoved = true))
@@ -552,9 +552,9 @@ class KingPieceRules : PieceRules {
     private fun isRookAvailable(
         board: GameBoard,
         rookPos: Position,
-        to: Position,
     ) : Boolean {
-        return board.getPieceAt(rookPos).takeIf { board.containsPieceOfPlayer(to, player) }
+        return board
+            .getPieceAt(rookPos).takeIf { board.containsPieceOfPlayer(rookPos, player) }
             ?.let { piece -> piece.rules.takeIf { it is RookPieceRules && !it.hasEverMoved } }
             ?.let { true } ?: false
     }

@@ -15,8 +15,8 @@ class GameFlowTests {
     fun `checkmate by black tower and black queen`() {
         val blackRook = Piece(Player.BLACK, RookPieceRules(Player.BLACK))
         val blackQueen = Piece(Player.BLACK, QueenPieceRules(Player.BLACK))
-        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
+        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE, hasEverMoved = true))
 
         val provider = BufferedInputProvider()
         provider.addMove(Player.WHITE, Position(1, 3), Position(1, 4))
@@ -38,15 +38,18 @@ class GameFlowTests {
     fun `stalemate by black tower and black queen`() {
         val blackRook = Piece(Player.BLACK, RookPieceRules(Player.BLACK))
         val blackQueen = Piece(Player.BLACK, QueenPieceRules(Player.BLACK))
-        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
+        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         val provider = BufferedInputProvider()
         provider.addMove(Player.WHITE,Position(1, 3), Position(1, 4))
         provider.addMove(Player.BLACK,Position(6, 3), Position(3, 3))
 
         val pieces = listOf(
-            Position(2, 1) to blackRook, Position(6, 3) to blackQueen,Position(1, 3) to whiteKing, Position(8, 4) to blackKing
+            Position(2, 1) to blackRook,
+            Position(6, 3) to blackQueen,
+            Position(1, 3) to whiteKing,
+            Position(8, 4) to blackKing
         )
 
         val board = HashGameBoard.build(validator, pieces, Position(1, 3), Position(8, 4))
@@ -63,8 +66,8 @@ class GameFlowTests {
         val blackPawn1 = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         val blackPawn2 = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
         val whiteRook = Piece(Player.WHITE, RookPieceRules(Player.WHITE))
-        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
+        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         val provider = BufferedInputProvider()
         provider.addMove(Player.WHITE, Position(7, 1), Position(8, 1))
@@ -89,8 +92,8 @@ class GameFlowTests {
     fun `white bishop cannot expose its king`() {
         val blackRook = Piece(Player.BLACK, RookPieceRules(Player.BLACK))
         val whiteBishop = Piece(Player.WHITE, BishopPieceRules(Player.WHITE))
-        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE))
+        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.WHITE, hasEverMoved = true))
 
         val provider = BufferedInputProvider()
         provider.addMove(Player.WHITE,Position(2, 3), Position(6, 7))

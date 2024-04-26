@@ -15,8 +15,8 @@ class SpecialMovementsTests {
     fun `pawn can perform en passant`() {
         val whitePawn = Piece(Player.WHITE, PawnPieceRules(Player.WHITE))
         val blackPawn = Piece(Player.BLACK, PawnPieceRules(Player.BLACK))
-        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         val pieces = listOf(
             Position(2, 3) to whitePawn, Position(4, 4) to blackPawn, Position(1, 1) to whiteKing, Position(8, 8) to blackKing
@@ -41,8 +41,8 @@ class SpecialMovementsTests {
     @Test
     fun `pawn promotes to queen`() {
         val whitePawn = Piece(Player.WHITE, PawnPieceRules(Player.WHITE))
-        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE))
-        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK))
+        val whiteKing = Piece(Player.WHITE, KingPieceRules(Player.WHITE, hasEverMoved = true))
+        val blackKing = Piece(Player.BLACK, KingPieceRules(Player.BLACK, hasEverMoved = true))
 
         val pieces = listOf(
             Position(7, 1) to whitePawn, Position(1, 1) to whiteKing, Position(8, 8) to blackKing
