@@ -29,7 +29,7 @@ class Game(val gameRules: GameRules,
 
         val gameBoardAfterProcedures = gameRules.runPostPlayProcedures(gameBoardAfterPlay, piece, to)
 
-        val enemyPlayerState: PlayerState = KingPieceRules.getPlayerState(board, !playerOnTurn)
+        val enemyPlayerState: PlayerState = KingPieceRules.getPlayerState(gameBoardAfterProcedures, !playerOnTurn)
 
         if (gameRules.playerReachedWinCondition(!playerOnTurn, enemyPlayerState)) {
             println("${!playerOnTurn} wins!")

@@ -21,7 +21,7 @@ class Exam {
             )
         )
 //            .test()
-            .debug("mate_pawn.md")
+            .debug("movements_pawn.md")
     }
 
     private fun getPieceTypes(): Map<() -> Piece, TestPiece> {

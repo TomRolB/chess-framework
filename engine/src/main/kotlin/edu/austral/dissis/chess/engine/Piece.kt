@@ -134,8 +134,8 @@ class PawnPieceRules : PieceRules {
         board: GameBoard,
         moveData: MovementData,
     ): Boolean {
-        val front = Position(moveData.fromCol, moveData.fromRow + 1)
-        return board.isOccupied(moveData.to) || board.isOccupied(front)
+        val frontPos = Position((moveData.fromRow + moveData.toRow) / 2, moveData.fromCol)
+        return board.isOccupied(moveData.to) || board.isOccupied(frontPos)
     }
 
     private fun moveAheadOrDiagonallyIfValid(
