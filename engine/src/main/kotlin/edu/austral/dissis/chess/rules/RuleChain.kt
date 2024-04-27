@@ -2,8 +2,8 @@ package edu.austral.dissis.chess.rules
 
 // Used for cases where we need to pass information
 // between rules, since All cannot do this.
-interface RuleChain<T, R> {
-    fun verify(arg: T): R
+interface RuleChain<In, Out> {
+    fun verify(arg: In): Out
 }
 
 // Sometimes an element of the chain is the last one, but

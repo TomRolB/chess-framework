@@ -551,7 +551,7 @@ class NoRules : GameRules {
         return true
     }
 
-    override fun isMoveValid(board: GameBoard, player: Player, from: Position, to: Position): Boolean {
+    override fun prePlayRules(board: GameBoard, player: Player, from: Position, to: Position): Boolean {
         return true
     }
 
@@ -567,7 +567,7 @@ class NoRules : GameRules {
         return false
     }
 
-    override fun runPostPlayRules(board: GameBoard, piece: Piece, finalPosition: Position): GameBoard {
+    override fun postPlayRules(board: GameBoard, piece: Piece, finalPosition: Position): GameBoard {
         return board
     }
 }
