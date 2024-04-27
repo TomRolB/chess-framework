@@ -19,7 +19,7 @@ class GameOverRules(val player: Player) : RuleChain<Pair<Play, GameBoard>, RuleR
     }
 
     private fun winResult(player: Player): EngineResult {
-        when (player) {
+        return when (player) {
             Player.WHITE -> EngineResult.WHITE_WINS
             Player.BLACK -> EngineResult.BLACK_WINS
         }

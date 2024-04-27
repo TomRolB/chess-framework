@@ -1,6 +1,7 @@
 package edu.austral.dissis.chess.engine.exam
 
 import edu.austral.dissis.chess.engine.*
+import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.test.TestPiece
 import edu.austral.dissis.chess.test.game.GameTester
 import org.junit.jupiter.api.DynamicTest
@@ -16,7 +17,7 @@ class Exam {
         return GameTester(
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
-                gameRules = TestableStandardGameRules(),
+                gameRules = StandardGameRules(),
                 turnManager = OneToOneTurnManager()
             )
         )

@@ -30,49 +30,6 @@ class Game(val gameRules: RuleChain<GameData, RuleResult>,
         }
 
         return ruleResult.play to ruleResult.engineResult
-
-//        gameRules.prePlayRules()
-//
-//        if (!gameRules.prePlayRules(board, playerOnTurn, from, to)) {
-//            return null to EngineResult.GENERAL_MOVE_VIOLATION
-//        }
-//
-//        val piece = board.getPieceAt(from)
-//        val play = piece!!.rules.getPlayIfValid(board, from, to)
-//        if (play == null) {
-//            println("This movement does not abide by the piece's rules")
-//            return null to EngineResult.PIECE_VIOLATION
-//        }
-//
-//        val gameBoardAfterPlay = play.execute()
-//
-//        // TODO: make this optional (in the extinction variant,
-//        //  there is no check). Actually, should be a post-play procedure
-//        if (KingPieceRules.isChecked(gameBoardAfterPlay, playerOnTurn)) {
-//            println("Invalid movement: this would leave your king checked")
-//            return null to EngineResult.POST_PLAY_VIOLATION
-//        }
-//
-//        val gameBoardAfterProcedures = gameRules.postPlayRules(gameBoardAfterPlay, piece, to)
-//
-//        val enemyPlayerState: PlayerState = KingPieceRules.getPlayerState(gameBoardAfterProcedures, !playerOnTurn)
-//
-//        if (gameRules.playerReachedWinCondition(!playerOnTurn, enemyPlayerState)) {
-//            println("${!playerOnTurn} wins!")
-//            return play to (
-//                if (playerOnTurn == Player.WHITE) EngineResult.WHITE_WINS else EngineResult.BLACK_WINS
-//            )
-//        }
-//
-//        if (gameRules.wasTieReached(!playerOnTurn, enemyPlayerState)) {
-//            println("It's a tie!")
-//            return play to EngineResult.TIE
-//        }
-//
-//        board = gameBoardAfterProcedures
-//        turnManager = turnManager.nextTurn()
-//
-//        return play to EngineResult.VALID_MOVE
     }
 }
 
@@ -96,81 +53,81 @@ enum class EngineResult {
 //      3. We add the variables 'winner' and 'endedOnTie'
 //         to actually know whether the game ended and how
 
-class TestableGame(private val gameRules: GameRules,
-                   var board: GameBoard,
-                   private var turnManager: TurnManager,
-                   private val inputProvider: PlayerInputProvider) {
-    var winner: Player? = null
-    var endedOnTie = false
-
-    fun run() {
-        // TODO: Modularize. The problem with this method is that
-        //  some things are very difficult to handle apart.
-
-        while (true) {
-            val playerOnTurn: Player = turnManager.getTurn()
-
-            val playerState: PlayerState = KingPieceRules.getPlayerState(board, playerOnTurn)
-
-            if (gameRules.playerReachedWinCondition(!playerOnTurn, playerState)) {
-                println("${!playerOnTurn} wins!")
-                winner = !playerOnTurn
-                return
-            }
-
-            if (gameRules.wasTieReached(!playerOnTurn, playerState)) {
-                println("It's a tie!")
-                endedOnTie = true
-                return
-            }
-
-            while (true) {
-                val (from, to) = inputProvider.requestPlayerMove(playerOnTurn)
-
-                if (!gameRules.prePlayRules(board, playerOnTurn, from, to)) continue
-
-                val piece = board.getPieceAt(from)
-                val play = piece!!.rules.getPlayIfValid(board, from, to)
-                if (play == null) {
-                    println("This movement is not valid")
-                    continue
-                }
-
-                val gameBoardAfterPlay = play.execute()
-
-                // TODO: make this optional (in the extinction variant,
-                //  there is no check)
-                if (KingPieceRules.isChecked(gameBoardAfterPlay, playerOnTurn)) {
-                    println("Invalid movement: this would leave your king checked")
-                    continue
-                }
-
-                val gameBoardAfterProcedures = gameRules.postPlayRules(gameBoardAfterPlay, piece, to)
-
-                board = gameBoardAfterProcedures
-                turnManager = turnManager.nextTurn()
-
-                break
-            }
-        }
-    }
-
-    fun movePiece(
-        from: Position,
-        to: Position,
-    ) {
-        require(board.positionExists(from)) { "Invalid board position" }
-
-        val piece = board.getPieceAt(from)
-        require(piece != null) { "There is no piece at this position" }
-
-        val play = piece.rules.getPlayIfValid(board, from, to)
-        require(play != null) { "This movement is not valid" }
-
-        val gameBoardAfterPlay = play.execute()
-        board = gameBoardAfterPlay
-    }
-}
+//class TestableGame(private val gameRules: GameRules,
+//                   var board: GameBoard,
+//                   private var turnManager: TurnManager,
+//                   private val inputProvider: PlayerInputProvider) {
+//    var winner: Player? = null
+//    var endedOnTie = false
+//
+//    fun run() {
+//        // TODO: Modularize. The problem with this method is that
+//        //  some things are very difficult to handle apart.
+//
+//        while (true) {
+//            val playerOnTurn: Player = turnManager.getTurn()
+//
+//            val playerState: PlayerState = KingPieceRules.getPlayerState(board, playerOnTurn)
+//
+//            if (gameRules.playerReachedWinCondition(!playerOnTurn, playerState)) {
+//                println("${!playerOnTurn} wins!")
+//                winner = !playerOnTurn
+//                return
+//            }
+//
+//            if (gameRules.wasTieReached(!playerOnTurn, playerState)) {
+//                println("It's a tie!")
+//                endedOnTie = true
+//                return
+//            }
+//
+//            while (true) {
+//                val (from, to) = inputProvider.requestPlayerMove(playerOnTurn)
+//
+//                if (!gameRules.prePlayRules(board, playerOnTurn, from, to)) continue
+//
+//                val piece = board.getPieceAt(from)
+//                val play = piece!!.rules.getPlayIfValid(board, from, to)
+//                if (play == null) {
+//                    println("This movement is not valid")
+//                    continue
+//                }
+//
+//                val gameBoardAfterPlay = play.execute()
+//
+//                // TODO: make this optional (in the extinction variant,
+//                //  there is no check)
+//                if (KingPieceRules.isChecked(gameBoardAfterPlay, playerOnTurn)) {
+//                    println("Invalid movement: this would leave your king checked")
+//                    continue
+//                }
+//
+//                val gameBoardAfterProcedures = gameRules.postPlayRules(gameBoardAfterPlay, piece, to)
+//
+//                board = gameBoardAfterProcedures
+//                turnManager = turnManager.nextTurn()
+//
+//                break
+//            }
+//        }
+//    }
+//
+//    fun movePiece(
+//        from: Position,
+//        to: Position,
+//    ) {
+//        require(board.positionExists(from)) { "Invalid board position" }
+//
+//        val piece = board.getPieceAt(from)
+//        require(piece != null) { "There is no piece at this position" }
+//
+//        val play = piece.rules.getPlayIfValid(board, from, to)
+//        require(play != null) { "This movement is not valid" }
+//
+//        val gameBoardAfterPlay = play.execute()
+//        board = gameBoardAfterPlay
+//    }
+//}
 
 interface GameRules {
 
@@ -203,43 +160,43 @@ interface GameRules {
     ): RuleChain<GameBoard, Pair<Play?, EngineResult>>
 }
 
-class TestableStandardGameRules : GameRules {
-    //TODO: Why kept as "Testable"?
-
-    override fun prePlayRules(board: GameBoard, player: Player, from: Position, to: Position): Boolean {
-        return PrePlayRules(board, from, to, player).verify()
-    }
-
-    override fun playerReachedWinCondition(player: Player, enemyState: PlayerState): Boolean {
-        return enemyState == PlayerState.CHECKMATE
-    }
-
-    override fun wasTieReached(playerOnTurn: Player, enemyState: PlayerState): Boolean {
-        return enemyState == PlayerState.STALEMATE
-    }
-
-    override fun playerIsChecked(player: Player): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun postPlayRules(
-        board: GameBoard,
-        piece: Piece,
-        finalPosition: Position,
-    ): GameBoard {
-        val (_, col) = finalPosition
-        val rowAsWhite: Int = board.getRowAsWhite(finalPosition, piece.player)
-        val positionAsWhite = Position(rowAsWhite, col)
-
-        if (piece.rules is PawnPieceRules && board.isPositionOnUpperLimit(positionAsWhite)) {
-            val promotionPiece = Piece(piece.player, QueenPieceRules(piece.player))
-
-            return board.setPieceAt(finalPosition, promotionPiece)
-        }
-        else return board
-    }
-
-}
+//class TestableStandardGameRules : GameRules {
+//    //TODO: Why kept as "Testable"?
+//
+//    override fun prePlayRules(board: GameBoard, player: Player, from: Position, to: Position): Boolean {
+//        return PrePlayRules(board, from, to, player).verify()
+//    }
+//
+//    override fun playerReachedWinCondition(player: Player, enemyState: PlayerState): Boolean {
+//        return enemyState == PlayerState.CHECKMATE
+//    }
+//
+//    override fun wasTieReached(playerOnTurn: Player, enemyState: PlayerState): Boolean {
+//        return enemyState == PlayerState.STALEMATE
+//    }
+//
+//    override fun playerIsChecked(player: Player): Boolean {
+//        TODO("Not yet implemented")
+//    }
+//
+//    override fun postPlayRules(
+//        board: GameBoard,
+//        piece: Piece,
+//        finalPosition: Position,
+//    ): GameBoard {
+//        val (_, col) = finalPosition
+//        val rowAsWhite: Int = board.getRowAsWhite(finalPosition, piece.player)
+//        val positionAsWhite = Position(rowAsWhite, col)
+//
+//        if (piece.rules is PawnPieceRules && board.isPositionOnUpperLimit(positionAsWhite)) {
+//            val promotionPiece = Piece(piece.player, QueenPieceRules(piece.player))
+//
+//            return board.setPieceAt(finalPosition, promotionPiece)
+//        }
+//        else return board
+//    }
+//
+//}
 
 interface TurnManager {
     fun getTurn(): Player

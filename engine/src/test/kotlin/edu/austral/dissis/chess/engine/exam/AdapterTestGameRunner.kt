@@ -2,6 +2,7 @@ package edu.austral.dissis.chess.engine.exam
 
 import edu.austral.dissis.chess.engine.*
 import edu.austral.dissis.chess.engine.EngineResult.*
+import edu.austral.dissis.chess.rules.RuleChain
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPosition
 import edu.austral.dissis.chess.test.game.*
@@ -10,7 +11,7 @@ class AdapterTestGameRunner : TestGameRunner {
     private val actionAdapter: ActionAdapter
     private val pieceAdapter: PieceAdapter
 
-    private val gameRules: GameRules
+    private val gameRules: RuleChain<GameData, RuleResult>
     private val turnManager: TurnManager
 
     private lateinit var game: Game
@@ -18,7 +19,7 @@ class AdapterTestGameRunner : TestGameRunner {
 
     // Lazy constructor to initialize game once withBoard() is called
     constructor(pieceAdapter: PieceAdapter,
-                gameRules: GameRules,
+                gameRules: RuleChain<GameData, RuleResult>,
                 turnManager: TurnManager) {
         this.pieceAdapter = pieceAdapter
         this.actionAdapter = ActionAdapter(pieceAdapter)
