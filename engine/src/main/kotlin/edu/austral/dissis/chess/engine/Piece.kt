@@ -1,5 +1,10 @@
 package edu.austral.dissis.chess.engine
 
+import edu.austral.dissis.chess.rules.EndChain
+import edu.austral.dissis.chess.rules.RuleChainIsNotNull
+import edu.austral.dissis.chess.rules.PieceDidNotMove
+import edu.austral.dissis.chess.rules.PieceOfPlayerHypothesis2
+
 // Our engine is not interested in whether two pieces of the same
 // type are different objects or not: the pieces are immutable,
 // and the engine identifies the difference in positions merely
@@ -42,11 +47,15 @@ interface PieceRules {
     ): Play?
 }
 
-class PawnPieceRules : PieceRules {
+interface MoveDependant {
+    val hasEverMoved: Boolean
+}
+
+class PawnPieceRules : PieceRules, MoveDependant {
     private val player: Player
-    private val hasEverMoved: Boolean
     private val hasJustMovedTwoPlaces: Boolean
     private val increments = listOf(1 to 1, 0 to 1, -1 to 1, 0 to 2)
+    override val hasEverMoved: Boolean
 
     enum class State {
         MOVED,
@@ -231,10 +240,10 @@ class PawnPieceRules : PieceRules {
     }
 }
 
-class RookPieceRules : PieceRules {
+class RookPieceRules : PieceRules, MoveDependant {
     private val moveType = MoveType.VERTICAL_AND_HORIZONTAL
     private val player: Player
-    val hasEverMoved: Boolean
+    override val hasEverMoved: Boolean
 
     constructor(player: Player) {
         this.player = player
@@ -428,10 +437,10 @@ class KnightPieceRules(val player: Player) : PieceRules {
     }
 }
 
-class KingPieceRules : PieceRules {
+class KingPieceRules : PieceRules, MoveDependant {
     val player: Player
     val moveType = MoveType.ADJACENT_SQUARE
-    val hasEverMoved: Boolean
+    override val hasEverMoved: Boolean
 
     constructor(player: Player) {
         this.player = player
@@ -561,10 +570,22 @@ class KingPieceRules : PieceRules {
         board: GameBoard,
         rookPos: Position,
     ) : Boolean {
-        return board
-            .getPieceAt(rookPos).takeIf { board.containsPieceOfPlayer(rookPos, player) }
-            ?.let { piece -> piece.rules.takeIf { it is RookPieceRules && !it.hasEverMoved } }
-            ?.let { true } ?: false
+//        return board
+//            .getPieceAt(rookPos).takeIf { board.containsPieceOfPlayer(rookPos, player) }
+//            ?.let { piece -> piece.rules.takeIf { it is RookPieceRules && !it.hasEverMoved } }
+//            ?.let { true } ?: false
+
+        return RuleChainIsNotNull(
+            PieceOfPlayerHypothesis2(
+                board,
+                rookPos,
+                player,
+                next = PieceDidNotMove(
+                    RookPieceRules::class.java,
+                    next = EndChain()
+                )
+            )
+        ).verify(null)
     }
 
     private fun isPathSafe(from: Position, to: Position, board: GameBoard): Boolean {
