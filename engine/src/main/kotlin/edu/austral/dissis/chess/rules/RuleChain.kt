@@ -1,7 +1,13 @@
 package edu.austral.dissis.chess.rules
 
-// Used for cases where we need to pass information
+// RuleChain is used for cases where we need to pass information
 // between rules, since All cannot do this.
+
+// Parameters:
+//  1. Constructor parameters: used for data which is known at
+//     compile time
+//  2. verify()'s parameter 'arg': used for data which is known at
+//     runtime (the previous RuleChain object has to pass it down)
 interface RuleChain<In, Out> {
     fun verify(arg: In): Out
 }

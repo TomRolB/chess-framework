@@ -1,11 +1,6 @@
 package edu.austral.dissis.chess.engine
 
-import edu.austral.dissis.chess.rules.IsKingChecked
-import edu.austral.dissis.chess.rules.SimpleRule
 import edu.austral.dissis.chess.rules.castling.Castling
-import edu.austral.dissis.chess.rules.castling.IsKingsPathSafe
-import edu.austral.dissis.chess.rules.castling.IsRookAvailable
-import edu.austral.dissis.chess.rules.castling.IsbColumnFree
 
 // Our engine is not interested in whether two pieces of the same
 // type are different objects or not: the pieces are immutable,
@@ -560,14 +555,6 @@ class KingPieceRules : PieceRules, MoveDependant {
 //        )
 //            .takeIf { conditions }
 //    }
-
-    private fun becomesChecked(
-        board: GameBoard,
-        moveData: MovementData,
-    ): Boolean {
-        val futureBoard: GameBoard = Move(moveData.from, moveData.to, board).execute()
-        return isChecked(futureBoard, player)
-    }
 
     companion object {
         val possibleIncrements = listOf(

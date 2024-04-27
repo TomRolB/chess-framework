@@ -1,9 +1,7 @@
 package edu.austral.dissis.chess.rules.castling
 
-import com.sun.net.httpserver.Authenticator.Success
 import edu.austral.dissis.chess.engine.*
 import edu.austral.dissis.chess.rules.Rule
-import edu.austral.dissis.chess.rules.Succeed
 
 class Castling(
     val kingRules: KingPieceRules,

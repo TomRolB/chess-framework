@@ -1,8 +1,6 @@
 package edu.austral.dissis.chess.engine
 
-data class Position(val row: Int, val col: Int) {
-
-}
+data class Position(val row: Int, val col: Int)
 
 interface GameBoard {
     fun isOccupied(position: Position): Boolean
