@@ -567,7 +567,7 @@ class NoRules : GameRules {
         return false
     }
 
-    override fun runPostPlayProcedures(board: GameBoard, piece: Piece, finalPosition: Position): GameBoard {
+    override fun runPostPlayRules(board: GameBoard, piece: Piece, finalPosition: Position): GameBoard {
         return board
     }
 }

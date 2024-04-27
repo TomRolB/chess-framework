@@ -1,5 +1,7 @@
 package edu.austral.dissis.chess.engine
 
+import edu.austral.dissis.chess.rules.standard.gamerules.IsMoveValid
+
 class Game(val gameRules: GameRules,
            var board: GameBoard,
            var turnManager: TurnManager) {
@@ -27,7 +29,7 @@ class Game(val gameRules: GameRules,
             return null to EngineResult.POST_PLAY_VIOLATION
         }
 
-        val gameBoardAfterProcedures = gameRules.runPostPlayProcedures(gameBoardAfterPlay, piece, to)
+        val gameBoardAfterProcedures = gameRules.runPostPlayRules(gameBoardAfterPlay, piece, to)
 
         val enemyPlayerState: PlayerState = KingPieceRules.getPlayerState(gameBoardAfterProcedures, !playerOnTurn)
 
@@ -119,7 +121,7 @@ class TestableGame(private val gameRules: GameRules,
                     continue
                 }
 
-                val gameBoardAfterProcedures = gameRules.runPostPlayProcedures(gameBoardAfterPlay, piece, to)
+                val gameBoardAfterProcedures = gameRules.runPostPlayRules(gameBoardAfterPlay, piece, to)
 
                 board = gameBoardAfterProcedures
                 turnManager = turnManager.nextTurn()
@@ -170,39 +172,14 @@ interface GameRules {
     fun wasTieReached(playerOnTurn: Player, enemyState: PlayerState): Boolean
 
     fun playerIsChecked(player: Player): Boolean
-    fun runPostPlayProcedures(board: GameBoard, piece: Piece, finalPosition: Position): GameBoard
+    fun runPostPlayRules(board: GameBoard, piece: Piece, finalPosition: Position): GameBoard
 }
 
 class TestableStandardGameRules : GameRules {
     //TODO: Why kept as "Testable"?
 
     override fun isMoveValid(board: GameBoard, player: Player, from: Position, to: Position): Boolean {
-        if (from == to) {
-            println("'from' and 'to' must be different")
-            return false
-        }
-        if (!board.positionExists(from)) {
-            println("Invalid board position: '${from}'")
-            return false
-        }
-        if (!board.positionExists(to)) {
-            println("Invalid board position: '${to}'")
-            return false
-        }
-
-        if (!board.containsPieceOfPlayer(from, player)) {
-            println("This position does not hold any piece of yours (player: $player)")
-            return false
-        }
-
-        val piece = board.getPieceAt(from)!!
-
-        if (board.containsPieceOfPlayer(to, piece.player)) {
-            println("Cannot move to square containing ally piece")
-            return false
-        }
-
-        return true
+        return IsMoveValid(board, from, to, player).verify()
     }
 
     override fun playerReachedWinCondition(player: Player, enemyState: PlayerState): Boolean {
@@ -217,7 +194,7 @@ class TestableStandardGameRules : GameRules {
         TODO("Not yet implemented")
     }
 
-    override fun runPostPlayProcedures(
+    override fun runPostPlayRules(
         board: GameBoard,
         piece: Piece,
         finalPosition: Position,
