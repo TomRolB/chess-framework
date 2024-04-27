@@ -3,6 +3,8 @@ package edu.austral.dissis.chess.engine
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
+// TODO: May need to replace by dynamic version (a map which lets
+//  you specify the different MoveTypes)
 enum class MoveType {
     VERTICAL_AND_HORIZONTAL,
     DIAGONAL,
