@@ -8,9 +8,10 @@ import edu.austral.dissis.chess.engine.*
 //    }
 //}
 
-interface RuleChain<T> {
-    fun verify(arg: T): Any?
+interface RuleChain<T, R> {
+    fun verify(arg: T): R
 }
+
 
 //class PieceOfPlayerHypothesis1 {
 //    val next: PieceOfType = //Instead of PieceOfType, we should have a type that specifies
@@ -27,50 +28,47 @@ interface RuleChain<T> {
 //    }
 //}
 
-class PieceOfType<T: PieceRules>(val pieceType: Class<T>) : RuleChain<Piece> {
-
-    override fun verify(piece: Piece): Any? {
-        return if (pieceType.isInstance(piece.rules)) piece.rules else null
-    }
-}
-
-class PieceDidNotMove<T: MoveDependant>(
+class PieceHasNeverMoved<T: MoveDependant>(
     val pieceType: Class<T>,
-    val next: RuleChain<PieceRules>) : RuleChain<Piece> {
+    val next: RuleChain<PieceRules, Boolean>) : RuleChain<Piece, Boolean> {
 
-    override fun verify(piece: Piece): Any? {
-        // TODO: Problem now is we have to pass RookPieceRules dynamically, but
-        //  2. How to indicate it has the attribute hasEverMoved? -> Solution?: define interface with getter
-        return piece.rules
-            .takeIf {
-                pieceType.isInstance(piece.rules)
-                && !(piece.rules as MoveDependant).hasEverMoved
-            }
-            ?.let { next.verify(piece.rules) }
+    override fun verify(piece: Piece): Boolean {
+        return if (
+            pieceType.isInstance(piece.rules)
+            && !(piece.rules as MoveDependant).hasEverMoved
+        ) next.verify(piece.rules)
+        else false
+
+
+//        return piece.rules
+//            .takeIf {
+//                pieceType.isInstance(piece.rules)
+//                && !(piece.rules as MoveDependant).hasEverMoved
+//            }
+//            ?.let { next.verify(piece.rules) }
     }
 }
 
-class PieceOfPlayerHypothesis2(
+class PieceOfPlayer(
     val board: GameBoard,
     val pos: Position,
     val player: Player,
-    val next: RuleChain<Piece>) : RuleChain<Any?>
+    val next: RuleChain<Piece, Boolean>) : RuleChain<Any?, Boolean>
 {
-    override fun verify(arg: Any?): Any? {
+    override fun verify(arg: Any?): Boolean {
         return board
             .getPieceAt(pos).takeIf { board.containsPieceOfPlayer(pos, player) }
             ?.let {next.verify(it)}
+            ?: false
     }
 }
 
-class RuleChainIsNotNull(val next: RuleChain<Any?>) : RuleChain<Any?> {
-    override fun verify(arg: Any?): Boolean {
-        return next.verify(arg) != null
-    }
-}
 
-class EndChain<T>() : RuleChain<T> {
-    override fun verify(arg: T): Any? {
-        return arg
+// Sometimes an element of the chain is the last one, but
+// we need to pass the next RuleChain object either way.
+// Succeed serves this purpose: it will simply return true.
+class Succeed<T> : RuleChain<T, Boolean> {
+    override fun verify(arg: T): Boolean {
+        return true
     }
 }
