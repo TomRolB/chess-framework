@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface Rule<T> {
+    + verify(): T
+}
+
+class And implements Rule {
+    - first: Rule
+    - second: Rule
+    + verify()
+}
+
+' value.takeIf(condition)
+class RuleChain<T> implements Rule {
+    - in: Object
+    - condition: Boolean
+    - out: Object
+    - next: RuleChain
+    + verify()
+}
+
+' false if not null
+class NullAdapter implements Rule {
+    verify()
+}
+
+And *--> Rule
+RuleChain *--> RuleChain
+
+
+@enduml
