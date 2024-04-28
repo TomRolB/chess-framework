@@ -32,9 +32,6 @@ fun main() {
 
 class ChessGameApplication : Application() {
     private val gameEngine = getEngine()
-
-    
-
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
     companion object {

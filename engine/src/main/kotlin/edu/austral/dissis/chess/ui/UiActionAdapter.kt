@@ -11,15 +11,15 @@ class UiActionAdapter(
     private val pieceAdapter: UiPieceAdapter,
     private val postPlayProcedures: (UiBoard) -> UiBoard,
 ) {
-    fun applyPlay(board: Map<Position, ChessPiece>, play: Play?): Map<Position, ChessPiece> {
+    fun applyPlay(board: UiBoard, play: Play?): UiBoard {
         return if (play == null) board
         else {
             val boardAfterPlay = adapt(play, board).execute()
-            postPlayProcedures(board)
+            postPlayProcedures(boardAfterPlay)
         }
     }
 
-    private fun adapt(action: Action, board: Map<Position, ChessPiece>): UiAdaptedAction {
+    private fun adapt(action: Action, board: UiBoard): UiAdaptedAction {
         return when (action) {
             is Move -> adapt(move = action, board)
             is Play -> adapt(play = action, board)

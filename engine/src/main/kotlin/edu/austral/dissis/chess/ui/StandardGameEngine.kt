@@ -29,7 +29,6 @@ class StandardGameEngine(
 
     override fun applyMove(move: Move): MoveResult {
         val (from, to) = move
-
         val (play, engineResult) = game.movePiece(adapt(from), adapt(to))
 
         board = actionAdapter.applyPlay(board, play)
@@ -44,10 +43,10 @@ class StandardGameEngine(
             // TODO: may have to make a TIE_BY_WHITE and TIE_BY_BLACK
             EngineResult.TIE -> GameOver(PlayerColor.BLACK)
             EngineResult.VALID_MOVE -> {
-                val pieces = board.values.toList()
-                val currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn())
-
-                NewGameState(pieces, currentPlayer)
+                NewGameState(
+                    pieces = board.values.toList(),
+                    currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn())
+                )
             }
         }
     }

@@ -127,7 +127,7 @@ class PawnPieceRules : PieceRules, MoveDependant {
         board: GameBoard,
         moveData: MovementData,
     ): Play? {
-        if (hasEverMoved || pathIsBlocked(board, moveData)) {
+        if (moveData.colDelta != 0 || hasEverMoved || pathIsBlocked(board, moveData)) {
             return null
         }
 
