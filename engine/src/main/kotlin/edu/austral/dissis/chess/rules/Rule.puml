@@ -1,6 +1,8 @@
 @startuml
 'https://plantuml.com/class-diagram
 
+'TODO: Update
+
 interface Rule<T> {
     + verify(): T
 }

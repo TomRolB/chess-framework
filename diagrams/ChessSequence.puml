@@ -5,6 +5,7 @@ autonumber
 
 title Sequence diagram: en passant
 'TODO: correct mistakes
+'TODO: update
 
 actor user
     user -> Game: movePiece(String from, String to)

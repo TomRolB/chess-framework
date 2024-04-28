@@ -1,6 +1,10 @@
 package edu.austral.dissis.chess.engine
 
-data class Position(val row: Int, val col: Int)
+data class Position(val row: Int, val col: Int) {
+    override fun toString(): String {
+        return getStringPosition(row, col)
+    }
+}
 
 interface GameBoard {
     fun isOccupied(position: Position): Boolean
@@ -22,6 +26,8 @@ interface GameBoard {
         position: Position,
         player: Player,
     ): Boolean
+
+    fun getAllPositions(): Iterable<Position>
 
     fun getAllPositionsOfPlayer(
         player: Player,
@@ -124,6 +130,10 @@ class HashGameBoard private constructor(
         return piece.player == player
     }
 
+    override fun getAllPositions(): Iterable<Position> {
+        return boardMap.keys
+    }
+
     override fun getAllPositionsOfPlayer(
         player: Player,
         includeKing: Boolean,
@@ -166,7 +176,7 @@ interface PositionValidator {
     fun isPositionOnLastRow(position: Position): Boolean
 }
 
-class RectangleBoardValidator(private val numberRows: Int, private val numberCols: Int) : PositionValidator {
+class RectangleBoardValidator(val numberRows: Int, val numberCols: Int) : PositionValidator {
     override fun positionExists(position: Position): Boolean {
         val (row, col) = position
         return (0 < row) && (row <= numberRows) &&

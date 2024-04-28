@@ -15,6 +15,8 @@ data class RuleResult(
     val engineResult: EngineResult,
 )
 
+// TODO: Should it be immutable? Honestly, there's a point where
+//  you have to have mutable state, but idk
 class Game(
     val gameRules: RuleChain<GameData, RuleResult>,
     var board: GameBoard,

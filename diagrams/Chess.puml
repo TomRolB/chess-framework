@@ -5,6 +5,7 @@
 'WHITE
 'BLACK
 '}
+'TODO: update
 
 enum Player {
     BLACK
