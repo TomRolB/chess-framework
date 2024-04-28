@@ -4,10 +4,8 @@ import edu.austral.dissis.chess.engine.Position
 import edu.austral.dissis.chess.rules.RuleChain
 
 private const val A_COLUMN = 1
-private const val B_COLUMN = 2
 private const val C_COLUMN = 3
 private const val D_COLUMN = 4
-private const val E_COLUMN = 5
 private const val F_COLUMN = 6
 private const val G_COLUMN = 7
 private const val H_COLUMN = 8

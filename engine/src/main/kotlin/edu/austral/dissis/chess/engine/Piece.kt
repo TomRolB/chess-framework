@@ -427,6 +427,10 @@ class KnightPieceRules(val player: Player) : PieceRules {
     }
 }
 
+private const val C_COLUMN = 3
+
+private const val G_COLUMN = 7
+
 class KingPieceRules : PieceRules, MoveDependant {
     val player: Player
     private val moveType = ClassicMoveType.ADJACENT_SQUARE
@@ -471,8 +475,8 @@ class KingPieceRules : PieceRules, MoveDependant {
             .plus(
                 // Possible castling
                 listOf(
-                    Position(position.row, 3),
-                    Position(position.row, 7),
+                    Position(position.row, C_COLUMN),
+                    Position(position.row, G_COLUMN),
                 ).mapNotNull {
                     getPlayIfValid(board, position, it)
                 },

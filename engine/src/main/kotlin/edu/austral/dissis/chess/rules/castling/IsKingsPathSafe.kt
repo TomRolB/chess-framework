@@ -7,6 +7,12 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Position
 import edu.austral.dissis.chess.rules.Rule
 
+private const val C_COLUMN = 3
+
+private const val D_COLUMN = 4
+
+private const val F_COLUMN = 6
+
 class IsKingsPathSafe(
     private val kingRules: KingPieceRules,
     val from: Position,
@@ -15,10 +21,10 @@ class IsKingsPathSafe(
 ) : Rule<Boolean> {
     override fun verify(): Boolean {
         val positions =
-            if (to.col == 3) {
-                listOf(Position(from.row, 4), to)
+            if (to.col == C_COLUMN) {
+                listOf(Position(from.row, D_COLUMN), to)
             } else {
-                listOf(Position(from.row, 6), to)
+                listOf(Position(from.row, F_COLUMN), to)
             }
 
         return positions

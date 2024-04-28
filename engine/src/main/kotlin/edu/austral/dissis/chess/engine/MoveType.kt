@@ -5,8 +5,16 @@ import kotlin.math.sign
 
 interface MoveType {
     fun isViolated(moveData: MovementData): Boolean
-    fun isPathBlocked( moveData: MovementData, board: GameBoard): Boolean
-    fun getPossiblePositions(board: GameBoard, position: Position): Iterable<Position>
+
+    fun isPathBlocked(
+        moveData: MovementData,
+        board: GameBoard,
+    ): Boolean
+
+    fun getPossiblePositions(
+        board: GameBoard,
+        position: Position,
+    ): Iterable<Position>
 }
 
 // So, why implementing an interface with an enum?
@@ -18,12 +26,13 @@ interface MoveType {
 
 // Besides, the reason for having an interface is that MoveType is not sealed
 // (different MoveTypes may be defined apart from the ones below)
+
 enum class ClassicMoveType(val increments: Iterable<Pair<Int, Int>>) : MoveType {
-    VERTICAL_AND_HORIZONTAL(listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)),
-    DIAGONAL(listOf(1 to 1, -1 to 1, -1 to -1, 1 to -1)),
-    ANY_STRAIGHT_LINE(VERTICAL_AND_HORIZONTAL.increments + DIAGONAL.increments),
-    L_SHAPED(listOf(2 to 1, 1 to 2, -2 to 1, -1 to 2, 2 to -1, 1 to -2, -2 to -1, -1 to -2)),
-    ADJACENT_SQUARE(listOf(1 to 0, 1 to 1, 0 to 1, -1 to 1, -1 to 0, -1 to -1, 0 to -1, -1 to 1)),
+    VERTICAL_AND_HORIZONTAL(parseIncrements("←↑→↓")),
+    DIAGONAL(parseIncrements("↖↗↘↙")),
+    ANY_STRAIGHT_LINE(parseIncrements("←↑→↓↖↗↘↙")),
+    L_SHAPED(parseIncrements("↰↱↲↳⬐⬎⬑⬏")),
+    ADJACENT_SQUARE(parseIncrements("←↑→↓↖↗↘↙")),
     ;
 
     override fun isViolated(moveData: MovementData): Boolean {
@@ -139,29 +148,58 @@ enum class ClassicMoveType(val increments: Iterable<Pair<Int, Int>>) : MoveType 
 
         val result: MutableList<Position> = mutableListOf()
 
-        while (true) {
+        var blocked = false
+        while (!blocked) {
             val reachablePos = Position(row, col)
 
             // We'll only add the position if it exists, does not hold
             // a piece of the same player and does not imply a move
             // that would leave our king checked
-            if (!board.positionExists(reachablePos) ||
+            if (
+                !board.positionExists(reachablePos) ||
                 board.containsPieceOfPlayer(reachablePos, player)
             ) {
-                break
+                blocked = true
+            } else {
+                result.addLast(reachablePos)
+
+                // We check if there is an enemy piece after adding, since
+                // it is possible to take that piece, but we must then
+                // break, as the rest of the path is blocked by it
+                if (board.containsPieceOfPlayer(reachablePos, !player)) blocked = true
+
+                row += rowIncrement
+                col += colIncrement
             }
-
-            result.addLast(reachablePos)
-
-            // We check if there is an enemy piece after adding, since
-            // it is possible to eat that piece, but we must then
-            // break, since the rest of the path is blocked by it
-            if (board.containsPieceOfPlayer(reachablePos, !player)) break
-
-            row += rowIncrement
-            col += colIncrement
         }
 
         return result
     }
 }
+
+private fun parseIncrements(pattern: String): Iterable<Pair<Int, Int>> {
+    return pattern
+        .toCharArray()
+        .map {
+            when (it) {
+                '↑' -> 0 to 1
+                '→' -> 1 to 0
+                '↓' -> 0 to -1
+                '←' -> -1 to 0
+                '↖' -> -1 to 1
+                '↗' -> 1 to 1
+                '↘' -> 1 to -1
+                '↙' -> -1 to -1
+                '↰' -> -1 to 2
+                '↱' -> 1 to 2
+                '↲' -> -1 to -2
+                '↳' -> -1 to 2
+                '⬐' -> -2 to -1
+                '⬎' -> 2 to -1
+                '⬑' -> -2 to 1
+                '⬏' -> 2 to 1
+                else -> throw IllegalArgumentException()
+            }
+        }
+}
+

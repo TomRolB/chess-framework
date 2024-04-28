@@ -6,7 +6,10 @@ import edu.austral.dissis.chess.rules.RuleChain
 
 class StandardGameRules : RuleChain<GameData, RuleResult> {
     override fun verify(arg: GameData): RuleResult {
-        val (board, turnManager, from, to) = arg
+        val board = arg.board
+        val turnManager = arg.turnManager
+        val from = arg.from
+        val to = arg.to
         val playerOnTurn = turnManager.getTurn()
 
         val rules =
