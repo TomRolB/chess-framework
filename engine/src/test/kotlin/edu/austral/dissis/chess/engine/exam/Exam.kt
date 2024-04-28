@@ -1,5 +1,6 @@
 package edu.austral.dissis.chess.engine.exam
 
+import CustomGameTester
 import edu.austral.dissis.chess.engine.*
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.test.TestPiece
@@ -15,6 +16,21 @@ class Exam {
 //        return GameTester(DummyTestGameRunner()).test()
 
         return GameTester(
+            AdapterTestGameRunner(
+                pieceAdapter = PieceAdapter(getPieceTypes()),
+                gameRules = StandardGameRules(),
+                turnManager = OneToOneTurnManager()
+            )
+        )
+            .test()
+//            .debug("short_castling.md")
+    }
+
+    @TestFactory
+    fun `custom tests`(): Stream<DynamicTest> {
+//        return GameTester(DummyTestGameRunner()).test()
+
+        return CustomGameTester(
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
                 gameRules = StandardGameRules(),
