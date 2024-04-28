@@ -74,13 +74,13 @@ class ChessGameApplication : Application() {
                         piece.color == PlayerColor.WHITE &&
                         piece.pieceId == "pawn"
                     ) {
-                        pos to ChessPiece(piece.id, piece.color, piece.position, "queen")
+                        pos to piece.copy(pieceId = "queen")
                     } else if (
-                        pos.row == 0 &&
+                        pos.row == 1 &&
                         piece.color == PlayerColor.BLACK &&
                         piece.pieceId == "pawn"
                     ) {
-                        pos to ChessPiece(piece.id, piece.color, piece.position, "queen")
+                        pos to piece.copy(pieceId = "queen")
                     } else {
                         pos to piece
                     }
