@@ -3,6 +3,7 @@ package edu.austral.dissis.chess.engine.exam
 import CustomGameTester
 import edu.austral.dissis.chess.engine.*
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
+import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPiece
 import edu.austral.dissis.chess.test.game.GameTester
 import org.junit.jupiter.api.DynamicTest
@@ -18,8 +19,9 @@ class Exam {
         return GameTester(
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
+                postPlayProcedures = promotePawns(),
                 gameRules = StandardGameRules(),
-                turnManager = OneToOneTurnManager()
+                turnManager = OneToOneTurnManager(),
             )
         )
             .test()
@@ -34,11 +36,36 @@ class Exam {
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
                 gameRules = StandardGameRules(),
-                turnManager = OneToOneTurnManager()
+                turnManager = OneToOneTurnManager(),
+                postPlayProcedures = promotePawns()
             )
         )
             .test()
-//            .debug("short_castling.md")
+//            .debug("promotion.md")
+    }
+
+    private fun promotePawns(): (TestBoard) -> TestBoard {
+        return {
+            testBoard: TestBoard ->
+            TestBoard(
+                testBoard.size,
+                testBoard.pieces.map {
+                    val (pos, piece) = it
+                    if (
+                        pos.row == testBoard.size.rows
+                        && piece.pieceTypeSymbol == 'P'
+                        && piece.playerColorSymbol == 'W'
+                        ) pos to TestPiece('Q', 'W')
+                    else if (
+                        pos.row == 0
+                        && piece.pieceTypeSymbol == 'P'
+                        && piece.playerColorSymbol == 'B'
+                    ) pos to TestPiece('Q', 'B')
+                    else pos to piece
+                }.toMap()
+            )
+
+        }
     }
 
     private fun getPieceTypes(): Map<() -> Piece, TestPiece> {

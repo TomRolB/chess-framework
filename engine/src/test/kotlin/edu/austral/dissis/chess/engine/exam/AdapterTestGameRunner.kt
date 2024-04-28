@@ -19,22 +19,23 @@ class AdapterTestGameRunner : TestGameRunner {
 
     // Lazy constructor to initialize game once withBoard() is called
     constructor(pieceAdapter: PieceAdapter,
+                postPlayProcedures: (TestBoard) -> TestBoard,
                 gameRules: RuleChain<GameData, RuleResult>,
                 turnManager: TurnManager) {
         this.pieceAdapter = pieceAdapter
-        this.actionAdapter = ActionAdapter(pieceAdapter)
+        this.actionAdapter = ActionAdapter(pieceAdapter, postPlayProcedures)
         this.gameRules = gameRules
         this.turnManager = turnManager
     }
 
     // Actual game initializer
-    constructor(game: Game, testBoard: TestBoard, pieceAdapter: PieceAdapter) {
+    constructor(game: Game, testBoard: TestBoard, pieceAdapter: PieceAdapter, actionAdapter: ActionAdapter) {
         this.game = game
         this.gameRules = game.gameRules
         this.turnManager = game.turnManager
         this.testBoard = testBoard
         this.pieceAdapter = pieceAdapter
-        this.actionAdapter = ActionAdapter(pieceAdapter)
+        this.actionAdapter = actionAdapter
     }
 
     override fun executeMove(from: TestPosition, to: TestPosition): TestMoveResult {
@@ -50,7 +51,7 @@ class AdapterTestGameRunner : TestGameRunner {
             BLACK_WINS -> BlackCheckMate(boardAfterMove)
             TIE -> TestMoveDraw(boardAfterMove)
             VALID_MOVE -> {
-                val adapterNextTurn = AdapterTestGameRunner(game, boardAfterMove, pieceAdapter)
+                val adapterNextTurn = AdapterTestGameRunner(game, boardAfterMove, pieceAdapter, actionAdapter)
                 TestMoveSuccess(adapterNextTurn)
             }
         }
@@ -73,7 +74,7 @@ class AdapterTestGameRunner : TestGameRunner {
         val engineBoard: GameBoard = initEngineBoard(board)
         val game = Game(gameRules, engineBoard, turnManager)
 
-        return AdapterTestGameRunner(game, board, pieceAdapter)
+        return AdapterTestGameRunner(game, board, pieceAdapter, actionAdapter)
     }
 
     private fun initEngineBoard(board: TestBoard): GameBoard {

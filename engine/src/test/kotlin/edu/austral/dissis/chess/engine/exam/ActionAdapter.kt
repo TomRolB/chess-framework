@@ -1,15 +1,19 @@
 package edu.austral.dissis.chess.engine.exam
 
-import edu.austral.dissis.chess.engine.Action
-import edu.austral.dissis.chess.engine.Move
-import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.Take
+import edu.austral.dissis.chess.engine.*
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPosition
 
-class ActionAdapter(private val pieceAdapter: PieceAdapter) {
+class ActionAdapter(
+    private val pieceAdapter: PieceAdapter,
+    private val postPlayProcedures: (TestBoard) -> TestBoard
+) {
     fun applyPlay(testBoard: TestBoard, play: Play?): TestBoard {
-        return if (play == null) testBoard else adapt(play, testBoard).execute()
+        return if (play == null) testBoard
+        else {
+            val boardAfterPlay = adapt(play, testBoard).execute()
+            postPlayProcedures(boardAfterPlay)
+        }
     }
 
     private fun adapt(action: Action, testBoard: TestBoard) : AdaptedAction {
