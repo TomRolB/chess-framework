@@ -3,17 +3,30 @@ package edu.austral.dissis.chess.engine
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
-// TODO: May need to replace by dynamic version (a map which lets
-//  you specify the different MoveTypes)
-enum class MoveType {
-    VERTICAL_AND_HORIZONTAL,
-    DIAGONAL,
-    ANY_STRAIGHT_LINE,
-    L_SHAPED,
-    ADJACENT_SQUARE,
+interface MoveType {
+    fun isViolated(moveData: MovementData): Boolean
+    fun isPathBlocked( moveData: MovementData, board: GameBoard): Boolean
+    fun getPossiblePositions(board: GameBoard, position: Position): Iterable<Position>
+}
+
+// So, why implementing an interface with an enum?
+
+// Many MoveTypes share the exact same functionality in some cases, but differ in others.
+
+// For instance, see how isViolated() is different for each constant, while
+// getPossiblePositions has overlapping constants in the 'when' statement.
+
+// Besides, the reason for having an interface is that MoveType is not sealed
+// (different MoveTypes may be defined apart from the ones below)
+enum class ClassicMoveTypes(val increments: Iterable<Pair<Int, Int>>) : MoveType {
+    VERTICAL_AND_HORIZONTAL(listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)),
+    DIAGONAL(listOf(1 to 1, -1 to 1, -1 to -1, 1 to -1)),
+    ANY_STRAIGHT_LINE(VERTICAL_AND_HORIZONTAL.increments + DIAGONAL.increments),
+    L_SHAPED(listOf(2 to 1, 1 to 2, -2 to 1, -1 to 2, 2 to -1, 1 to -2, -2 to -1, -1 to -2)),
+    ADJACENT_SQUARE(listOf(1 to 0, 1 to 1, 0 to 1, -1 to 1, -1 to 0, -1 to -1, 0 to -1, -1 to 1)),
     ;
 
-    fun isViolated(moveData: MovementData): Boolean {
+    override fun isViolated(moveData: MovementData): Boolean {
         return when (this) {
             VERTICAL_AND_HORIZONTAL -> {
                 val movedVertically = (moveData.rowDelta != 0)
@@ -53,7 +66,7 @@ enum class MoveType {
         }
     }
 
-    fun isPathBlocked(
+    override fun isPathBlocked(
         moveData: MovementData,
         board: GameBoard,
     ): Boolean {
@@ -87,53 +100,20 @@ enum class MoveType {
         }
     }
 
-    private fun getIncrements(): Iterable<Pair<Int, Int>> {
-        return when (this) {
-            VERTICAL_AND_HORIZONTAL -> listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
-            DIAGONAL -> listOf(1 to 1, -1 to 1, -1 to -1, 1 to -1)
-            ANY_STRAIGHT_LINE -> {
-                VERTICAL_AND_HORIZONTAL.getIncrements() + DIAGONAL.getIncrements()
-            }
-            L_SHAPED ->
-                listOf(
-                    2 to 1,
-                    1 to 2,
-                    -2 to 1,
-                    -1 to 2,
-                    2 to -1,
-                    1 to -2,
-                    -2 to -1,
-                    -1 to -2,
-                )
-
-            ADJACENT_SQUARE ->
-                listOf(
-                    1 to 0,
-                    1 to 1,
-                    0 to 1,
-                    -1 to 1,
-                    -1 to 0,
-                    -1 to -1,
-                    0 to -1,
-                    -1 to 1,
-                )
-        }
-    }
-
-    fun getPossiblePositions(
+    override fun getPossiblePositions(
         board: GameBoard,
         position: Position,
     ): Iterable<Position> {
         return when (this) {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT_LINE -> {
-                this.getIncrements()
+                this.increments
                     .flatMap { getLineOfPositions(board, position, it) }
             }
             L_SHAPED, ADJACENT_SQUARE -> {
                 val (row, col) = position
                 val player = board.getPieceAt(position)!!.player
 
-                this.getIncrements()
+                this.increments
                     .map { Position(row + it.first, col + it.second) }
                     .filter {
                         board.positionExists(it) &&

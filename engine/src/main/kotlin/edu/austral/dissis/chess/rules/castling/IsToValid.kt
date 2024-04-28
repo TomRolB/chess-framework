@@ -3,6 +3,15 @@ package edu.austral.dissis.chess.rules.castling
 import edu.austral.dissis.chess.engine.Position
 import edu.austral.dissis.chess.rules.RuleChain
 
+private const val A_COLUMN = 1
+private const val B_COLUMN = 2
+private const val C_COLUMN = 3
+private const val D_COLUMN = 4
+private const val E_COLUMN = 5
+private const val F_COLUMN = 6
+private const val G_COLUMN = 7
+private const val H_COLUMN = 8
+
 class IsToValid(
     val from: Position,
     val to: Position,
@@ -14,15 +23,15 @@ class IsToValid(
         val rookFrom: Position
         val rookTo: Position
         when (to.col) {
-            3 -> {
+            C_COLUMN -> {
                 isToValid = true
-                rookFrom = Position(from.row, 1)
-                rookTo = Position(from.row, 4)
+                rookFrom = Position(from.row, A_COLUMN)
+                rookTo = Position(from.row, D_COLUMN)
             }
-            7 -> {
+            G_COLUMN -> {
                 isToValid = true
-                rookFrom = Position(from.row, 8)
-                rookTo = Position(from.row, 6)
+                rookFrom = Position(from.row, H_COLUMN)
+                rookTo = Position(from.row, F_COLUMN)
             }
             else -> {
                 isToValid = false

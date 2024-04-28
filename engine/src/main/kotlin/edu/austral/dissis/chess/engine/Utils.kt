@@ -19,6 +19,7 @@ fun Int.colToChar(): Char {
     return (this + 'a'.code - 1).toChar()
 }
 
+// TODO: Are there unnecessary attributes?
 class MovementData {
     val from: Position
     val to: Position
