@@ -14,11 +14,11 @@ interface MoveType {
 // Many MoveTypes share the exact same functionality in some cases, but differ in others.
 
 // For instance, see how isViolated() is different for each constant, while
-// getPossiblePositions has overlapping constants in the 'when' statement.
+// getPossiblePositions() has overlapping constants in the 'when' statement.
 
 // Besides, the reason for having an interface is that MoveType is not sealed
 // (different MoveTypes may be defined apart from the ones below)
-enum class ClassicMoveTypes(val increments: Iterable<Pair<Int, Int>>) : MoveType {
+enum class ClassicMoveType(val increments: Iterable<Pair<Int, Int>>) : MoveType {
     VERTICAL_AND_HORIZONTAL(listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)),
     DIAGONAL(listOf(1 to 1, -1 to 1, -1 to -1, 1 to -1)),
     ANY_STRAIGHT_LINE(VERTICAL_AND_HORIZONTAL.increments + DIAGONAL.increments),

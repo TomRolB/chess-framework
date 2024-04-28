@@ -231,7 +231,7 @@ class PawnPieceRules : PieceRules, MoveDependant {
 }
 
 class RookPieceRules : PieceRules, MoveDependant {
-    private val moveType = MoveType.VERTICAL_AND_HORIZONTAL
+    private val moveType = ClassicMoveType.VERTICAL_AND_HORIZONTAL
     private val player: Player
     override val hasEverMoved: Boolean
 
@@ -294,7 +294,7 @@ class RookPieceRules : PieceRules, MoveDependant {
 }
 
 class BishopPieceRules(val player: Player) : PieceRules {
-    private val moveType = MoveType.DIAGONAL
+    private val moveType = ClassicMoveType.DIAGONAL
 
     override fun isPlayValid(
         from: Position,
@@ -342,7 +342,7 @@ class BishopPieceRules(val player: Player) : PieceRules {
 }
 
 class QueenPieceRules(val player: Player) : PieceRules {
-    private val moveType = MoveType.ANY_STRAIGHT_LINE
+    private val moveType = ClassicMoveType.ANY_STRAIGHT_LINE
 
     override fun isPlayValid(
         from: Position,
@@ -388,7 +388,7 @@ class QueenPieceRules(val player: Player) : PieceRules {
 }
 
 class KnightPieceRules(val player: Player) : PieceRules {
-    private val moveType = MoveType.L_SHAPED
+    private val moveType = ClassicMoveType.L_SHAPED
 
     override fun isPlayValid(
         from: Position,
@@ -429,7 +429,7 @@ class KnightPieceRules(val player: Player) : PieceRules {
 
 class KingPieceRules : PieceRules, MoveDependant {
     val player: Player
-    private val moveType = MoveType.ADJACENT_SQUARE
+    private val moveType = ClassicMoveType.ADJACENT_SQUARE
     override val hasEverMoved: Boolean
 
     constructor(player: Player) {
