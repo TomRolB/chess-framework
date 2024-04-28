@@ -21,7 +21,7 @@ class CustomGameTester(private val runner: TestGameRunner) {
     }
 
     fun debug(fileName: String): Stream<DynamicTest> {
-        return gameTest("/test_cases/$fileName").let { Stream.of(it) }
+        return gameTest("/custom_test_cases/$fileName").let { Stream.of(it) }
     }
 
     private fun gameTest(resource: String): DynamicTest {
@@ -92,7 +92,7 @@ class CustomGameTester(private val runner: TestGameRunner) {
     }
 
     private fun getTestPaths(): List<String> {
-        val resourcePath = "test_cases/"
+        val resourcePath = "custom_test_cases/"
         val uri = Thread.currentThread().contextClassLoader.getResource(resourcePath)?.toURI()
         val testPaths = mutableListOf<String>()
         uri?.let {
@@ -108,7 +108,7 @@ class CustomGameTester(private val runner: TestGameRunner) {
             Files.walk(path, 1).use { paths ->
                 paths.filter { p -> Files.isRegularFile(p) }
                     .forEach { p: Path ->
-                        testPaths.add("/test_cases/${p.fileName}")
+                        testPaths.add("/custom_test_cases/${p.fileName}")
                     }
             }
         } ?: println("Resource not found: $resourcePath")
