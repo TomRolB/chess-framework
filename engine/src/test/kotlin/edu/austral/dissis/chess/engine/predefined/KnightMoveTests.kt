@@ -14,8 +14,7 @@ class KnightMoveTests {
         moveTester.testMove(
             "/moves/knight/valid_moves.txt",
             TestPosition(4, 5),
-            ParseSettings(INVALID)
+            ParseSettings(INVALID),
         )
     }
-
 }

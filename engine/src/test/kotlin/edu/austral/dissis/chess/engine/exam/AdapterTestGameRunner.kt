@@ -1,11 +1,27 @@
 package edu.austral.dissis.chess.engine.exam
 
-import edu.austral.dissis.chess.engine.*
-import edu.austral.dissis.chess.engine.EngineResult.*
+import edu.austral.dissis.chess.engine.EngineResult
+import edu.austral.dissis.chess.engine.Game
+import edu.austral.dissis.chess.engine.GameBoard
+import edu.austral.dissis.chess.engine.GameData
+import edu.austral.dissis.chess.engine.HashGameBoard
+import edu.austral.dissis.chess.engine.KingPieceRules
+import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.Position
+import edu.austral.dissis.chess.engine.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.RuleResult
+import edu.austral.dissis.chess.engine.TurnManager
 import edu.austral.dissis.chess.rules.RuleChain
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPosition
-import edu.austral.dissis.chess.test.game.*
+import edu.austral.dissis.chess.test.game.BlackCheckMate
+import edu.austral.dissis.chess.test.game.TestGameRunner
+import edu.austral.dissis.chess.test.game.TestMoveDraw
+import edu.austral.dissis.chess.test.game.TestMoveFailure
+import edu.austral.dissis.chess.test.game.TestMoveResult
+import edu.austral.dissis.chess.test.game.TestMoveSuccess
+import edu.austral.dissis.chess.test.game.WhiteCheckMate
 
 class AdapterTestGameRunner : TestGameRunner {
     private val actionAdapter: ActionAdapter
@@ -18,10 +34,12 @@ class AdapterTestGameRunner : TestGameRunner {
     private lateinit var testBoard: TestBoard
 
     // Lazy constructor to initialize game once withBoard() is called
-    constructor(pieceAdapter: PieceAdapter,
-                postPlayProcedures: (TestBoard) -> TestBoard,
-                gameRules: RuleChain<GameData, RuleResult>,
-                turnManager: TurnManager) {
+    constructor(
+        pieceAdapter: PieceAdapter,
+        postPlayProcedures: (TestBoard) -> TestBoard,
+        gameRules: RuleChain<GameData, RuleResult>,
+        turnManager: TurnManager,
+    ) {
         this.pieceAdapter = pieceAdapter
         this.actionAdapter = ActionAdapter(pieceAdapter, postPlayProcedures)
         this.gameRules = gameRules
@@ -38,19 +56,22 @@ class AdapterTestGameRunner : TestGameRunner {
         this.actionAdapter = actionAdapter
     }
 
-    override fun executeMove(from: TestPosition, to: TestPosition): TestMoveResult {
+    override fun executeMove(
+        from: TestPosition,
+        to: TestPosition,
+    ): TestMoveResult {
         val (play, engineResult) = game.movePiece(adapt(from), adapt(to))
 
-        val boardAfterMove : TestBoard = actionAdapter.applyPlay(testBoard, play)
+        val boardAfterMove: TestBoard = actionAdapter.applyPlay(testBoard, play)
 
         return when (engineResult) {
-            GENERAL_MOVE_VIOLATION, PIECE_VIOLATION, POST_PLAY_VIOLATION -> {
+            EngineResult.GENERAL_MOVE_VIOLATION, EngineResult.PIECE_VIOLATION, EngineResult.POST_PLAY_VIOLATION -> {
                 TestMoveFailure(boardAfterMove)
             }
-            WHITE_WINS -> WhiteCheckMate(boardAfterMove)
-            BLACK_WINS -> BlackCheckMate(boardAfterMove)
-            TIE -> TestMoveDraw(boardAfterMove)
-            VALID_MOVE -> {
+            EngineResult.WHITE_WINS -> WhiteCheckMate(boardAfterMove)
+            EngineResult.BLACK_WINS -> BlackCheckMate(boardAfterMove)
+            EngineResult.TIE -> TestMoveDraw(boardAfterMove)
+            EngineResult.VALID_MOVE -> {
                 val adapterNextTurn = AdapterTestGameRunner(game, boardAfterMove, pieceAdapter, actionAdapter)
                 TestMoveSuccess(adapterNextTurn)
             }
@@ -66,7 +87,7 @@ class AdapterTestGameRunner : TestGameRunner {
     }
 
     override fun withBoard(board: TestBoard): TestGameRunner {
-        //return AdapterTestGameRunner(game, board, pieceTypes)
+        // return AdapterTestGameRunner(game, board, pieceTypes)
 
         // Set pieces at Game (also map board size to validator)
         // (board is initialized here)

@@ -10,7 +10,7 @@ enum class MoveType {
     DIAGONAL,
     ANY_STRAIGHT_LINE,
     L_SHAPED,
-    ADJACENT_SQUARE
+    ADJACENT_SQUARE,
     ;
 
     fun isViolated(moveData: MovementData): Boolean {
@@ -28,22 +28,25 @@ enum class MoveType {
                 !movedDiagonally
             }
             ANY_STRAIGHT_LINE -> {
-                val noStraightLine = VERTICAL_AND_HORIZONTAL.isViolated(moveData)
-                                      && DIAGONAL.isViolated(moveData)
+                val noStraightLine =
+                    VERTICAL_AND_HORIZONTAL.isViolated(moveData) &&
+                        DIAGONAL.isViolated(moveData)
 
                 noStraightLine
             }
             L_SHAPED -> {
                 val absRowDelta = moveData.rowDelta.absoluteValue
                 val absColDelta = moveData.colDelta.absoluteValue
-                val movedInL = (absRowDelta == 1 && absColDelta == 2)
-                                || (absRowDelta == 2 && absColDelta == 1)
+                val movedInL =
+                    (absRowDelta == 1 && absColDelta == 2) ||
+                        (absRowDelta == 2 && absColDelta == 1)
 
                 !movedInL
             }
             ADJACENT_SQUARE -> {
-                val movedToAdjSquare =  moveData.rowDelta.absoluteValue <= 1
-                                        && moveData.colDelta.absoluteValue <= 1
+                val movedToAdjSquare =
+                    moveData.rowDelta.absoluteValue <= 1 &&
+                        moveData.colDelta.absoluteValue <= 1
 
                 !movedToAdjSquare
             }
@@ -84,26 +87,43 @@ enum class MoveType {
         }
     }
 
-    fun getIncrements(): Iterable<Pair<Int, Int>> {
+    private fun getIncrements(): Iterable<Pair<Int, Int>> {
         return when (this) {
             VERTICAL_AND_HORIZONTAL -> listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
             DIAGONAL -> listOf(1 to 1, -1 to 1, -1 to -1, 1 to -1)
             ANY_STRAIGHT_LINE -> {
                 VERTICAL_AND_HORIZONTAL.getIncrements() + DIAGONAL.getIncrements()
             }
-            L_SHAPED -> listOf(
-                2 to 1, 1 to 2, -2 to 1, -1 to 2,
-                2 to -1, 1 to -2, -2 to -1, -1 to -2,
-            )
+            L_SHAPED ->
+                listOf(
+                    2 to 1,
+                    1 to 2,
+                    -2 to 1,
+                    -1 to 2,
+                    2 to -1,
+                    1 to -2,
+                    -2 to -1,
+                    -1 to -2,
+                )
 
-            ADJACENT_SQUARE -> listOf(
-                1 to 0, 1 to 1, 0 to 1, -1 to 1,
-                -1 to 0, -1 to -1, 0 to -1, -1 to 1
-            )
+            ADJACENT_SQUARE ->
+                listOf(
+                    1 to 0,
+                    1 to 1,
+                    0 to 1,
+                    -1 to 1,
+                    -1 to 0,
+                    -1 to -1,
+                    0 to -1,
+                    -1 to 1,
+                )
         }
     }
 
-    fun getPossiblePositions(board: GameBoard, position: Position): Iterable<Position> {
+    fun getPossiblePositions(
+        board: GameBoard,
+        position: Position,
+    ): Iterable<Position> {
         return when (this) {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT_LINE -> {
                 this.getIncrements()
@@ -115,15 +135,19 @@ enum class MoveType {
 
                 this.getIncrements()
                     .map { Position(row + it.first, col + it.second) }
-                    .filter{
-                        board.positionExists(it)
-                        && !board.containsPieceOfPlayer(it, player)
+                    .filter {
+                        board.positionExists(it) &&
+                            !board.containsPieceOfPlayer(it, player)
                     }
             }
         }
     }
 
-    private fun getLineOfPositions(board: GameBoard, position: Position, increments: Pair<Int, Int>): List<Position> {
+    private fun getLineOfPositions(
+        board: GameBoard,
+        position: Position,
+        increments: Pair<Int, Int>,
+    ): List<Position> {
         var (row, col) = position
         val player = board.getPieceAt(position)!!.player
 
@@ -133,16 +157,19 @@ enum class MoveType {
         row += rowIncrement
         col += colIncrement
 
-        var result: MutableList<Position> = mutableListOf()
+        val result: MutableList<Position> = mutableListOf()
 
         while (true) {
-            val reachablePos= Position(row, col)
+            val reachablePos = Position(row, col)
 
             // We'll only add the position if it exists, does not hold
             // a piece of the same player and does not imply a move
             // that would leave our king checked
-            if (!board.positionExists(reachablePos)
-                || board.containsPieceOfPlayer(reachablePos, player)) break
+            if (!board.positionExists(reachablePos) ||
+                board.containsPieceOfPlayer(reachablePos, player)
+            ) {
+                break
+            }
 
             result.addLast(reachablePos)
 

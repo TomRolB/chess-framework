@@ -2,10 +2,11 @@ package edu.austral.dissis.chess.engine
 
 sealed interface Action {
     fun execute(): GameBoard
+
     fun setBoard(board: GameBoard): Action
 }
 
-class Play(val actions: Iterable<Action>, private val board: GameBoard) : Action {
+class Play(val actions: Iterable<Action>) : Action {
     override fun execute(): GameBoard {
 //        var gameBoardAfter = board
 //        for (action in actions) {
@@ -20,7 +21,7 @@ class Play(val actions: Iterable<Action>, private val board: GameBoard) : Action
     }
 
     override fun setBoard(board: GameBoard): Action {
-        return Play(actions, board)
+        return Play(actions)
     }
 }
 
@@ -58,17 +59,17 @@ class Move : Action {
     }
 
     fun asPlay(): Play {
-        return Play(listOf(this), board)
+        return Play(listOf(this))
     }
 }
 
- class Take(val position: Position, val board: GameBoard) : Action {
-     override fun execute(): GameBoard {
+class Take(val position: Position, val board: GameBoard) : Action {
+    override fun execute(): GameBoard {
         val gameBoardAfter = board.delPieceAt(position)
         return gameBoardAfter
-     }
+    }
 
-     override fun setBoard(board: GameBoard): Action {
-         return Take(position, board)
-     }
- }
+    override fun setBoard(board: GameBoard): Action {
+        return Take(position, board)
+    }
+}

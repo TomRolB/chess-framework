@@ -15,6 +15,7 @@ interface GameBoard {
     fun delPieceAt(position: Position): GameBoard
 
     fun positionExists(position: Position): Boolean
+
     fun isPositionOnUpperLimit(position: Position): Boolean
 
     fun containsPieceOfPlayer(
@@ -22,8 +23,10 @@ interface GameBoard {
         player: Player,
     ): Boolean
 
-    fun getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<Position>
-
+    fun getAllPositionsOfPlayer(
+        player: Player,
+        includeKing: Boolean,
+    ): Iterable<Position>
 
     fun getRowAsWhite(
         position: Position,
@@ -33,15 +36,14 @@ interface GameBoard {
     fun getKingPosition(player: Player): Position
 }
 
-class HashGameBoard : GameBoard {
-    private val validator: PositionValidator
-    private val boardMap: Map<Position, Piece>
-
-    //TODO: may replace by something better. Maybe we can proxy HashGameBoard and add these positions as proxy methods
-    //TODO: or actually, could simply inherit. This is the only case where inheritance might come in handy
-    private val whiteKingPosition: Position
-    private val blackKingPosition: Position
-
+class HashGameBoard private constructor(
+    private val validator: PositionValidator,
+    private val boardMap: Map<Position, Piece>,
+    // TODO: may replace by something better. Maybe we can proxy HashGameBoard and add these positions as proxy methods
+    // TODO: or actually, could simply inherit. This is the only case where inheritance might come in handy
+    private val whiteKingPosition: Position,
+    private val blackKingPosition: Position,
+) : GameBoard {
     companion object {
         fun build(
             validator: PositionValidator,
@@ -53,15 +55,7 @@ class HashGameBoard : GameBoard {
         }
     }
 
-    private constructor(
-        validator: PositionValidator,
-        boardMap: Map<Position, Piece>,
-        whiteKingPosition: Position,
-        blackKingPosition: Position,
-    ) {
-        this.validator = validator
-        this.boardMap = boardMap
-
+    init {
         for (pair in listOf(Player.WHITE, Player.BLACK).zip(listOf(whiteKingPosition, blackKingPosition))) {
             val player = pair.first
             val position = pair.second
@@ -71,15 +65,7 @@ class HashGameBoard : GameBoard {
                 "The $player king is not located at $king"
             }
         }
-
-        this.whiteKingPosition = whiteKingPosition
-        this.blackKingPosition = blackKingPosition
     }
-
-//    constructor(validator: PositionValidator, boardMap: Map<Position, Piece>) {
-//        this.validator = validator
-//        this.boardMap = boardMap
-//    }
 
     override fun isOccupied(position: Position): Boolean {
         return boardMap[position] != null
@@ -138,13 +124,19 @@ class HashGameBoard : GameBoard {
         return piece.player == player
     }
 
-    override fun getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<Position> {
+    override fun getAllPositionsOfPlayer(
+        player: Player,
+        includeKing: Boolean,
+    ): Iterable<Position> {
         return boardMap.keys.filter {
             val position: Position = it
             val piece = boardMap[position]!!
 
-            if (includeKing) piece.player == player
-            else piece.player == player && (piece.rules !is KingPieceRules)
+            if (includeKing) {
+                piece.player == player
+            } else {
+                piece.player == player && (piece.rules !is KingPieceRules)
+            }
         }
     }
 
@@ -177,8 +169,8 @@ interface PositionValidator {
 class RectangleBoardValidator(private val numberRows: Int, private val numberCols: Int) : PositionValidator {
     override fun positionExists(position: Position): Boolean {
         val (row, col) = position
-        return (0 < row) && (row <= numberRows)
-                && (0 < col) && (col <= numberCols)
+        return (0 < row) && (row <= numberRows) &&
+            (0 < col) && (col <= numberCols)
     }
 
     override fun getRowAsWhite(

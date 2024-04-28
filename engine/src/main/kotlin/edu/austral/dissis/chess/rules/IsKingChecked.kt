@@ -1,8 +1,13 @@
 package edu.austral.dissis.chess.rules
 
-import edu.austral.dissis.chess.engine.*
+import edu.austral.dissis.chess.engine.GameBoard
+import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.Position
+import edu.austral.dissis.chess.engine.not
 
-class IsKingChecked(val board: GameBoard,val player: Player) : Rule<Boolean> {
+class IsKingChecked(val board: GameBoard, val player: Player) : Rule<Boolean> {
     override fun verify(): Boolean {
         val kingPosition = board.getKingPosition(player)
 

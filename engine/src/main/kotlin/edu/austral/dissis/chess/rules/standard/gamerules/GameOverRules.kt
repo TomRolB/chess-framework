@@ -1,6 +1,13 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
-import edu.austral.dissis.chess.engine.*
+import edu.austral.dissis.chess.engine.EngineResult
+import edu.austral.dissis.chess.engine.GameBoard
+import edu.austral.dissis.chess.engine.KingPieceRules
+import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.PlayerState
+import edu.austral.dissis.chess.engine.RuleResult
+import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.RuleChain
 
 class GameOverRules(val player: Player) : RuleChain<Pair<Play, GameBoard>, RuleResult> {
@@ -9,11 +16,12 @@ class GameOverRules(val player: Player) : RuleChain<Pair<Play, GameBoard>, RuleR
 
         val enemyState = KingPieceRules.getPlayerState(board, !player)
 
-        val engineResult = when (enemyState) {
-            PlayerState.CHECKMATE -> winResult(player)
-            PlayerState.STALEMATE -> EngineResult.TIE
-            else -> EngineResult.VALID_MOVE
-        }
+        val engineResult =
+            when (enemyState) {
+                PlayerState.CHECKMATE -> winResult(player)
+                PlayerState.STALEMATE -> EngineResult.TIE
+                else -> EngineResult.VALID_MOVE
+            }
 
         return RuleResult(board, play, engineResult)
     }

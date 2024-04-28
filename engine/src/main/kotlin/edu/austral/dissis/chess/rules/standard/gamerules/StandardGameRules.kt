@@ -10,11 +10,24 @@ class StandardGameRules : RuleChain<GameData, RuleResult> {
         val playerOnTurn = turnManager.getTurn()
 
         val rules =
-            PrePlayRules(board, from, to, playerOnTurn,
-                next = IsPlayValid(board, from, to,
-                    next = PostPlayRules(from, to, playerOnTurn,
-                        next = GameOverRules(playerOnTurn))
-                    )
+            PrePlayRules(
+                board,
+                from,
+                to,
+                playerOnTurn,
+                next =
+                    IsPlayValid(
+                        board,
+                        from,
+                        to,
+                        next =
+                            PostPlayRules(
+                                from,
+                                to,
+                                playerOnTurn,
+                                next = GameOverRules(playerOnTurn),
+                            ),
+                    ),
             )
 
         return rules.verify(null)

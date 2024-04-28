@@ -8,6 +8,7 @@ import edu.austral.dissis.chess.test.TestPosition
 // the engine's Action classes
 sealed interface AdaptedAction {
     fun execute(): TestBoard
+
     fun setBoard(newBoard: TestBoard): AdaptedAction
 }
 
@@ -21,10 +22,14 @@ class AdaptedPlay(private val actions: Iterable<AdaptedAction>) : AdaptedAction 
     override fun setBoard(newBoard: TestBoard): AdaptedPlay {
         return AdaptedPlay(actions)
     }
-
 }
 
-class AdaptedMove(private val from: TestPosition, val to: TestPosition, private val board: TestBoard, private val pieceNextTurn: TestPiece) : AdaptedAction {
+class AdaptedMove(
+    private val from: TestPosition,
+    val to: TestPosition,
+    private val board: TestBoard,
+    private val pieceNextTurn: TestPiece,
+) : AdaptedAction {
     override fun execute(): TestBoard {
         val piecesAfter =
             board.pieces

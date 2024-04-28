@@ -1,7 +1,15 @@
 package edu.austral.dissis.chess.engine.exam
 
 import CustomGameTester
-import edu.austral.dissis.chess.engine.*
+import edu.austral.dissis.chess.engine.BishopPieceRules
+import edu.austral.dissis.chess.engine.KingPieceRules
+import edu.austral.dissis.chess.engine.KnightPieceRules
+import edu.austral.dissis.chess.engine.OneToOneTurnManager
+import edu.austral.dissis.chess.engine.PawnPieceRules
+import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.QueenPieceRules
+import edu.austral.dissis.chess.engine.RookPieceRules
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPiece
@@ -11,7 +19,6 @@ import org.junit.jupiter.api.TestFactory
 import java.util.stream.Stream
 
 class Exam {
-
     @TestFactory
     fun `required exam tests`(): Stream<DynamicTest> {
 //        return GameTester(DummyTestGameRunner()).test()
@@ -22,7 +29,7 @@ class Exam {
                 postPlayProcedures = promotePawns(),
                 gameRules = StandardGameRules(),
                 turnManager = OneToOneTurnManager(),
-            )
+            ),
         )
             .test()
 //            .debug("short_castling.md")
@@ -37,8 +44,8 @@ class Exam {
                 pieceAdapter = PieceAdapter(getPieceTypes()),
                 gameRules = StandardGameRules(),
                 turnManager = OneToOneTurnManager(),
-                postPlayProcedures = promotePawns()
-            )
+                postPlayProcedures = promotePawns(),
+            ),
         )
             .test()
 //            .debug("promotion.md")
@@ -46,25 +53,28 @@ class Exam {
 
     private fun promotePawns(): (TestBoard) -> TestBoard {
         return {
-            testBoard: TestBoard ->
+                testBoard: TestBoard ->
             TestBoard(
                 testBoard.size,
                 testBoard.pieces.map {
                     val (pos, piece) = it
                     if (
-                        pos.row == testBoard.size.rows
-                        && piece.pieceTypeSymbol == 'P'
-                        && piece.playerColorSymbol == 'W'
-                        ) pos to TestPiece('Q', 'W')
-                    else if (
-                        pos.row == 0
-                        && piece.pieceTypeSymbol == 'P'
-                        && piece.playerColorSymbol == 'B'
-                    ) pos to TestPiece('Q', 'B')
-                    else pos to piece
-                }.toMap()
+                        pos.row == testBoard.size.rows &&
+                        piece.pieceTypeSymbol == 'P' &&
+                        piece.playerColorSymbol == 'W'
+                    ) {
+                        pos to TestPiece('Q', 'W')
+                    } else if (
+                        pos.row == 0 &&
+                        piece.pieceTypeSymbol == 'P' &&
+                        piece.playerColorSymbol == 'B'
+                    ) {
+                        pos to TestPiece('Q', 'B')
+                    } else {
+                        pos to piece
+                    }
+                }.toMap(),
             )
-
         }
     }
 
@@ -78,7 +88,7 @@ class Exam {
                     { Piece(it.first, BishopPieceRules(it.first)) } to TestPiece('B', it.second),
                     { Piece(it.first, QueenPieceRules(it.first)) } to TestPiece('Q', it.second),
                     { Piece(it.first, KnightPieceRules(it.first)) } to TestPiece('N', it.second),
-                    { Piece(it.first, KingPieceRules(it.first)) } to TestPiece('K', it.second)
+                    { Piece(it.first, KingPieceRules(it.first)) } to TestPiece('K', it.second),
                 )
             }
             .toMap()

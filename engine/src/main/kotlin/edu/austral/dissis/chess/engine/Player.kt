@@ -17,7 +17,7 @@ enum class PlayerState {
     NORMAL,
     CHECKED,
     STALEMATE,
-    CHECKMATE
+    CHECKMATE,
 }
 
 operator fun Player.not(): Player {

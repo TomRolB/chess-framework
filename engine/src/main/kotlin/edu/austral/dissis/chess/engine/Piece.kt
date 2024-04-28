@@ -21,8 +21,8 @@ data class Piece(val player: Player, val rules: PieceRules) {
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is Piece
-                && this.hashCode() == other.hashCode()
+        return other is Piece &&
+            this.hashCode() == other.hashCode()
     }
 }
 
@@ -133,7 +133,7 @@ class PawnPieceRules : PieceRules, MoveDependant {
 
         val rulesNextTurn = PawnPieceRules(player, State.MOVED_TWO_PLACES)
         val pieceNextTurn = Piece(player, rulesNextTurn)
-        return Play(listOf(Move(moveData.from, moveData.to, board, pieceNextTurn)), board)
+        return Play(listOf(Move(moveData.from, moveData.to, board, pieceNextTurn)))
     }
 
     private fun pathIsBlocked(
@@ -183,7 +183,10 @@ class PawnPieceRules : PieceRules, MoveDependant {
 //    private fun safeGetPieceOfTypePawn(piece: Piece): Piece? =
 //        if (piece.rules !is PawnPieceRules) piece else null
 
-    private fun enPassantIfValid(board: GameBoard, moveData: MovementData): Play? {
+    private fun enPassantIfValid(
+        board: GameBoard,
+        moveData: MovementData,
+    ): Play? {
 //      TOPO'S PATTERN
 
 //        val enemyPawnPosition = getStringPosition(moveData.fromRow, moveData.toCol)
@@ -203,17 +206,8 @@ class PawnPieceRules : PieceRules, MoveDependant {
         val enemyPawn = board.getPieceAt(enemyPawnPosition)!!
         if (enemyPawn.rules !is PawnPieceRules) return null
 
-        val enemyRules = enemyPawn.rules as PawnPieceRules
+        val enemyRules = enemyPawn.rules
         if (!enemyRules.hasJustMovedTwoPlaces) return null
-
-
-
-
-
-
-
-
-
 
 //        try {
 //            BooleanChain
@@ -230,9 +224,8 @@ class PawnPieceRules : PieceRules, MoveDependant {
         return Play(
             listOf(
                 Move(moveData.from, moveData.to, board),
-                Take(enemyPawnPosition, board)
+                Take(enemyPawnPosition, board),
             ),
-            board
         )
     }
 }
@@ -265,7 +258,7 @@ class RookPieceRules : PieceRules, MoveDependant {
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
-            .map { Play(listOf(Move(position, it, board)), board) }
+            .map { Play(listOf(Move(position, it, board))) }
             .filter {
                 val futureBoard = it.execute()
                 !KingPieceRules.isChecked(futureBoard, player)
@@ -301,7 +294,7 @@ class RookPieceRules : PieceRules, MoveDependant {
 }
 
 class BishopPieceRules(val player: Player) : PieceRules {
-    val moveType = MoveType.DIAGONAL
+    private val moveType = MoveType.DIAGONAL
 
     override fun isPlayValid(
         from: Position,
@@ -317,7 +310,7 @@ class BishopPieceRules(val player: Player) : PieceRules {
         return moveType
             .getPossiblePositions(board, position)
             .map {
-                Play(listOf(Move(position, it, board)), board)
+                Play(listOf(Move(position, it, board)))
             }
             .filter {
                 val futureBoard = it.execute()
@@ -349,7 +342,7 @@ class BishopPieceRules(val player: Player) : PieceRules {
 }
 
 class QueenPieceRules(val player: Player) : PieceRules {
-    val moveType = MoveType.ANY_STRAIGHT_LINE
+    private val moveType = MoveType.ANY_STRAIGHT_LINE
 
     override fun isPlayValid(
         from: Position,
@@ -364,7 +357,7 @@ class QueenPieceRules(val player: Player) : PieceRules {
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
-            .map { Play(listOf(Move(position, it, board)), board) }
+            .map { Play(listOf(Move(position, it, board))) }
             .filter {
                 val futureBoard = it.execute()
                 !KingPieceRules.isChecked(futureBoard, player)
@@ -395,7 +388,7 @@ class QueenPieceRules(val player: Player) : PieceRules {
 }
 
 class KnightPieceRules(val player: Player) : PieceRules {
-    val moveType = MoveType.L_SHAPED
+    private val moveType = MoveType.L_SHAPED
 
     override fun isPlayValid(
         from: Position,
@@ -436,7 +429,7 @@ class KnightPieceRules(val player: Player) : PieceRules {
 
 class KingPieceRules : PieceRules, MoveDependant {
     val player: Player
-    val moveType = MoveType.ADJACENT_SQUARE
+    private val moveType = MoveType.ADJACENT_SQUARE
     override val hasEverMoved: Boolean
 
     constructor(player: Player) {
@@ -453,7 +446,6 @@ class KingPieceRules : PieceRules, MoveDependant {
         // Return this piece with hasEverMoved = true
         return Piece(player, KingPieceRules(player, hasEverMoved = true))
     }
-
 
     override fun isPlayValid(
         from: Position,
@@ -474,16 +466,16 @@ class KingPieceRules : PieceRules, MoveDependant {
             }
             .filter {
                 val futureBoard = it.execute()
-                !KingPieceRules.isChecked(futureBoard, player)
+                !isChecked(futureBoard, player)
             }
             .plus(
                 // Possible castling
                 listOf(
                     Position(position.row, 3),
-                    Position(position.row, 7)
+                    Position(position.row, 7),
                 ).mapNotNull {
                     getPlayIfValid(board, position, it)
-                }
+                },
             )
     }
 
@@ -509,60 +501,11 @@ class KingPieceRules : PieceRules, MoveDependant {
         }
     }
 
-//    private fun castlingIfValid(from: Position, to: Position, board: GameBoard): Play? {
-        // 1. Neither the king nor the rook have previously moved.
-        // 2. There are no pieces between the king and the rook.
-        // 3. The king is not currently in check.
-        // 4. The king does not pass through or finish on a square that is attacked by an enemy piece.
-
-//        val isToValid: Boolean
-//        val rookFrom: Position
-//        val rookTo: Position
-//        when (to.col) {
-//            3 -> {
-//                isToValid = true
-//                rookFrom = Position(from.row, 1)
-//                rookTo = Position(from.row, 4)
-//            }
-//            7 -> {
-//                isToValid = true
-//                rookFrom = Position(from.row, 8)
-//                rookTo = Position(from.row, 6)
-//            }
-//            else -> {
-//                isToValid = false
-//                rookFrom = Position(0, 0) // Unreachable
-//                rookTo = Position(0, 0) // Unreachable
-//            }
-//        }
-//
-//        val conditions = (
-//            isToValid
-//            && SimpleRule(!hasEverMoved).verify()
-//            && IsRookAvailable(board, rookFrom, player).verify()
-//            && IsKingsPathSafe(this, from, to, board).verify()
-//            && IsbColumnFree(board, rookFrom).verify()
-//            && !IsKingChecked(board, player).verify()
-//        )
-//
-//        val movedRook = Piece(player, RookPieceRules(player, hasEverMoved = true))
-//        return Play(
-//            listOf(
-//                Move(from, to, board, pieceNextTurn = this.asMoved()),
-//                Move(rookFrom, rookTo, board, pieceNextTurn = movedRook)
-//            ),
-//            board
-//        )
-//            .takeIf { conditions }
-//    }
-
     companion object {
-        val possibleIncrements = listOf(
-            1 to 0, 1 to 1, 0 to 1, -1 to 1,
-            -1 to 0, -1 to -1, 0 to -1, -1 to 1
-        )
-
-        fun isChecked(board: GameBoard, player: Player): Boolean {
+        fun isChecked(
+            board: GameBoard,
+            player: Player,
+        ): Boolean {
             val kingPosition = board.getKingPosition(player)
 
             // Return true if any enemy piece "can capture" the King
@@ -586,29 +529,31 @@ class KingPieceRules : PieceRules, MoveDependant {
 //                    isChecked(futureBoard, player)
 //                }
 //        }
-        fun willBeChecked(board: GameBoard, player: Player): Boolean {
+        private fun willBeChecked(
+            board: GameBoard,
+            player: Player,
+        ): Boolean {
             return board.getAllPositionsOfPlayer(player, true).all {
                 val piece = board.getPieceAt(it)!!
                 allMovementsEndInCheck(board, piece, it)
             }
         }
 
-        private fun allMovementsEndInCheck(board: GameBoard, piece: Piece, position: Position): Boolean {
+        private fun allMovementsEndInCheck(
+            board: GameBoard,
+            piece: Piece,
+            position: Position,
+        ): Boolean {
             return piece.rules.getValidPlays(board, position).all {
                 val futureBoard = it.execute()
                 isChecked(futureBoard, piece.player)
             }
         }
 
-        private fun getPossibleFuturePositions(board: GameBoard, player: Player, kingPosition: Position): Iterable<Position> {
-            val (row, col) = kingPosition
-
-            return possibleIncrements
-                .map { Position(row + it.first, col + it.second) }
-                .filter { board.positionExists(it) && !board.containsPieceOfPlayer(it, player) }
-        }
-
-        fun getPlayerState(board: GameBoard, player: Player): PlayerState {
+        fun getPlayerState(
+            board: GameBoard,
+            player: Player,
+        ): PlayerState {
             val isChecked: Int = if (isChecked(board, player)) 1 else 0
             val willBeChecked: Int = if (willBeChecked(board, player)) 1 else 0
             val combinedStatus: Int = isChecked * 2 + willBeChecked
