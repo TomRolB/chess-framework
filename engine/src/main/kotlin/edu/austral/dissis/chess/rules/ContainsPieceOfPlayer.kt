@@ -5,7 +5,7 @@ import edu.austral.dissis.chess.engine.Piece
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Position
 
-class PieceOfPlayer(
+class ContainsPieceOfPlayer(
     val board: GameBoard,
     val pos: Position,
     val player: Player,

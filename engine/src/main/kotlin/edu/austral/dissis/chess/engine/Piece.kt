@@ -1,6 +1,7 @@
 package edu.austral.dissis.chess.engine
 
 import edu.austral.dissis.chess.rules.castling.Castling
+import edu.austral.dissis.chess.rules.pieces.pawn.EnPassant
 
 // Our engine is not interested in whether two pieces of the same
 // type are different objects or not: the pieces are immutable,
@@ -50,7 +51,7 @@ interface MoveDependant : PieceRules {
 
 class PawnPieceRules : MoveDependant {
     private val player: Player
-    private val hasJustMovedTwoPlaces: Boolean
+    val hasJustMovedTwoPlaces: Boolean
     private val increments = listOf(1 to 1, 0 to 1, -1 to 1, 0 to 2)
     override val hasEverMoved: Boolean
 
@@ -166,7 +167,7 @@ class PawnPieceRules : MoveDependant {
                     val pieceNextTurn = Piece(player, rulesNextTurn)
                     Move(moveData.from, moveData.to, board, pieceNextTurn).asPlay()
                 } else {
-                    enPassantIfValid(board, moveData)
+                    EnPassant(board, moveData, !player).verify()
                 }
             }
 
@@ -175,33 +176,6 @@ class PawnPieceRules : MoveDependant {
                 null
             }
         }
-    }
-
-//    private fun safeGetPieceOfColor(piece: Piece, player: Player): Piece? =
-//        if (piece.player == player) piece else null
-//
-//    private fun safeGetPieceOfTypePawn(piece: Piece): Piece? =
-//        if (piece.rules !is PawnPieceRules) piece else null
-
-    private fun enPassantIfValid(
-        board: GameBoard,
-        moveData: MovementData,
-    ): Play? {
-        val enemyPawnPosition = Position(moveData.fromRow, moveData.toCol)
-        if (!board.containsPieceOfPlayer(enemyPawnPosition, !player)) return null
-
-        val enemyPawn = board.getPieceAt(enemyPawnPosition)!!
-        if (enemyPawn.rules !is PawnPieceRules) return null
-
-        val enemyRules = enemyPawn.rules
-        if (!enemyRules.hasJustMovedTwoPlaces) return null
-
-        return Play(
-            listOf(
-                Move(moveData.from, moveData.to, board),
-                Take(enemyPawnPosition, board),
-            ),
-        )
     }
 }
 
