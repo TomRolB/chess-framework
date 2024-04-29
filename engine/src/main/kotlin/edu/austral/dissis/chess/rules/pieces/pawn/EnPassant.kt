@@ -15,8 +15,8 @@ import edu.austral.dissis.chess.rules.pieces.IsPieceOfType
 class EnPassant(
     val board: GameBoard,
     val moveData: MovementData,
-    val enemyPlayer: Player
-): Rule<Play?> {
+    val enemyPlayer: Player,
+) : Rule<Play?> {
     val possibleEnemyPawnPosition = Position(moveData.fromRow, moveData.toCol)
 
     override fun verify(): Play? {
@@ -25,10 +25,11 @@ class EnPassant(
                 board,
                 possibleEnemyPawnPosition,
                 enemyPlayer,
-                next = IsPieceOfType(
-                    PawnPieceRules::class.java,
-                    next = MovedTwoPlaces()
-                )
+                next =
+                    IsPieceOfType(
+                        PawnPieceRules::class.java,
+                        next = MovedTwoPlaces(),
+                    ),
             )
 
         return Play(

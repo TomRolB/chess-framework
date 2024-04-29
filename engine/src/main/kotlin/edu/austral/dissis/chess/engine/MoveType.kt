@@ -177,7 +177,6 @@ enum class ClassicMoveType : MoveType {
             ) {
                 blocked = true
             } else {
-
                 result.addLast(reachablePos)
 
                 // We check if there is an enemy piece after adding, since

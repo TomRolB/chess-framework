@@ -1,7 +1,6 @@
 package edu.austral.dissis.chess.rules
 
 import edu.austral.dissis.chess.engine.MoveDependant
-import edu.austral.dissis.chess.engine.Piece
 import edu.austral.dissis.chess.engine.PieceRules
 
 class PieceHasNeverMoved<T : MoveDependant>(
@@ -24,6 +23,5 @@ class PieceHasNeverMoved<T : MoveDependant>(
 //        } else {
 //            false
 //        }
-
     }
 }
