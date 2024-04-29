@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PlayerState
@@ -10,8 +10,8 @@ import edu.austral.dissis.chess.engine.getPlayerState
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.RuleChain
 
-class GameOverRules(val player: Player) : RuleChain<Pair<Play, GameBoard>, RuleResult> {
-    override fun verify(arg: Pair<Play, GameBoard>): RuleResult {
+class GameOverRules(val player: Player) : RuleChain<Pair<Play, ChessBoard>, RuleResult> {
+    override fun verify(arg: Pair<Play, ChessBoard>): RuleResult {
         val (play, board) = arg
 
         val enemyState = getPlayerState(board, !player)

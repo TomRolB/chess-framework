@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.board.Position
@@ -17,7 +17,7 @@ class IsKingsPathSafe(
     private val kingRules: King,
     val from: Position,
     val to: Position,
-    val board: GameBoard,
+    val board: ChessBoard,
 ) : Rule<Boolean> {
     override fun verify(): Boolean {
         val positions =

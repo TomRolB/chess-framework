@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.pieces.Pawn
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Play
@@ -16,7 +16,7 @@ class PostPlayRules(
     val from: Position,
     val to: Position,
     val player: Player,
-    val next: RuleChain<Pair<Play, GameBoard>, RuleResult>,
+    val next: RuleChain<Pair<Play, ChessBoard>, RuleResult>,
 ) : RuleChain<Play, RuleResult> {
     override fun verify(arg: Play): RuleResult {
         var board = arg.execute()

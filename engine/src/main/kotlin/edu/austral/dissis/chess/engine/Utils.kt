@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 
 fun getStringPosition(
@@ -51,7 +51,7 @@ class MovementData {
         this.colDelta = toCol - fromCol
     }
 
-    constructor(from: Position, to: Position, board: GameBoard, player: Player) {
+    constructor(from: Position, to: Position, board: ChessBoard, player: Player) {
         this.from = from
         this.to = to
 

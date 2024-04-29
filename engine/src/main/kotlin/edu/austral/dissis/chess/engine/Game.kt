@@ -1,18 +1,18 @@
 package edu.austral.dissis.chess.engine
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.RuleChain
 
 data class GameData(
-    val board: GameBoard,
+    val board: ChessBoard,
     val turnManager: TurnManager,
     val from: Position,
     val to: Position,
 )
 
 data class RuleResult(
-    val board: GameBoard,
+    val board: ChessBoard,
     val play: Play?,
     val engineResult: EngineResult,
     val message: String,
@@ -20,7 +20,7 @@ data class RuleResult(
 
 class Game(
     val gameRules: RuleChain<GameData, RuleResult>,
-    var board: GameBoard,
+    var board: ChessBoard,
     var turnManager: TurnManager,
 ) {
     fun movePiece(

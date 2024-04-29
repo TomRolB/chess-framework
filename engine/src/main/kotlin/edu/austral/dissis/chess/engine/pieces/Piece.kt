@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine.pieces
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MoveType
 import edu.austral.dissis.chess.engine.Play
@@ -31,12 +31,12 @@ data class PlayResult(val play: Play?, val message: String)
 
 interface PieceType {
     fun getValidPlays(
-        board: GameBoard,
+        board: ChessBoard,
         position: Position,
     ): Iterable<Play>
 
     fun getPlayIfValid(
-        board: GameBoard,
+        board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult
@@ -48,7 +48,7 @@ interface MoveDependantPieceType : PieceType {
 
 fun getValidPlaysFromMoveType(
     moveType: MoveType,
-    board: GameBoard,
+    board: ChessBoard,
     position: Position,
     player: Player,
 ) = moveType

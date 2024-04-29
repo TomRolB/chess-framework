@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.ui
 
 import edu.austral.dissis.chess.engine.pieces.Bishop
 import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.HashGameBoard
+import edu.austral.dissis.chess.engine.board.HashChessBoard
 import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.pieces.Knight
 import edu.austral.dissis.chess.engine.OneToOneTurnManager
@@ -120,7 +120,7 @@ class ChessGameApplication : Application() {
 
         private fun getEngine(): StandardGameEngine {
             val board =
-                HashGameBoard.build(
+                HashChessBoard.build(
                     validator = VALIDATOR,
                     pieces = getInitialPieces(),
                     whiteKingPosition = WK_POSITION,

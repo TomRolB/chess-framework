@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine.pieces
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.Position
@@ -40,7 +40,7 @@ class Pawn : MoveDependantPieceType {
     }
 
     override fun getValidPlays(
-        board: GameBoard,
+        board: ChessBoard,
         position: Position,
     ): Iterable<Play> {
         val (row, col) = position
@@ -55,7 +55,7 @@ class Pawn : MoveDependantPieceType {
     }
 
     override fun getPlayIfValid(
-        board: GameBoard,
+        board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult {

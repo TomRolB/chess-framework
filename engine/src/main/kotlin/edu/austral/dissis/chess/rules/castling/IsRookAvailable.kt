@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Rook
@@ -11,7 +11,7 @@ import edu.austral.dissis.chess.rules.Succeed
 import edu.austral.dissis.chess.rules.pieces.IsPieceOfType
 
 class IsRookAvailable(
-    private val board: GameBoard,
+    private val board: ChessBoard,
     private val rookPos: Position,
     private val player: Player,
 ) : Rule<Boolean> {

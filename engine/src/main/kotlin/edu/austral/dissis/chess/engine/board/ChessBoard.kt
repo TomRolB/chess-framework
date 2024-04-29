@@ -18,9 +18,9 @@ interface GameBoard {
     fun setPieceAt(
         position: Position,
         piece: Piece,
-    ): GameBoard
+    ): ChessBoard
 
-    fun delPieceAt(position: Position): GameBoard
+    fun delPieceAt(position: Position): ChessBoard
 
     fun positionExists(position: Position): Boolean
 
@@ -32,7 +32,9 @@ interface GameBoard {
     ): Boolean
 
     fun getAllPositions(): Iterable<Position>
+}
 
+interface ChessBoardOps {
     fun getAllPositionsOfPlayer(
         player: Player,
         includeKing: Boolean,
@@ -46,3 +48,4 @@ interface GameBoard {
     fun getKingPosition(player: Player): Position
 }
 
+interface ChessBoard : GameBoard, ChessBoardOps

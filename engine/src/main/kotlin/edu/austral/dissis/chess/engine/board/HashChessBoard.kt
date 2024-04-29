@@ -1,27 +1,23 @@
-package edu.austral.dissis.chess.engine
+package edu.austral.dissis.chess.engine.board
 
-import edu.austral.dissis.chess.engine.board.GameBoard
-import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.board.PositionValidator
+import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.pieces.Piece
 
-class HashGameBoard private constructor(
+class HashChessBoard private constructor(
     private val validator: PositionValidator,
     private val boardMap: Map<Position, Piece>,
-    // TODO: may replace by something better. Maybe we can proxy HashGameBoard and add these positions as proxy methods
-    // TODO: or actually, could simply inherit. This is the only case where inheritance might come in handy
     private val whiteKingPosition: Position,
     private val blackKingPosition: Position,
-) : GameBoard {
+) : ChessBoard {
     companion object {
         fun build(
             validator: PositionValidator,
             pieces: List<Pair<Position, Piece>>,
             whiteKingPosition: Position,
             blackKingPosition: Position,
-        ): HashGameBoard {
-            return HashGameBoard(validator, pieces.toMap(), whiteKingPosition, blackKingPosition)
+        ): HashChessBoard {
+            return HashChessBoard(validator, pieces.toMap(), whiteKingPosition, blackKingPosition)
         }
     }
 
@@ -48,7 +44,7 @@ class HashGameBoard private constructor(
     override fun setPieceAt(
         position: Position,
         piece: Piece,
-    ): HashGameBoard {
+    ): HashChessBoard {
         val newMap = boardMap + (position to piece)
 
         var newWhiteKingPosition = whiteKingPosition
@@ -61,10 +57,10 @@ class HashGameBoard private constructor(
             }
         }
 
-        return HashGameBoard(validator, newMap, newWhiteKingPosition, newBlackKingPosition)
+        return HashChessBoard(validator, newMap, newWhiteKingPosition, newBlackKingPosition)
     }
 
-    override fun delPieceAt(position: Position): HashGameBoard {
+    override fun delPieceAt(position: Position): HashChessBoard {
         require(position != whiteKingPosition && position != blackKingPosition) {
             "A king cannot be deleted without being set in other position first"
         }
@@ -72,7 +68,7 @@ class HashGameBoard private constructor(
         val newMap: HashMap<Position, Piece> = HashMap(boardMap)
         newMap.remove(position)
 
-        return HashGameBoard(validator, newMap, whiteKingPosition, blackKingPosition)
+        return HashChessBoard(validator, newMap, whiteKingPosition, blackKingPosition)
     }
 
     override fun positionExists(position: Position): Boolean {

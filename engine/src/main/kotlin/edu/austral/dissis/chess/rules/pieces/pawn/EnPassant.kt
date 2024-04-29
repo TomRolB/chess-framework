@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.rules.pieces.pawn
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.pieces.Pawn
@@ -13,7 +13,7 @@ import edu.austral.dissis.chess.rules.Rule
 import edu.austral.dissis.chess.rules.pieces.IsPieceOfType
 
 class EnPassant(
-    val board: GameBoard,
+    val board: ChessBoard,
     val moveData: MovementData,
     val enemyPlayer: Player,
 ) : Rule<Play?> {

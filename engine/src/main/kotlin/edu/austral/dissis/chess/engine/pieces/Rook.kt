@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.engine.pieces
 
 import edu.austral.dissis.chess.engine.ClassicMoveType
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
@@ -25,7 +25,7 @@ class Rook : MoveDependantPieceType {
     }
 
     override fun getValidPlays(
-        board: GameBoard,
+        board: ChessBoard,
         position: Position,
     ): Iterable<Play> {
         return moveType
@@ -41,7 +41,7 @@ class Rook : MoveDependantPieceType {
     }
 
     override fun getPlayIfValid(
-        board: GameBoard,
+        board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult {

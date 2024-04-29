@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import kotlin.math.absoluteValue
 import kotlin.math.sign
@@ -10,11 +10,11 @@ interface MoveType {
 
     fun isPathBlocked(
         moveData: MovementData,
-        board: GameBoard,
+        board: ChessBoard,
     ): Boolean
 
     fun getPossiblePositions(
-        board: GameBoard,
+        board: ChessBoard,
         position: Position,
     ): Iterable<Position>
 }
@@ -85,7 +85,7 @@ enum class ClassicMoveType : MoveType {
 
     override fun isPathBlocked(
         moveData: MovementData,
-        board: GameBoard,
+        board: ChessBoard,
     ): Boolean {
         return when (this) {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT_LINE -> {
@@ -129,7 +129,7 @@ enum class ClassicMoveType : MoveType {
     }
 
     override fun getPossiblePositions(
-        board: GameBoard,
+        board: ChessBoard,
         position: Position,
     ): Iterable<Position> {
         return when (this) {
@@ -152,7 +152,7 @@ enum class ClassicMoveType : MoveType {
     }
 
     private fun getLineOfPositions(
-        board: GameBoard,
+        board: ChessBoard,
         position: Position,
         increments: Pair<Int, Int>,
     ): List<Position> {

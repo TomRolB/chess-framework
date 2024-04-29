@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.All
@@ -12,7 +12,7 @@ import edu.austral.dissis.chess.rules.SimpleRule
 class CastlingSubRules(
     private val kingRules: King,
     private val hasEverMoved: Boolean,
-    val board: GameBoard,
+    val board: ChessBoard,
     val from: Position,
     val to: Position,
 ) : RuleChain<Pair<Position, Position>, Boolean> {

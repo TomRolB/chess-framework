@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.Position
@@ -9,7 +9,7 @@ import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.rules.RuleChain
 
 class IsPlayValid(
-    val board: GameBoard,
+    val board: ChessBoard,
     val from: Position,
     val to: Position,
     val next: RuleChain<Play, RuleResult>,

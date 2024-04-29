@@ -1,23 +1,23 @@
 package edu.austral.dissis.chess.engine
 
-import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Piece
 
 sealed interface Action {
-    fun execute(): GameBoard
+    fun execute(): ChessBoard
 
-    fun setBoard(board: GameBoard): Action
+    fun setBoard(board: ChessBoard): Action
 }
 
 class Play(val actions: Iterable<Action>) : Action {
-    override fun execute(): GameBoard {
+    override fun execute(): ChessBoard {
         return actions
             .reduce { action, next -> next.setBoard(action.execute()) }
             .execute()
     }
 
-    override fun setBoard(board: GameBoard): Action {
+    override fun setBoard(board: ChessBoard): Action {
         return Play(actions)
     }
 }
@@ -25,24 +25,24 @@ class Play(val actions: Iterable<Action>) : Action {
 class Move : Action {
     val from: Position
     val to: Position
-    val board: GameBoard
+    val board: ChessBoard
     val pieceNextTurn: Piece
 
-    constructor(from: Position, to: Position, board: GameBoard) {
+    constructor(from: Position, to: Position, board: ChessBoard) {
         this.from = from
         this.to = to
         this.board = board
         this.pieceNextTurn = board.getPieceAt(from)!! // At this point, we've made all necessary checks
     }
 
-    constructor(from: Position, to: Position, board: GameBoard, pieceNextTurn: Piece) {
+    constructor(from: Position, to: Position, board: ChessBoard, pieceNextTurn: Piece) {
         this.from = from
         this.to = to
         this.board = board
         this.pieceNextTurn = pieceNextTurn
     }
 
-    override fun execute(): GameBoard {
+    override fun execute(): ChessBoard {
         val gameBoardAfter =
             board
                 .setPieceAt(to, pieceNextTurn)
@@ -51,7 +51,7 @@ class Move : Action {
         return gameBoardAfter
     }
 
-    override fun setBoard(board: GameBoard): Action {
+    override fun setBoard(board: ChessBoard): Action {
         return Move(from, to, board, pieceNextTurn)
     }
 
@@ -60,13 +60,13 @@ class Move : Action {
     }
 }
 
-class Take(val position: Position, val board: GameBoard) : Action {
-    override fun execute(): GameBoard {
+class Take(val position: Position, val board: ChessBoard) : Action {
+    override fun execute(): ChessBoard {
         val gameBoardAfter = board.delPieceAt(position)
         return gameBoardAfter
     }
 
-    override fun setBoard(board: GameBoard): Action {
+    override fun setBoard(board: ChessBoard): Action {
         return Take(position, board)
     }
 }
