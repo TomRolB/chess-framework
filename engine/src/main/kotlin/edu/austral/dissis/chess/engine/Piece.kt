@@ -246,8 +246,6 @@ class KnightPieceRules(val player: Player) : PieceRules {
         return when {
             moveType.isViolated(moveData) ->
                 PlayResult(null, "A knight cannot move this way")
-            moveType.isPathBlocked(moveData, board) ->
-                    PlayResult(null, "Cannot move there: the path is blocked")
             else -> PlayResult(Move(from, to, board).asPlay(), "Valid move")
         }
     }
