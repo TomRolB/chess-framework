@@ -1,5 +1,6 @@
 package edu.austral.dissis.chess.engine
 
+import edu.austral.dissis.chess.rules.IndependentRuleChain
 import edu.austral.dissis.chess.rules.IsKingChecked
 import edu.austral.dissis.chess.rules.castling.Castling
 import edu.austral.dissis.chess.rules.pieces.pawn.PawnValidMove
@@ -29,6 +30,8 @@ data class Piece(val player: Player, val rules: PieceRules) {
     }
 }
 
+data class PlayResult(val play: Play?, val message: String)
+
 interface PieceRules {
     fun getValidPlays(
         board: GameBoard,
@@ -39,7 +42,7 @@ interface PieceRules {
         board: GameBoard,
         from: Position,
         to: Position,
-    ): Play?
+    ): PlayResult
 }
 
 interface MoveDependantPieceRules : PieceRules {
@@ -86,7 +89,7 @@ class PawnPieceRules : MoveDependantPieceRules {
 
         return increments
             .map { Position(row + it.first, col + it.second) }
-            .mapNotNull { getPlayIfValid(board, position, it) }
+            .mapNotNull { getPlayIfValid(board, position, it).play }
             .filter {
                 val futureBoard = it.execute()
                 !IsKingChecked(futureBoard, player).verify()
@@ -97,12 +100,11 @@ class PawnPieceRules : MoveDependantPieceRules {
         board: GameBoard,
         from: Position,
         to: Position,
-    ): Play? {
-        // In this case, moveData is always created from
-        // WHITE's point of view, to avoid splitting rules
-        // based on the player
-
-        return PawnValidMove(board, from, to, player, hasEverMoved).verify()
+    ): PlayResult {
+        return PawnValidMove(board, from, to, player, hasEverMoved)
+            .verify()
+            ?.let { PlayResult(it, "Valid play") }
+            ?: PlayResult(null, "Pawn cannot move this way")
     }
 }
 
@@ -143,35 +145,46 @@ class RookPieceRules : MoveDependantPieceRules {
         board: GameBoard,
         from: Position,
         to: Position,
-    ): Play? {
+    ): PlayResult {
         val moveData = MovementData(from, to, board)
 
-        // TODO: This is repeated at Bishop's and Queen's, but
-        //  at the same time is difficult to reduce to a single
-        //  Rule, since there is an extra rule for the rook
-        //  (checking if it moved, although this could be
-        //  solved by passing 'ExtraRules') and All cannot be
-        //  used, considering it returns a boolean (the
-        //  alternative is to simply have 'subRules' and return
-        //  the play if these are valid, as we have done some
-        //  other times, but this seems like hardcoding).
-        return when {
-            moveType.isViolated(moveData) -> {
-                println("A tower cannot move this way")
-                null
-            }
-            moveType.isPathBlocked(moveData, board) -> {
-                println("Cannot move there: the path is blocked")
-                null
-            }
-            !hasEverMoved -> {
-                val rulesNextTurn = RookPieceRules(player, true)
-                val pieceNextTurn = Piece(player, rulesNextTurn)
-                Move(from, to, board, pieceNextTurn).asPlay()
-            }
-            else -> {
-                Move(from, to, board).asPlay()
-            }
+//        return when {
+//            moveType.isViolated(moveData) -> {
+//                println("A tower cannot move this way")
+//                null
+//            }
+//            moveType.isPathBlocked(moveData, board) -> {
+//                println("Cannot move there: the path is blocked")
+//                null
+//            }
+//            !hasEverMoved -> {
+//                val rulesNextTurn = RookPieceRules(player, true)
+//                val pieceNextTurn = Piece(player, rulesNextTurn)
+//                Move(from, to, board, pieceNextTurn).asPlay()
+//            }
+//            else -> {
+//                Move(from, to, board).asPlay()
+//            }
+//        }
+
+        return IndependentRuleChain(
+            moveType.isViolated(moveData)
+                    to PlayResult(null, "A rook cannot move this way"),
+            moveType.isPathBlocked(moveData, board)
+                    to PlayResult(null, "Cannot move there: the path is blocked")
+        )
+            .onSuccess(PlayResult(getPlay(from, to, board), "Valid move"))
+            .verify()!!
+    }
+
+    private fun getPlay(from: Position, to: Position, board: GameBoard): Play? {
+        return if (!hasEverMoved) {
+            val rulesNextTurn = RookPieceRules(player, true)
+            val pieceNextTurn = Piece(player, rulesNextTurn)
+            Move(from, to, board, pieceNextTurn).asPlay()
+        }
+        else {
+            Move(from, to, board).asPlay()
         }
     }
 }
@@ -190,22 +203,17 @@ class BishopPieceRules(val player: Player) : PieceRules {
         board: GameBoard,
         from: Position,
         to: Position,
-    ): Play? {
+    ): PlayResult {
         val moveData = MovementData(from, to, board)
 
-        return when {
-            moveType.isViolated(moveData) -> {
-                println("A bishop cannot move this way")
-                null
-            }
-            moveType.isPathBlocked(moveData, board) -> {
-                println("Cannot move there: the path is blocked")
-                null
-            }
-            else -> {
-                Move(from, to, board).asPlay()
-            }
-        }
+        return IndependentRuleChain(
+            moveType.isViolated(moveData)
+                    to PlayResult(null, "A bishop cannot move this way"),
+            moveType.isPathBlocked(moveData, board)
+                    to PlayResult(null, "Cannot move there: the path is blocked")
+        )
+            .onSuccess(PlayResult(Move(from, to, board).asPlay(), "Valid move"))
+            .verify()!!
     }
 }
 
@@ -223,24 +231,20 @@ class QueenPieceRules(val player: Player) : PieceRules {
         board: GameBoard,
         from: Position,
         to: Position,
-    ): Play? {
-        val moveData = MovementData(from, to, board)
+    ): PlayResult {
+            val moveData = MovementData(from, to, board)
 
-        return when {
-            moveType.isViolated(moveData) -> {
-                println("A queen cannot move this way")
-                null
-            }
-            moveType.isPathBlocked(moveData, board) -> {
-                println("Cannot move there: the path is blocked")
-                null
-            }
-            else -> {
-                Move(from, to, board).asPlay()
-            }
-        }
+            return IndependentRuleChain(
+                moveType.isViolated(moveData)
+                        to PlayResult(null, "A queen cannot move this way"),
+                moveType.isPathBlocked(moveData, board)
+                        to PlayResult(null, "Cannot move there: the path is blocked")
+            )
+                .onSuccess(PlayResult(Move(from, to, board).asPlay(), "Valid move"))
+                .verify()!!
     }
 }
+
 
 class KnightPieceRules(val player: Player) : PieceRules {
     private val moveType = ClassicMoveType.L_SHAPED
@@ -256,16 +260,17 @@ class KnightPieceRules(val player: Player) : PieceRules {
         board: GameBoard,
         from: Position,
         to: Position,
-    ): Play? {
+    ): PlayResult {
         val moveData = MovementData(from, to, board)
 
-        return when {
-            moveType.isViolated(moveData) -> {
-                println("A bishop cannot move this way")
-                null
-            }
-            else -> Move(from, to, board).asPlay()
-        }
+        return IndependentRuleChain(
+            moveType.isViolated(moveData)
+                    to PlayResult(null, "A knight cannot move this way"),
+            moveType.isPathBlocked(moveData, board)
+                    to PlayResult(null, "Cannot move there: the path is blocked")
+        )
+            .onSuccess(PlayResult(Move(from, to, board).asPlay(), "Valid move"))
+            .verify()!!
     }
 }
 
@@ -313,7 +318,7 @@ class KingPieceRules : MoveDependantPieceRules {
                     Position(position.row, C_COLUMN),
                     Position(position.row, G_COLUMN),
                 ).mapNotNull {
-                    getPlayIfValid(board, position, it)
+                    getPlayIfValid(board, position, it).play
                 },
             )
     }
@@ -322,15 +327,18 @@ class KingPieceRules : MoveDependantPieceRules {
         board: GameBoard,
         from: Position,
         to: Position,
-    ): Play? {
+    ): PlayResult {
         val moveData = MovementData(from, to, board)
         return when {
+            // TODO: Is it possible to "rulify" it?
             moveType.isViolated(moveData) -> {
                 Castling(this, hasEverMoved, board, from, to).verify()
+                    ?.let { PlayResult(it, "Valid play") }
+                    ?: PlayResult(null, "King cannot move this way")
             }
             else -> {
                 val pieceNextTurn = Piece(player, KingPieceRules(player, hasEverMoved = true))
-                Move(from, to, board, pieceNextTurn).asPlay()
+                PlayResult(Move(from, to, board, pieceNextTurn).asPlay(), "Valid play")
             }
         }
     }

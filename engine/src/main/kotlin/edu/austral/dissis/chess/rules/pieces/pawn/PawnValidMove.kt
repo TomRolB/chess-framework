@@ -15,6 +15,10 @@ class PawnValidMove(
     val hasEverMoved: Boolean
 ): Rule<Play?> {
     override fun verify(): Play? {
+        // In this case, moveData is always created from
+        // WHITE's point of view, to avoid splitting rules
+        // based on the player
+
         val moveData = MovementData(from, to, board, player)
 
         val pawnDiagonal = PawnDiagonal(board, moveData, player)

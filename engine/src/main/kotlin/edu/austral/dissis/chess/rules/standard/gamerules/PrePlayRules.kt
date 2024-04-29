@@ -6,7 +6,7 @@ import edu.austral.dissis.chess.engine.Piece
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Position
 import edu.austral.dissis.chess.engine.RuleResult
-import edu.austral.dissis.chess.rules.FirstFailOrNull
+import edu.austral.dissis.chess.rules.IndependentRuleChain
 import edu.austral.dissis.chess.rules.RuleChain
 
 class PrePlayRules(
@@ -21,7 +21,7 @@ class PrePlayRules(
         // as before (although they were being printed before,
         // not returned. Should actually consider the messaging policy).
 
-        return FirstFailOrNull(
+        return IndependentRuleChain(
             board.positionExists(from) to "Starting position does not exist",
             board.positionExists(to) to "Final position does not exist",
             board.containsPieceOfPlayer(from, player) to "This tile does not contain a piece of yours",

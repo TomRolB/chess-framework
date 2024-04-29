@@ -15,10 +15,10 @@ class IsPlayValid(
     val next: RuleChain<Play, RuleResult>,
 ) : RuleChain<Piece, RuleResult> {
     override fun verify(arg: Piece): RuleResult {
-        val play = arg.rules.getPlayIfValid(board, from, to)
+        val (play, message) = arg.rules.getPlayIfValid(board, from, to)
 
         return if (play == null) {
-            RuleResult(board, null, EngineResult.PIECE_VIOLATION, "Cannot move piece that way")
+            RuleResult(board, null, EngineResult.PIECE_VIOLATION, message)
         } else {
             next.verify(play)
         }
