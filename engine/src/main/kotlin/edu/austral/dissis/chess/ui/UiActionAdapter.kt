@@ -4,22 +4,28 @@ import edu.austral.dissis.chess.engine.Action
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Take
-import edu.austral.dissis.chess.gui.ChessPiece
 import edu.austral.dissis.chess.gui.Position
 
 class UiActionAdapter(
     private val pieceAdapter: UiPieceAdapter,
     private val postPlayProcedures: (UiBoard) -> UiBoard,
 ) {
-    fun applyPlay(board: UiBoard, play: Play?): UiBoard {
-        return if (play == null) board
-        else {
+    fun applyPlay(
+        board: UiBoard,
+        play: Play?,
+    ): UiBoard {
+        return if (play == null) {
+            board
+        } else {
             val boardAfterPlay = adapt(play, board).execute()
             postPlayProcedures(boardAfterPlay) // TODO: Queen image loads after moving promoted pawn
         }
     }
 
-    private fun adapt(action: Action, board: UiBoard): UiAdaptedAction {
+    private fun adapt(
+        action: Action,
+        board: UiBoard,
+    ): UiAdaptedAction {
         return when (action) {
             is Move -> adapt(move = action, board)
             is Play -> adapt(play = action, board)

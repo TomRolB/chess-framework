@@ -15,8 +15,8 @@ enum class Player {
 
 enum class PlayerState {
     NORMAL,
-    CHECKED,
     STALEMATE,
+    CHECKED,
     CHECKMATE,
 }
 

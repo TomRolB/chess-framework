@@ -21,11 +21,10 @@ class StandardGameEngine(
     val game: Game,
     val validator: RectangleBoardValidator,
     val pieceAdapter: UiPieceAdapter,
-    val postPlayProcedures: (UiBoard) -> UiBoard
+    val postPlayProcedures: (UiBoard) -> UiBoard,
 ) : GameEngine {
     var board: UiBoard = mapOf()
     val actionAdapter = UiActionAdapter(pieceAdapter, postPlayProcedures)
-
 
     override fun applyMove(move: Move): MoveResult {
         val (from, to) = move
@@ -35,7 +34,7 @@ class StandardGameEngine(
 
         return when (engineResult) {
             EngineResult.GENERAL_MOVE_VIOLATION, EngineResult.PIECE_VIOLATION, EngineResult.POST_PLAY_VIOLATION -> {
-                //TODO: reason = [message from the engine]
+                // TODO: reason = [message from the engine]
                 InvalidMove("Invalid move")
             }
             EngineResult.WHITE_WINS -> GameOver(PlayerColor.WHITE)
@@ -45,7 +44,7 @@ class StandardGameEngine(
             EngineResult.VALID_MOVE -> {
                 NewGameState(
                     pieces = board.values.toList(),
-                    currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn())
+                    currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
                 )
             }
         }
@@ -68,7 +67,7 @@ class StandardGameEngine(
         return InitialState(
             boardSize = BoardSize(validator.numberRows, validator.numberCols),
             pieces = board.values.toList(),
-            currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn())
+            currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
         )
     }
 }

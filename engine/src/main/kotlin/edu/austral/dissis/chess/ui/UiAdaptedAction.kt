@@ -5,6 +5,7 @@ import edu.austral.dissis.chess.gui.Position
 
 sealed interface UiAdaptedAction {
     fun execute(): UiBoard
+
     fun setBoard(newBoard: UiBoard): UiAdaptedAction
 }
 
@@ -28,8 +29,8 @@ class UiAdaptedMove(
 ) : UiAdaptedAction {
     override fun execute(): UiBoard {
         return board
-                .plus(to to pieceNextTurn)
-                .minus(from)
+            .plus(to to pieceNextTurn)
+            .minus(from)
     }
 
     override fun setBoard(newBoard: UiBoard): UiAdaptedMove {
@@ -39,7 +40,7 @@ class UiAdaptedMove(
 
 class UiAdaptedTake(
     private val position: Position,
-    private val board: UiBoard
+    private val board: UiBoard,
 ) : UiAdaptedAction {
     override fun execute(): UiBoard {
         return board.minus(position)

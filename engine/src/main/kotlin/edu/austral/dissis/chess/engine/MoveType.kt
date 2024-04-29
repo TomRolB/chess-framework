@@ -27,13 +27,19 @@ interface MoveType {
 // Besides, the reason for having an interface is that MoveType is not sealed
 // (different MoveTypes may be defined apart from the ones below)
 
-enum class ClassicMoveType(val increments: Iterable<Pair<Int, Int>>) : MoveType {
-    VERTICAL_AND_HORIZONTAL(parseIncrements("←↑→↓")),
-    DIAGONAL(parseIncrements("↖↗↘↙")),
-    ANY_STRAIGHT_LINE(parseIncrements("←↑→↓↖↗↘↙")),
-    L_SHAPED(parseIncrements("↰↱↲↳⬐⬎⬑⬏")),
-    ADJACENT_SQUARE(parseIncrements("←↑→↓↖↗↘↙")),
+enum class ClassicMoveType : MoveType {
+    VERTICAL_AND_HORIZONTAL,
+    DIAGONAL,
+    ANY_STRAIGHT_LINE,
+    L_SHAPED,
+    ADJACENT_SQUARE,
     ;
+
+    companion object {
+        val VH = listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
+        val D = listOf(1 to 1, -1 to 1, 1 to -1, 1 to -1)
+        val L = listOf(2 to 1, 1 to 2, -2 to 1, -1 to 2, 2 to -1, 1 to -2, -2 to -1, -1 to -2)
+    }
 
     override fun isViolated(moveData: MovementData): Boolean {
         return when (this) {
@@ -109,20 +115,31 @@ enum class ClassicMoveType(val increments: Iterable<Pair<Int, Int>>) : MoveType 
         }
     }
 
+    private fun getIncrements(): Iterable<Pair<Int, Int>> {
+        return when (this) {
+            VERTICAL_AND_HORIZONTAL -> VH
+            DIAGONAL -> D
+            ANY_STRAIGHT_LINE, ADJACENT_SQUARE -> {
+                VERTICAL_AND_HORIZONTAL.getIncrements() + DIAGONAL.getIncrements()
+            }
+            L_SHAPED -> L
+        }
+    }
+
     override fun getPossiblePositions(
         board: GameBoard,
         position: Position,
     ): Iterable<Position> {
         return when (this) {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT_LINE -> {
-                this.increments
+                this.getIncrements()
                     .flatMap { getLineOfPositions(board, position, it) }
             }
             L_SHAPED, ADJACENT_SQUARE -> {
                 val (row, col) = position
                 val player = board.getPieceAt(position)!!.player
 
-                this.increments
+                this.getIncrements()
                     .map { Position(row + it.first, col + it.second) }
                     .filter {
                         board.positionExists(it) &&
@@ -148,58 +165,29 @@ enum class ClassicMoveType(val increments: Iterable<Pair<Int, Int>>) : MoveType 
 
         val result: MutableList<Position> = mutableListOf()
 
-        var blocked = false
-        while (!blocked) {
+        while (true) {
             val reachablePos = Position(row, col)
 
             // We'll only add the position if it exists, does not hold
             // a piece of the same player and does not imply a move
             // that would leave our king checked
-            if (
-                !board.positionExists(reachablePos) ||
+            if (!board.positionExists(reachablePos) ||
                 board.containsPieceOfPlayer(reachablePos, player)
             ) {
-                blocked = true
-            } else {
-                result.addLast(reachablePos)
-
-                // We check if there is an enemy piece after adding, since
-                // it is possible to take that piece, but we must then
-                // break, as the rest of the path is blocked by it
-                if (board.containsPieceOfPlayer(reachablePos, !player)) blocked = true
-
-                row += rowIncrement
-                col += colIncrement
+                break
             }
+
+            result.addLast(reachablePos)
+
+            // We check if there is an enemy piece after adding, since
+            // it is possible to eat that piece, but we must then
+            // break, since the rest of the path is blocked by it
+            if (board.containsPieceOfPlayer(reachablePos, !player)) break
+
+            row += rowIncrement
+            col += colIncrement
         }
 
         return result
     }
 }
-
-private fun parseIncrements(pattern: String): Iterable<Pair<Int, Int>> {
-    return pattern
-        .toCharArray()
-        .map {
-            when (it) {
-                '↑' -> 0 to 1
-                '→' -> 1 to 0
-                '↓' -> 0 to -1
-                '←' -> -1 to 0
-                '↖' -> -1 to 1
-                '↗' -> 1 to 1
-                '↘' -> 1 to -1
-                '↙' -> -1 to -1
-                '↰' -> -1 to 2
-                '↱' -> 1 to 2
-                '↲' -> -1 to -2
-                '↳' -> -1 to 2
-                '⬐' -> -2 to -1
-                '⬎' -> 2 to -1
-                '⬑' -> -2 to 1
-                '⬏' -> 2 to 1
-                else -> throw IllegalArgumentException()
-            }
-        }
-}
-

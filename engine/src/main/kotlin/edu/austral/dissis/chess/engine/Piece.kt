@@ -562,13 +562,7 @@ class KingPieceRules : PieceRules, MoveDependant {
             val willBeChecked: Int = if (willBeChecked(board, player)) 1 else 0
             val combinedStatus: Int = isChecked * 2 + willBeChecked
 
-            return when (combinedStatus) {
-                0 -> PlayerState.NORMAL
-                2 -> PlayerState.CHECKED
-                1 -> PlayerState.STALEMATE
-                3 -> PlayerState.CHECKMATE
-                else -> throw IllegalStateException("Invalid combined status")
-            }
+            return PlayerState.entries[combinedStatus]
         }
     }
 }

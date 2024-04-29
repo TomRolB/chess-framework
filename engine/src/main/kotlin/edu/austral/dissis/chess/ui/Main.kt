@@ -34,10 +34,6 @@ class ChessGameApplication : Application() {
     private val gameEngine = getEngine()
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
-    companion object {
-        const val GAME_TITLE = "Chess"
-    }
-
     override fun start(primaryStage: Stage) {
         primaryStage.title = GAME_TITLE
 
@@ -47,25 +43,59 @@ class ChessGameApplication : Application() {
         primaryStage.show()
     }
 
-    private fun getEngine(): StandardGameEngine {
-        val validator = RectangleBoardValidator(8, 8)
-        val board = HashGameBoard.build(
-            validator = validator,
-            pieces = getInitialPieces(),
-            whiteKingPosition = Position(1, 5),
-            blackKingPosition = Position(8, 5)
-        )
-        val pieceAdapter = UiPieceAdapter(getPieceIdMap())
-        val postPlayProcedures = getPostPlayProcedures(validator)
+    companion object {
+        const val GAME_TITLE = "Chess"
+        val ONE_TO_EIGHT = 1..8
+        val WHITE_PIECES = getFromPlayer(1, 2, Player.WHITE)
+        val BLACK_PIECES = getFromPlayer(8, 7, Player.BLACK)
+        val VALIDATOR = RectangleBoardValidator(8, 8)
+        val WK_POSITION = Position(1, 5)
+        val BK_POSITION = Position(8, 5)
 
-        val game = Game(StandardGameRules(), board, OneToOneTurnManager())
+        private fun getFromPlayer(
+            borderRow: Int,
+            pawnsRow: Int,
+            player: Player,
+        ): List<Pair<Position, Piece>> {
+            val firstRow =
+                listOf(
+                    RookPieceRules(player),
+                    KnightPieceRules(player),
+                    BishopPieceRules(player),
+                    QueenPieceRules(player),
+                    KingPieceRules(player),
+                    BishopPieceRules(player),
+                    KnightPieceRules(player),
+                    RookPieceRules(player),
+                )
+                    .zip(ONE_TO_EIGHT)
+                    .map { (pieceRules, col) -> Position(borderRow, col) to Piece(player, pieceRules) }
+            val secondRow =
+                ONE_TO_EIGHT
+                    .map { Position(pawnsRow, it) to Piece(player, PawnPieceRules(player)) }
+            return firstRow + secondRow
+        }
 
-        return StandardGameEngine(game, validator, pieceAdapter, postPlayProcedures)
-    }
+        private fun getInitialPieces(): List<Pair<Position, Piece>> {
+            return WHITE_PIECES + BLACK_PIECES
+        }
 
-    private fun getPostPlayProcedures(validator: RectangleBoardValidator): (UiBoard) -> Map<edu.austral.dissis.chess.gui.Position, ChessPiece> {
-        return {
-                uiBoard: UiBoard ->
+        private fun getPieceIdMap(): Map<KClass<out PieceRules>, String> {
+            return listOf(
+                PawnPieceRules::class to "pawn",
+                RookPieceRules::class to "rook",
+                BishopPieceRules::class to "bishop",
+                KnightPieceRules::class to "knight",
+                QueenPieceRules::class to "queen",
+                KingPieceRules::class to "king",
+            ).toMap()
+        }
+
+        private fun getPostPlayProcedures(
+            validator: RectangleBoardValidator,
+        ): (UiBoard) -> Map<edu.austral.dissis.chess.gui.Position, ChessPiece> {
+            return {
+                    uiBoard: UiBoard ->
 
                 uiBoard.map {
                     val (pos, piece) = it
@@ -85,36 +115,23 @@ class ChessGameApplication : Application() {
                         pos to piece
                     }
                 }.toMap()
+            }
         }
-    }
 
-    private fun getPieceIdMap(): Map<KClass<out PieceRules>, String> {
-        return listOf(
-            PawnPieceRules::class to "pawn",
-            RookPieceRules::class to "rook",
-            BishopPieceRules::class to "bishop",
-            KnightPieceRules::class to "knight",
-            QueenPieceRules::class to "queen",
-            KingPieceRules::class to "king"
-        ).toMap()
-    }
+        private fun getEngine(): StandardGameEngine {
+            val board =
+                HashGameBoard.build(
+                    validator = VALIDATOR,
+                    pieces = getInitialPieces(),
+                    whiteKingPosition = WK_POSITION,
+                    blackKingPosition = BK_POSITION,
+                )
+            val pieceAdapter = UiPieceAdapter(getPieceIdMap())
+            val postPlayProcedures = getPostPlayProcedures(VALIDATOR)
 
-    private fun getInitialPieces(): List<Pair<Position, Piece>> {
-        return getFromPlayer(1, 2, Player.WHITE) + getFromPlayer(8, 7, Player.BLACK)
-    }
+            val game = Game(StandardGameRules(), board, OneToOneTurnManager())
 
-    private fun getFromPlayer(borderRow: Int, pawnsRow: Int, player: Player): List<Pair<Position, Piece>> {
-        return listOf(
-            Position(borderRow, 1) to Piece(player, RookPieceRules(player)),
-            Position(borderRow, 2) to Piece(player, KnightPieceRules(player)),
-            Position(borderRow, 3) to Piece(player, BishopPieceRules(player)),
-            Position(borderRow, 4) to Piece(player, QueenPieceRules(player)),
-            Position(borderRow, 5) to Piece(player, KingPieceRules(player)),
-            Position(borderRow, 6) to Piece(player, BishopPieceRules(player)),
-            Position(borderRow, 7) to Piece(player, KnightPieceRules(player)),
-            Position(borderRow, 8) to Piece(player, RookPieceRules(player)),
-        ) + (1..8).map {
-            Position(pawnsRow, it) to Piece(player, PawnPieceRules(player))
+            return StandardGameEngine(game, VALIDATOR, pieceAdapter, postPlayProcedures)
         }
     }
 }
