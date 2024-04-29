@@ -1,9 +1,9 @@
 package edu.austral.dissis.chess.rules
 
-import edu.austral.dissis.chess.engine.MoveDependant
+import edu.austral.dissis.chess.engine.MoveDependantPieceRules
 import edu.austral.dissis.chess.engine.PieceRules
 
-class PieceHasNeverMoved<T : MoveDependant>(
+class PieceHasNeverMoved<T : MoveDependantPieceRules>(
     val next: RuleChain<PieceRules, Boolean>,
 ) : RuleChain<T, Boolean> {
     override fun verify(arg: T): Boolean {

@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.engine
 
 import edu.austral.dissis.chess.rules.castling.Castling
-import edu.austral.dissis.chess.rules.pieces.pawn.EnPassant
+import edu.austral.dissis.chess.rules.pieces.pawn.PawnValidMove
 
 // Our engine is not interested in whether two pieces of the same
 // type are different objects or not: the pieces are immutable,
@@ -28,11 +28,6 @@ data class Piece(val player: Player, val rules: PieceRules) {
 }
 
 interface PieceRules {
-    fun isPlayValid(
-        from: Position,
-        to: Position,
-    ): Boolean
-
     fun getValidPlays(
         board: GameBoard,
         position: Position,
@@ -45,11 +40,11 @@ interface PieceRules {
     ): Play?
 }
 
-interface MoveDependant : PieceRules {
+interface MoveDependantPieceRules : PieceRules {
     val hasEverMoved: Boolean
 }
 
-class PawnPieceRules : MoveDependant {
+class PawnPieceRules : MoveDependantPieceRules {
     private val player: Player
     val hasJustMovedTwoPlaces: Boolean
     private val increments = listOf(1 to 1, 0 to 1, -1 to 1, 0 to 2)
@@ -80,13 +75,6 @@ class PawnPieceRules : MoveDependant {
         }
     }
 
-    override fun isPlayValid(
-        from: Position,
-        to: Position,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
@@ -110,76 +98,14 @@ class PawnPieceRules : MoveDependant {
         // In this case, moveData is always created from
         // WHITE's point of view, to avoid splitting rules
         // based on the player
-        val moveData = MovementData(from, to, board, player)
 
-        // TODO: en passant
-
-        return when (moveData.rowDelta) {
-            1 -> moveAheadOrDiagonallyIfValid(board, moveData)
-            2 -> moveTwoPlacesIfValid(board, moveData)
-            else -> {
-                println("A pawn cannot move this way")
-                null
-            }
-        }
-    }
-
-    private fun moveTwoPlacesIfValid(
-        board: GameBoard,
-        moveData: MovementData,
-    ): Play? {
-        if (moveData.colDelta != 0 || hasEverMoved || pathIsBlocked(board, moveData)) {
-            return null
-        }
-
-        val rulesNextTurn = PawnPieceRules(player, State.MOVED_TWO_PLACES)
-        val pieceNextTurn = Piece(player, rulesNextTurn)
-        return Play(listOf(Move(moveData.from, moveData.to, board, pieceNextTurn)))
-    }
-
-    private fun pathIsBlocked(
-        board: GameBoard,
-        moveData: MovementData,
-    ): Boolean {
-        val frontPos = Position((moveData.fromRow + moveData.toRow) / 2, moveData.fromCol)
-        return board.isOccupied(moveData.to) || board.isOccupied(frontPos)
-    }
-
-    private fun moveAheadOrDiagonallyIfValid(
-        board: GameBoard,
-        moveData: MovementData,
-    ): Play? {
-        return when (moveData.colDelta) {
-            // TODO: Replaceable by a map of deltas, which takes you
-            //  to the conditions related to the delta in question
-            0 -> {
-                if (board.isOccupied(moveData.to)) {
-                    null
-                } else {
-                    val rulesNextTurn = PawnPieceRules(player, State.MOVED)
-                    val pieceNextTurn = Piece(player, rulesNextTurn)
-                    Move(moveData.from, moveData.to, board, pieceNextTurn).asPlay()
-                }
-            }
-            1, -1 -> {
-                if (board.containsPieceOfPlayer(moveData.to, !player)) {
-                    val rulesNextTurn = PawnPieceRules(player, State.MOVED)
-                    val pieceNextTurn = Piece(player, rulesNextTurn)
-                    Move(moveData.from, moveData.to, board, pieceNextTurn).asPlay()
-                } else {
-                    EnPassant(board, moveData, !player).verify()
-                }
-            }
-
-            else -> {
-                println("A pawn cannot move this way")
-                null
-            }
-        }
+        return PawnValidMove(board, from, to, player, hasEverMoved).verify()
     }
 }
 
-class RookPieceRules : MoveDependant {
+
+
+class RookPieceRules : MoveDependantPieceRules {
     private val moveType = ClassicMoveType.VERTICAL_AND_HORIZONTAL
     private val player: Player
     override val hasEverMoved: Boolean
@@ -192,13 +118,6 @@ class RookPieceRules : MoveDependant {
     constructor(player: Player, hasEverMoved: Boolean) {
         this.player = player
         this.hasEverMoved = hasEverMoved
-    }
-
-    override fun isPlayValid(
-        from: Position,
-        to: Position,
-    ): Boolean {
-        TODO("Not yet implemented")
     }
 
     override fun getValidPlays(
@@ -221,6 +140,15 @@ class RookPieceRules : MoveDependant {
     ): Play? {
         val moveData = MovementData(from, to, board)
 
+        // TODO: This is repeated at Bishop's and Queen's, but
+        //  at the same time is difficult to reduce to a single
+        //  Rule, since there is an extra rule for the rook
+        //  (checking if it moved, although this could be
+        //  solved by passing 'ExtraRules') and All cannot be
+        //  used, considering it returns a boolean (the
+        //  alternative is to simply have 'subRules' and return
+        //  the play if these are valid, as we have done some
+        //  other times, but this seems like hardcoding).
         return when {
             moveType.isViolated(moveData) -> {
                 println("A tower cannot move this way")
@@ -244,13 +172,6 @@ class RookPieceRules : MoveDependant {
 
 class BishopPieceRules(val player: Player) : PieceRules {
     private val moveType = ClassicMoveType.DIAGONAL
-
-    override fun isPlayValid(
-        from: Position,
-        to: Position,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
 
     override fun getValidPlays(
         board: GameBoard,
@@ -293,13 +214,6 @@ class BishopPieceRules(val player: Player) : PieceRules {
 class QueenPieceRules(val player: Player) : PieceRules {
     private val moveType = ClassicMoveType.ANY_STRAIGHT_LINE
 
-    override fun isPlayValid(
-        from: Position,
-        to: Position,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
@@ -339,13 +253,6 @@ class QueenPieceRules(val player: Player) : PieceRules {
 class KnightPieceRules(val player: Player) : PieceRules {
     private val moveType = ClassicMoveType.L_SHAPED
 
-    override fun isPlayValid(
-        from: Position,
-        to: Position,
-    ): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
@@ -380,7 +287,7 @@ private const val C_COLUMN = 3
 
 private const val G_COLUMN = 7
 
-class KingPieceRules : MoveDependant {
+class KingPieceRules : MoveDependantPieceRules {
     val player: Player
     private val moveType = ClassicMoveType.ADJACENT_SQUARE
     override val hasEverMoved: Boolean
@@ -398,13 +305,6 @@ class KingPieceRules : MoveDependant {
     fun asMoved(): Piece {
         // Return this piece with hasEverMoved = true
         return Piece(player, KingPieceRules(player, hasEverMoved = true))
-    }
-
-    override fun isPlayValid(
-        from: Position,
-        to: Position,
-    ): Boolean {
-        TODO("Not yet implemented")
     }
 
     override fun getValidPlays(

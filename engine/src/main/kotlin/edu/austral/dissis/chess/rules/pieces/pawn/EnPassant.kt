@@ -28,7 +28,7 @@ class EnPassant(
                 next =
                     IsPieceOfType(
                         PawnPieceRules::class.java,
-                        next = MovedTwoPlaces(),
+                        next = EnemyMovedTwoPlaces(),
                     ),
             )
 

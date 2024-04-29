@@ -48,7 +48,7 @@ class Exam {
             ),
         )
             .test()
-//            .debug("promotion.md")
+//            .debug("white_two_then_cannot.md")
     }
 
     private fun promotePawns(): (TestBoard) -> TestBoard {
