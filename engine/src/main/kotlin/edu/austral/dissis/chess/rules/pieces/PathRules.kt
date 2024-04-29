@@ -4,10 +4,10 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.rules.All
 import edu.austral.dissis.chess.rules.Rule
 
-//class PathRules: Rule<Play?> {
-//    override fun verify(): Play? {
-//        All(
-//
-//        )
-//    }
-//}
+class PathRules: Rule<Play?> {
+    override fun verify(): Play? {
+        All(
+
+        )
+    }
+}

@@ -18,7 +18,7 @@ class UiActionAdapter(
             board
         } else {
             val boardAfterPlay = adapt(play, board).execute()
-            postPlayProcedures(boardAfterPlay) // TODO: Queen image loads after moving promoted pawn
+            postPlayProcedures(boardAfterPlay)
         }
     }
 

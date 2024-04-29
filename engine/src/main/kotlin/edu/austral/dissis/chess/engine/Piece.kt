@@ -1,8 +1,10 @@
 package edu.austral.dissis.chess.engine
 
+import edu.austral.dissis.chess.rules.IsKingChecked
 import edu.austral.dissis.chess.rules.castling.Castling
 import edu.austral.dissis.chess.rules.pieces.pawn.PawnValidMove
 
+// TODO: Is this explanation necessary?
 // Our engine is not interested in whether two pieces of the same
 // type are different objects or not: the pieces are immutable,
 // and the engine identifies the difference in positions merely
@@ -50,6 +52,7 @@ class PawnPieceRules : MoveDependantPieceRules {
     private val increments = listOf(1 to 1, 0 to 1, -1 to 1, 0 to 2)
     override val hasEverMoved: Boolean
 
+    // TODO: consider modifying this
     enum class State {
         MOVED,
         MOVED_TWO_PLACES,
@@ -86,7 +89,7 @@ class PawnPieceRules : MoveDependantPieceRules {
             .mapNotNull { getPlayIfValid(board, position, it) }
             .filter {
                 val futureBoard = it.execute()
-                !KingPieceRules.isChecked(futureBoard, player)
+                !IsKingChecked(futureBoard, player).verify()
             }
     }
 
@@ -126,10 +129,13 @@ class RookPieceRules : MoveDependantPieceRules {
     ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
-            .map { Play(listOf(Move(position, it, board))) }
+            .map {
+                val pieceNextTurn = Piece(player, RookPieceRules(player, hasEverMoved = true))
+                Play(listOf(Move(position, it, board, pieceNextTurn)))
+            }
             .filter {
                 val futureBoard = it.execute()
-                !KingPieceRules.isChecked(futureBoard, player)
+                !IsKingChecked(futureBoard, player).verify()
             }
     }
 
@@ -177,15 +183,7 @@ class BishopPieceRules(val player: Player) : PieceRules {
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return moveType
-            .getPossiblePositions(board, position)
-            .map {
-                Play(listOf(Move(position, it, board)))
-            }
-            .filter {
-                val futureBoard = it.execute()
-                !KingPieceRules.isChecked(futureBoard, player)
-            }
+        return getValidPlaysFromMoveType(moveType, board, position, player)
     }
 
     override fun getPlayIfValid(
@@ -218,13 +216,7 @@ class QueenPieceRules(val player: Player) : PieceRules {
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return moveType
-            .getPossiblePositions(board, position)
-            .map { Play(listOf(Move(position, it, board))) }
-            .filter {
-                val futureBoard = it.execute()
-                !KingPieceRules.isChecked(futureBoard, player)
-            }
+        return getValidPlaysFromMoveType(moveType, board, position, player)
     }
 
     override fun getPlayIfValid(
@@ -257,13 +249,7 @@ class KnightPieceRules(val player: Player) : PieceRules {
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return moveType
-            .getPossiblePositions(board, position)
-            .map { Move(position, it, board).asPlay() }
-            .filter {
-                val futureBoard = it.execute()
-                !KingPieceRules.isChecked(futureBoard, player)
-            }
+        return getValidPlaysFromMoveType(moveType, board, position, player)
     }
 
     override fun getPlayIfValid(
@@ -319,7 +305,7 @@ class KingPieceRules : MoveDependantPieceRules {
             }
             .filter {
                 val futureBoard = it.execute()
-                !isChecked(futureBoard, player)
+                !IsKingChecked(futureBoard, player).verify()
             }
             .plus(
                 // Possible castling
@@ -342,11 +328,6 @@ class KingPieceRules : MoveDependantPieceRules {
             moveType.isViolated(moveData) -> {
                 Castling(this, hasEverMoved, board, from, to).verify()
             }
-// This is actually verified at Game
-//            becomesChecked(board, moveData) -> {
-//                println("Invalid movement: the king would become checked")
-//                null
-//            }
             else -> {
                 val pieceNextTurn = Piece(player, KingPieceRules(player, hasEverMoved = true))
                 Move(from, to, board, pieceNextTurn).asPlay()
@@ -355,33 +336,7 @@ class KingPieceRules : MoveDependantPieceRules {
     }
 
     companion object {
-        fun isChecked(
-            board: GameBoard,
-            player: Player,
-        ): Boolean {
-            val kingPosition = board.getKingPosition(player)
-
-            // Return true if any enemy piece "can capture" the King
-            // We don't include the enemy king, since the kings cannot
-            // check each other
-            return board.getAllPositionsOfPlayer(!player, false).any {
-                val enemyPosition: Position = it
-                val enemyPiece: Piece = board.getPieceAt(enemyPosition)!!
-                val kingCapture: Play? = enemyPiece.rules.getPlayIfValid(board, enemyPosition, kingPosition)
-
-                kingCapture != null
-            }
-        }
-
-        //        fun willBeChecked(board: GameBoard, player: Player): Boolean {
-//            val kingPosition = board.getKingPosition(player)
-//
-//            return getPossibleFuturePositions(board, player, kingPosition)
-//                .all {
-//                    val futureBoard = Play(listOf(Move(kingPosition, it, board)), board).execute()
-//                    isChecked(futureBoard, player)
-//                }
-//        }
+        //TODO: willBeChecked should be a Rule
         private fun willBeChecked(
             board: GameBoard,
             player: Player,
@@ -399,7 +354,7 @@ class KingPieceRules : MoveDependantPieceRules {
         ): Boolean {
             return piece.rules.getValidPlays(board, position).all {
                 val futureBoard = it.execute()
-                isChecked(futureBoard, piece.player)
+                IsKingChecked(futureBoard, piece.player).verify()
             }
         }
 
@@ -407,7 +362,7 @@ class KingPieceRules : MoveDependantPieceRules {
             board: GameBoard,
             player: Player,
         ): PlayerState {
-            val isChecked: Int = if (isChecked(board, player)) 1 else 0
+            val isChecked: Int = if (IsKingChecked(board, player).verify()) 1 else 0
             val willBeChecked: Int = if (willBeChecked(board, player)) 1 else 0
             val combinedStatus: Int = isChecked * 2 + willBeChecked
 
@@ -415,3 +370,20 @@ class KingPieceRules : MoveDependantPieceRules {
         }
     }
 }
+
+
+// TODO: Maybe we can manage special case where piece is move-dependant
+fun getValidPlaysFromMoveType(
+    moveType: MoveType,
+    board: GameBoard,
+    position: Position,
+    player: Player
+) = moveType
+    .getPossiblePositions(board, position)
+    .map {
+        Play(listOf(Move(position, it, board)))
+    }
+    .filter {
+        val futureBoard = it.execute()
+        !IsKingChecked(futureBoard, player).verify()
+    }

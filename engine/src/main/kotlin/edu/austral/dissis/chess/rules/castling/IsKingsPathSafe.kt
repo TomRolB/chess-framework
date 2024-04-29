@@ -2,9 +2,9 @@ package edu.austral.dissis.chess.rules.castling
 
 import edu.austral.dissis.chess.engine.GameBoard
 import edu.austral.dissis.chess.engine.KingPieceRules
-import edu.austral.dissis.chess.engine.KingPieceRules.Companion.isChecked
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Position
+import edu.austral.dissis.chess.rules.IsKingChecked
 import edu.austral.dissis.chess.rules.Rule
 
 private const val C_COLUMN = 3
@@ -29,6 +29,6 @@ class IsKingsPathSafe(
 
         return positions
             .map { Move(from, it, board, pieceNextTurn = kingRules.asMoved()).execute() }
-            .all { futureBoard -> !isChecked(futureBoard, kingRules.player) }
+            .all { futureBoard -> !IsKingChecked(futureBoard, kingRules.player).verify() }
     }
 }
