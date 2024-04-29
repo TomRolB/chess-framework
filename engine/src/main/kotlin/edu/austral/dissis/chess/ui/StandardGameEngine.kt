@@ -28,14 +28,14 @@ class StandardGameEngine(
 
     override fun applyMove(move: Move): MoveResult {
         val (from, to) = move
-        val (play, engineResult) = game.movePiece(adapt(from), adapt(to))
+        val (_, play, engineResult, message) = game.movePiece(adapt(from), adapt(to))
 
         board = actionAdapter.applyPlay(board, play)
 
         return when (engineResult) {
             EngineResult.GENERAL_MOVE_VIOLATION, EngineResult.PIECE_VIOLATION, EngineResult.POST_PLAY_VIOLATION -> {
                 // TODO: reason = [message from the engine]
-                InvalidMove("Invalid move")
+                InvalidMove(message)
             }
             EngineResult.WHITE_WINS -> GameOver(PlayerColor.WHITE)
             EngineResult.BLACK_WINS -> GameOver(PlayerColor.BLACK)

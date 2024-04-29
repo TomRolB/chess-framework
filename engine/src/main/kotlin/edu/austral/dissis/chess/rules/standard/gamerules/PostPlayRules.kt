@@ -35,7 +35,7 @@ class PostPlayRules(
 
         // King should not be checked
         return if (IsKingChecked(board, player).verify()) {
-            RuleResult(board, null, EngineResult.POST_PLAY_VIOLATION)
+            RuleResult(board, null, EngineResult.POST_PLAY_VIOLATION, "That movement would leave your king checked")
         } else {
             next.verify(arg to board)
         }

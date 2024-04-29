@@ -13,6 +13,13 @@ data class RuleResult(
     val board: GameBoard,
     val play: Play?,
     val engineResult: EngineResult,
+    val message: String
+)
+
+data class GameResult(
+    val play: Play?,
+    val engineResult: EngineResult,
+    val message: String?
 )
 
 // TODO: Should it be immutable? Honestly, there's a point where
@@ -25,7 +32,7 @@ class Game(
     fun movePiece(
         from: Position,
         to: Position,
-    ): Pair<Play?, EngineResult> {
+    ): RuleResult {
         val gameData = GameData(board, turnManager, from, to)
         val ruleResult = gameRules.verify(gameData)
 
@@ -34,7 +41,7 @@ class Game(
             turnManager = turnManager.nextTurn()
         }
 
-        return ruleResult.play to ruleResult.engineResult
+        return ruleResult
     }
 }
 

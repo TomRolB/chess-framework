@@ -60,7 +60,7 @@ class AdapterTestGameRunner : TestGameRunner {
         from: TestPosition,
         to: TestPosition,
     ): TestMoveResult {
-        val (play, engineResult) = game.movePiece(adapt(from), adapt(to))
+        val (_, play, engineResult, _) = game.movePiece(adapt(from), adapt(to))
 
         val boardAfterMove: TestBoard = actionAdapter.applyPlay(testBoard, play)
 

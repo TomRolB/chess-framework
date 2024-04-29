@@ -18,7 +18,7 @@ class IsPlayValid(
         val play = arg.rules.getPlayIfValid(board, from, to)
 
         return if (play == null) {
-            RuleResult(board, null, EngineResult.PIECE_VIOLATION)
+            RuleResult(board, null, EngineResult.PIECE_VIOLATION, "Cannot move piece that way")
         } else {
             next.verify(play)
         }

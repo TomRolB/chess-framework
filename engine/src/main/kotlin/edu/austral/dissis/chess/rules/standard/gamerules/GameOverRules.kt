@@ -16,20 +16,20 @@ class GameOverRules(val player: Player) : RuleChain<Pair<Play, GameBoard>, RuleR
 
         val enemyState = KingPieceRules.getPlayerState(board, !player)
 
-        val engineResult =
+        val (engineResult, message) =
             when (enemyState) {
                 PlayerState.CHECKMATE -> winResult(player)
-                PlayerState.STALEMATE -> EngineResult.TIE
-                else -> EngineResult.VALID_MOVE
+                PlayerState.STALEMATE -> EngineResult.TIE to "It's a tie!"
+                else -> EngineResult.VALID_MOVE to "Successfully moved"
             }
 
-        return RuleResult(board, play, engineResult)
+        return RuleResult(board, play, engineResult, message)
     }
 
-    private fun winResult(player: Player): EngineResult {
+    private fun winResult(player: Player): Pair<EngineResult, String> {
         return when (player) {
-            Player.WHITE -> EngineResult.WHITE_WINS
-            Player.BLACK -> EngineResult.BLACK_WINS
+            Player.WHITE -> EngineResult.WHITE_WINS to "White wins!"
+            Player.BLACK -> EngineResult.BLACK_WINS to "Black wins!"
         }
     }
 }

@@ -6,7 +6,7 @@ import edu.austral.dissis.chess.engine.Piece
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Position
 import edu.austral.dissis.chess.engine.RuleResult
-import edu.austral.dissis.chess.rules.All
+import edu.austral.dissis.chess.rules.FirstFailOrNull
 import edu.austral.dissis.chess.rules.RuleChain
 
 class PrePlayRules(
@@ -21,20 +21,18 @@ class PrePlayRules(
         // as before (although they were being printed before,
         // not returned. Should actually consider the messaging policy).
 
-        val subRules =
-            All(
-                from != to,
-                board.positionExists(from),
-                board.positionExists(to),
-                board.containsPieceOfPlayer(from, player),
-                !board.containsPieceOfPlayer(to, player),
-            ).verify()
-
-        return if (!subRules) {
-            RuleResult(board, null, EngineResult.GENERAL_MOVE_VIOLATION)
-        } else {
-            val piece = board.getPieceAt(from)!!
-            next.verify(piece)
-        }
+        return FirstFailOrNull(
+            board.positionExists(from) to "Starting position does not exist",
+            board.positionExists(to) to "Final position does not exist",
+            board.containsPieceOfPlayer(from, player) to "This tile does not contain a piece of yours",
+            (from != to) to "Cannot stay in the same place",
+            !board.containsPieceOfPlayer(to, player) to "Cannot move over piece of yours",
+        )
+            .verify()
+            ?.let { RuleResult(board, null, EngineResult.GENERAL_MOVE_VIOLATION, it) }
+            ?: let {
+                val piece = board.getPieceAt(from)!!
+                next.verify(piece)
+            }
     }
 }
