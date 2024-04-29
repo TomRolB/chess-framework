@@ -12,17 +12,17 @@ import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.Rule
 
 class PawnDiagonal(
-    val board: GameBoard,
-    val moveData: MovementData,
-    val player: Player
-): Rule<Play?> {
+    private val board: GameBoard,
+    private val moveData: MovementData,
+    private val player: Player,
+) : Rule<Play?> {
     override fun verify(): Play? {
         return if (board.containsPieceOfPlayer(moveData.to, !player)) {
             Move(
                 moveData.from,
                 moveData.to,
                 board,
-                pieceNextTurn = Piece(player, PawnPieceRules(player, State.MOVED))
+                pieceNextTurn = Piece(player, PawnPieceRules(player, State.MOVED)),
             ).asPlay()
         } else {
             EnPassant(board, moveData, !player).verify()

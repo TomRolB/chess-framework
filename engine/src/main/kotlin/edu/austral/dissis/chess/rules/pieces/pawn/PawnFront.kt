@@ -11,21 +11,24 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.rules.Rule
 
 class PawnFront(
-    val board: GameBoard,
-    val moveData: MovementData,
-    val player: Player
-): Rule<Play?> {
+    private val board: GameBoard,
+    private val moveData: MovementData,
+    private val player: Player,
+) : Rule<Play?> {
     override fun verify(): Play? {
-        return if (board.isOccupied(moveData.to)) null
-        else Move(
+        return if (board.isOccupied(moveData.to)) {
+            null
+        } else {
+            Move(
                 moveData.from,
                 moveData.to,
                 board,
                 pieceNextTurn =
                     Piece(
                         player,
-                        PawnPieceRules(player, State.MOVED)
-                    )
+                        PawnPieceRules(player, State.MOVED),
+                    ),
             ).asPlay()
+        }
     }
 }

@@ -18,17 +18,20 @@ import edu.austral.dissis.chess.gui.Position
 typealias UiBoard = Map<Position, ChessPiece>
 
 class StandardGameEngine(
-    val game: Game,
-    val validator: RectangleBoardValidator,
-    val pieceAdapter: UiPieceAdapter,
-    val postPlayProcedures: (UiBoard) -> UiBoard,
+    private val game: Game,
+    private val validator: RectangleBoardValidator,
+    private val pieceAdapter: UiPieceAdapter,
+    postPlayProcedures: (UiBoard) -> UiBoard,
 ) : GameEngine {
     var board: UiBoard = mapOf()
-    val actionAdapter = UiActionAdapter(pieceAdapter, postPlayProcedures)
+    private val actionAdapter = UiActionAdapter(pieceAdapter, postPlayProcedures)
 
     override fun applyMove(move: Move): MoveResult {
         val (from, to) = move
-        val (_, play, engineResult, message) = game.movePiece(adapt(from), adapt(to))
+        val ruleResult = game.movePiece(adapt(from), adapt(to))
+        val play = ruleResult.play
+        val engineResult = ruleResult.engineResult
+        val message = ruleResult.message
 
         board = actionAdapter.applyPlay(board, play)
 
@@ -57,12 +60,10 @@ class StandardGameEngine(
     override fun init(): InitialState {
         board =
             game.board
-                .getAllPositions()
-                .map {
+                .getAllPositions().associate {
                     val chessPiece = pieceAdapter.adaptNew(game.board.getPieceAt(it)!!, it)
                     chessPiece.position to chessPiece
                 }
-                .toMap()
 
         return InitialState(
             boardSize = BoardSize(validator.numberRows, validator.numberCols),

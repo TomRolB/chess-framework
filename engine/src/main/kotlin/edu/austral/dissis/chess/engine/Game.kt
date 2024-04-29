@@ -13,13 +13,7 @@ data class RuleResult(
     val board: GameBoard,
     val play: Play?,
     val engineResult: EngineResult,
-    val message: String
-)
-
-data class GameResult(
-    val play: Play?,
-    val engineResult: EngineResult,
-    val message: String?
+    val message: String,
 )
 
 // TODO: Should it be immutable? Honestly, there's a point where

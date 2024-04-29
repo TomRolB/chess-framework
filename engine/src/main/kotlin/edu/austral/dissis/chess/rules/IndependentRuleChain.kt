@@ -1,9 +1,8 @@
 package edu.austral.dissis.chess.rules
 
 class IndependentRuleChain<T> : Rule<T?> {
-
     val rules: Array<out IndependentRule<T>>
-    val onSuccess: T?
+    private val onSuccess: T?
 
     constructor(rules: List<Pair<Boolean, T>>) {
         this.rules = rules.map { IndependentRule(it.first, it.second) }.toTypedArray()
@@ -17,7 +16,7 @@ class IndependentRuleChain<T> : Rule<T?> {
 
     private constructor(
         rules: Array<out IndependentRule<T>>,
-        onSuccess: T?
+        onSuccess: T?,
     ) {
         this.rules = rules
         this.onSuccess = onSuccess
@@ -30,14 +29,14 @@ class IndependentRuleChain<T> : Rule<T?> {
             ?: onSuccess
     }
 
-    fun onSuccess(onSuccess: T):IndependentRuleChain<T> {
+    fun onSuccess(onSuccess: T): IndependentRuleChain<T> {
         return IndependentRuleChain(rules, onSuccess)
     }
 }
 
-class IndependentRule<T> (
+class IndependentRule<T>(
     private val condition: Boolean,
-    val onFail: T
+    val onFail: T,
 ) {
     fun verify(): Boolean {
         return condition

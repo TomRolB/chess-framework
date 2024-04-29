@@ -4,7 +4,7 @@ import edu.austral.dissis.chess.engine.GameBoard
 import edu.austral.dissis.chess.engine.Position
 import edu.austral.dissis.chess.rules.Rule
 
-class IsbColumnFree(val board: GameBoard, val rookFrom: Position) : Rule<Boolean> {
+class IsbColumnFree(val board: GameBoard, private val rookFrom: Position) : Rule<Boolean> {
     override fun verify(): Boolean {
         // When performing long castling, the king does not pass over
         // the position in column b. However, it mustn't be blocked

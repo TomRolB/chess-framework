@@ -14,24 +14,27 @@ import edu.austral.dissis.chess.rules.Rule
 import edu.austral.dissis.chess.rules.SimpleRule
 
 class PawnTwoPlaces(
-    val board: GameBoard,
-    val moveData: MovementData,
-    val player: Player,
-    val hasEverMoved: Boolean
-): Rule<Play?> {
+    private val board: GameBoard,
+    private val moveData: MovementData,
+    private val player: Player,
+    private val hasEverMoved: Boolean,
+) : Rule<Play?> {
     override fun verify(): Play? {
         val subRules =
             All(
                 SimpleRule(!hasEverMoved),
-                Not(PawnPathIsBlocked(board, moveData))
+                Not(PawnPathIsBlocked(board, moveData)),
             )
 
-        return if (!subRules.verify()) null
-        else Move(
-            moveData.from,
-            moveData.to,
-            board,
-            pieceNextTurn = Piece(player, rules = PawnPieceRules(player, State.MOVED_TWO_PLACES))
-        ).asPlay()
+        return if (!subRules.verify()) {
+            null
+        } else {
+            Move(
+                moveData.from,
+                moveData.to,
+                board,
+                pieceNextTurn = Piece(player, rules = PawnPieceRules(player, State.MOVED_TWO_PLACES)),
+            ).asPlay()
+        }
     }
 }

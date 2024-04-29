@@ -11,9 +11,9 @@ import edu.austral.dissis.chess.rules.Succeed
 import edu.austral.dissis.chess.rules.pieces.IsPieceOfType
 
 class IsRookAvailable(
-    val board: GameBoard,
-    val rookPos: Position,
-    val player: Player,
+    private val board: GameBoard,
+    private val rookPos: Position,
+    private val player: Player,
 ) : Rule<Boolean> {
     override fun verify(): Boolean {
         return ContainsPieceOfPlayer(

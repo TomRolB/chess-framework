@@ -1,6 +1,5 @@
 package edu.austral.dissis.chess.engine.exam
 
-import CustomGameTester
 import edu.austral.dissis.chess.engine.BishopPieceRules
 import edu.austral.dissis.chess.engine.KingPieceRules
 import edu.austral.dissis.chess.engine.KnightPieceRules
@@ -10,6 +9,7 @@ import edu.austral.dissis.chess.engine.Piece
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.QueenPieceRules
 import edu.austral.dissis.chess.engine.RookPieceRules
+import edu.austral.dissis.chess.engine.custom.CustomGameTester
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPiece

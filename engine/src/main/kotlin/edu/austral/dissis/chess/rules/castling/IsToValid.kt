@@ -11,10 +11,10 @@ private const val G_COLUMN = 7
 private const val H_COLUMN = 8
 
 class IsToValid(
-    val from: Position,
-    val to: Position,
-    val listener: RookMoveListener,
-    val next: RuleChain<Pair<Position, Position>, Boolean>,
+    private val from: Position,
+    private val to: Position,
+    private val listener: RookMoveListener,
+    private val next: RuleChain<Pair<Position, Position>, Boolean>,
 ) : RuleChain<Any?, Boolean> {
     override fun verify(arg: Any?): Boolean {
         val isToValid: Boolean

@@ -107,8 +107,6 @@ class PawnPieceRules : MoveDependantPieceRules {
     }
 }
 
-
-
 class RookPieceRules : MoveDependantPieceRules {
     private val moveType = ClassicMoveType.VERTICAL_AND_HORIZONTAL
     private val player: Player
@@ -158,17 +156,6 @@ class RookPieceRules : MoveDependantPieceRules {
             else -> PlayResult(Move(from, to, board).asPlay(), "Valid play")
         }
     }
-
-    private fun getPlay(from: Position, to: Position, board: GameBoard): Play? {
-        return if (!hasEverMoved) {
-            val rulesNextTurn = RookPieceRules(player, true)
-            val pieceNextTurn = Piece(player, rulesNextTurn)
-            Move(from, to, board, pieceNextTurn).asPlay()
-        }
-        else {
-            Move(from, to, board).asPlay()
-        }
-    }
 }
 
 class BishopPieceRules(val player: Player) : PieceRules {
@@ -190,9 +177,9 @@ class BishopPieceRules(val player: Player) : PieceRules {
 
         return when {
             moveType.isViolated(moveData)
-                    -> PlayResult(null, "A bishop cannot move this way")
+            -> PlayResult(null, "A bishop cannot move this way")
             moveType.isPathBlocked(moveData, board)
-                    -> PlayResult(null, "Cannot move there: the path is blocked")
+            -> PlayResult(null, "Cannot move there: the path is blocked")
             else -> PlayResult(Move(from, to, board).asPlay(), "Valid move")
         }
     }
@@ -213,18 +200,17 @@ class QueenPieceRules(val player: Player) : PieceRules {
         from: Position,
         to: Position,
     ): PlayResult {
-            val moveData = MovementData(from, to, board)
+        val moveData = MovementData(from, to, board)
 
-            return when {
-                moveType.isViolated(moveData)
-                        -> PlayResult(null, "A queen cannot move this way")
-                moveType.isPathBlocked(moveData, board)
-                        -> PlayResult(null, "Cannot move there: the path is blocked")
-                else -> PlayResult(Move(from, to, board).asPlay(), "Valid move")
-            }
+        return when {
+            moveType.isViolated(moveData)
+            -> PlayResult(null, "A queen cannot move this way")
+            moveType.isPathBlocked(moveData, board)
+            -> PlayResult(null, "Cannot move there: the path is blocked")
+            else -> PlayResult(Move(from, to, board).asPlay(), "Valid move")
+        }
     }
 }
-
 
 class KnightPieceRules(val player: Player) : PieceRules {
     private val moveType = ClassicMoveType.L_SHAPED
@@ -321,7 +307,7 @@ class KingPieceRules : MoveDependantPieceRules {
     }
 
     companion object {
-        //TODO: willBeChecked should be a Rule
+        // TODO: willBeChecked should be a Rule
         private fun willBeChecked(
             board: GameBoard,
             player: Player,
@@ -356,13 +342,12 @@ class KingPieceRules : MoveDependantPieceRules {
     }
 }
 
-
 // TODO: Maybe we can manage special case where piece is move-dependant
 fun getValidPlaysFromMoveType(
     moveType: MoveType,
     board: GameBoard,
     position: Position,
-    player: Player
+    player: Player,
 ) = moveType
     .getPossiblePositions(board, position)
     .map {

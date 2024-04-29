@@ -6,8 +6,8 @@ import edu.austral.dissis.chess.engine.Position
 import edu.austral.dissis.chess.rules.Rule
 
 class PawnPathIsBlocked(
-    val board: GameBoard,
-    val moveData: MovementData
+    private val board: GameBoard,
+    private val moveData: MovementData,
 ) : Rule<Boolean> {
     override fun verify(): Boolean {
         val frontPos = Position((moveData.fromRow + moveData.toRow) / 2, moveData.fromCol)

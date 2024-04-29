@@ -1,3 +1,5 @@
+package edu.austral.dissis.chess.engine.custom
+
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestGame
 import edu.austral.dissis.chess.test.TestGameResult

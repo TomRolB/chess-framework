@@ -8,12 +8,12 @@ import edu.austral.dissis.chess.engine.Position
 import edu.austral.dissis.chess.rules.Rule
 
 class PawnValidMove(
-    val board: GameBoard,
-    val from: Position,
-    val to: Position,
-    val player: Player,
-    val hasEverMoved: Boolean
-): Rule<Play?> {
+    private val board: GameBoard,
+    private val from: Position,
+    private val to: Position,
+    private val player: Player,
+    private val hasEverMoved: Boolean,
+) : Rule<Play?> {
     override fun verify(): Play? {
         // In this case, moveData is always created from
         // WHITE's point of view, to avoid splitting rules
@@ -22,12 +22,13 @@ class PawnValidMove(
         val moveData = MovementData(from, to, board, player)
 
         val pawnDiagonal = PawnDiagonal(board, moveData, player)
-        val subRules = mapOf(
-            (0 to 1) to PawnFront(board, moveData, player),
-            (1 to 1) to pawnDiagonal,
-            (-1 to 1) to pawnDiagonal,
-            (0 to 2) to PawnTwoPlaces(board, moveData, player, hasEverMoved)
-        )
+        val subRules =
+            mapOf(
+                (0 to 1) to PawnFront(board, moveData, player),
+                (1 to 1) to pawnDiagonal,
+                (-1 to 1) to pawnDiagonal,
+                (0 to 2) to PawnTwoPlaces(board, moveData, player, hasEverMoved),
+            )
 
         return subRules[ moveData.colDelta to moveData.rowDelta ]?.verify()
     }

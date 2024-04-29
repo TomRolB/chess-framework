@@ -8,7 +8,7 @@ import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 import kotlin.reflect.KClass
 
-class UiPieceAdapter(val pieceIdMap: Map<KClass<out PieceRules>, String>) {
+class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceRules>, String>) {
     fun adapt(
         piece: Piece,
         id: String,

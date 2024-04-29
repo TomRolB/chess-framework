@@ -45,12 +45,12 @@ class ChessGameApplication : Application() {
 
     companion object {
         const val GAME_TITLE = "Chess"
-        val ONE_TO_EIGHT = 1..8
-        val WHITE_PIECES = getFromPlayer(1, 2, Player.WHITE)
-        val BLACK_PIECES = getFromPlayer(8, 7, Player.BLACK)
-        val VALIDATOR = RectangleBoardValidator(8, 8)
-        val WK_POSITION = Position(1, 5)
-        val BK_POSITION = Position(8, 5)
+        private val ONE_TO_EIGHT = 1..8
+        private val WHITE_PIECES = getFromPlayer(1, 2, Player.WHITE)
+        private val BLACK_PIECES = getFromPlayer(8, 7, Player.BLACK)
+        private val VALIDATOR = RectangleBoardValidator(8, 8)
+        private val WK_POSITION = Position(1, 5)
+        private val BK_POSITION = Position(8, 5)
 
         private fun getFromPlayer(
             borderRow: Int,
