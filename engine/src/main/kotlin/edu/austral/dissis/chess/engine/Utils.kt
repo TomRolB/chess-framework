@@ -19,7 +19,6 @@ fun Int.colToChar(): Char {
     return (this + 'a'.code - 1).toChar()
 }
 
-// TODO: Are there unnecessary attributes?
 class MovementData {
     val from: Position
     val to: Position
@@ -33,7 +32,7 @@ class MovementData {
     val rowDelta: Int
     val colDelta: Int
 
-    constructor(from: Position, to: Position, board: GameBoard) {
+    constructor(from: Position, to: Position) {
         this.from = from
         this.to = to
 

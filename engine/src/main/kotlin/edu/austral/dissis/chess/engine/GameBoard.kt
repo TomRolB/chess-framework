@@ -101,11 +101,8 @@ class HashGameBoard private constructor(
     }
 
     override fun delPieceAt(position: Position): HashGameBoard {
-        // TODO: This should actually be a impossible situation,
-        //  since there should never be a delPieceAt() for the king.
-        //  Should we keep this or erase it?
         require(position != whiteKingPosition && position != blackKingPosition) {
-            "A king cannot be deleted"
+            "A king cannot be deleted without being set in other position first"
         }
 
         val newMap: HashMap<Position, Piece> = HashMap(boardMap)

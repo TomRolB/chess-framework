@@ -37,13 +37,10 @@ class StandardGameEngine(
 
         return when (engineResult) {
             EngineResult.GENERAL_MOVE_VIOLATION, EngineResult.PIECE_VIOLATION, EngineResult.POST_PLAY_VIOLATION -> {
-                // TODO: reason = [message from the engine]
                 InvalidMove(message)
             }
-            EngineResult.WHITE_WINS -> GameOver(PlayerColor.WHITE)
-            EngineResult.BLACK_WINS -> GameOver(PlayerColor.BLACK)
-            // TODO: may have to make a TIE_BY_WHITE and TIE_BY_BLACK
-            EngineResult.TIE -> GameOver(PlayerColor.BLACK)
+            EngineResult.WHITE_WINS, EngineResult.TIE_BY_WHITE -> GameOver(PlayerColor.WHITE)
+            EngineResult.BLACK_WINS, EngineResult.TIE_BY_BLACK -> GameOver(PlayerColor.BLACK)
             EngineResult.VALID_MOVE -> {
                 NewGameState(
                     pieces = board.values.toList(),

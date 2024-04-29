@@ -72,7 +72,7 @@ class AdapterTestGameRunner : TestGameRunner {
             }
             EngineResult.WHITE_WINS -> WhiteCheckMate(boardAfterMove)
             EngineResult.BLACK_WINS -> BlackCheckMate(boardAfterMove)
-            EngineResult.TIE -> TestMoveDraw(boardAfterMove)
+            EngineResult.TIE_BY_WHITE, EngineResult.TIE_BY_BLACK -> TestMoveDraw(boardAfterMove)
             EngineResult.VALID_MOVE -> {
                 val adapterNextTurn = AdapterTestGameRunner(game, boardAfterMove, pieceAdapter, actionAdapter)
                 TestMoveSuccess(adapterNextTurn)

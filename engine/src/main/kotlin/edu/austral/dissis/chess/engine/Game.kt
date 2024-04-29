@@ -45,7 +45,8 @@ enum class EngineResult {
     POST_PLAY_VIOLATION,
     WHITE_WINS,
     BLACK_WINS,
-    TIE,
+    TIE_BY_WHITE,
+    TIE_BY_BLACK,
     VALID_MOVE,
 }
 

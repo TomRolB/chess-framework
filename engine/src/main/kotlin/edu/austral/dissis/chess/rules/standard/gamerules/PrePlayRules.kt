@@ -17,10 +17,6 @@ class PrePlayRules(
     val next: RuleChain<Piece, RuleResult>,
 ) : RuleChain<Any?, RuleResult> {
     override fun verify(arg: Any?): RuleResult {
-        // TODO: Check whether to implement a way to have messages,
-        // as before (although they were being printed before,
-        // not returned. Should actually consider the messaging policy).
-
         return IndependentRuleChain(
             board.positionExists(from) to "Starting position does not exist",
             board.positionExists(to) to "Final position does not exist",

@@ -1,8 +1,13 @@
 package edu.austral.dissis.chess.engine
 
 import edu.austral.dissis.chess.rules.IsKingChecked
+import edu.austral.dissis.chess.rules.WillKingBeChecked
 import edu.austral.dissis.chess.rules.castling.Castling
 import edu.austral.dissis.chess.rules.pieces.pawn.PawnValidMove
+//TODO: put pieces in different file?
+// TODO: we are supposed to make rules easy to change. Should see if
+//  this applies to each implementation of PieceRules.
+
 
 // TODO: Is this explanation necessary?
 // Our engine is not interested in whether two pieces of the same
@@ -50,8 +55,8 @@ interface MoveDependantPieceRules : PieceRules {
 
 class PawnPieceRules : MoveDependantPieceRules {
     private val player: Player
-    val hasJustMovedTwoPlaces: Boolean
     private val increments = listOf(1 to 1, 0 to 1, -1 to 1, 0 to 2)
+    val hasJustMovedTwoPlaces: Boolean
     override val hasEverMoved: Boolean
 
     // TODO: consider modifying this
@@ -143,7 +148,7 @@ class RookPieceRules : MoveDependantPieceRules {
         from: Position,
         to: Position,
     ): PlayResult {
-        val moveData = MovementData(from, to, board)
+        val moveData = MovementData(from, to)
 
         return when {
             moveType.isViolated(moveData) -> PlayResult(null, "A rook cannot move this way")
@@ -173,7 +178,7 @@ class BishopPieceRules(val player: Player) : PieceRules {
         from: Position,
         to: Position,
     ): PlayResult {
-        val moveData = MovementData(from, to, board)
+        val moveData = MovementData(from, to)
 
         return when {
             moveType.isViolated(moveData)
@@ -200,7 +205,7 @@ class QueenPieceRules(val player: Player) : PieceRules {
         from: Position,
         to: Position,
     ): PlayResult {
-        val moveData = MovementData(from, to, board)
+        val moveData = MovementData(from, to)
 
         return when {
             moveType.isViolated(moveData)
@@ -227,7 +232,7 @@ class KnightPieceRules(val player: Player) : PieceRules {
         from: Position,
         to: Position,
     ): PlayResult {
-        val moveData = MovementData(from, to, board)
+        val moveData = MovementData(from, to)
 
         return when {
             moveType.isViolated(moveData) ->
@@ -291,7 +296,7 @@ class KingPieceRules : MoveDependantPieceRules {
         from: Position,
         to: Position,
     ): PlayResult {
-        val moveData = MovementData(from, to, board)
+        val moveData = MovementData(from, to)
         return when {
             // TODO: Could be better
             moveType.isViolated(moveData) -> {
@@ -307,34 +312,12 @@ class KingPieceRules : MoveDependantPieceRules {
     }
 
     companion object {
-        // TODO: willBeChecked should be a Rule
-        private fun willBeChecked(
-            board: GameBoard,
-            player: Player,
-        ): Boolean {
-            return board.getAllPositionsOfPlayer(player, true).all {
-                val piece = board.getPieceAt(it)!!
-                allMovementsEndInCheck(board, piece, it)
-            }
-        }
-
-        private fun allMovementsEndInCheck(
-            board: GameBoard,
-            piece: Piece,
-            position: Position,
-        ): Boolean {
-            return piece.rules.getValidPlays(board, position).all {
-                val futureBoard = it.execute()
-                IsKingChecked(futureBoard, piece.player).verify()
-            }
-        }
-
         fun getPlayerState(
             board: GameBoard,
             player: Player,
         ): PlayerState {
             val isChecked: Int = if (IsKingChecked(board, player).verify()) 1 else 0
-            val willBeChecked: Int = if (willBeChecked(board, player)) 1 else 0
+            val willBeChecked: Int = if (WillKingBeChecked(board, player).verify()) 1 else 0
             val combinedStatus: Int = isChecked * 2 + willBeChecked
 
             return PlayerState.entries[combinedStatus]

@@ -19,11 +19,18 @@ class GameOverRules(val player: Player) : RuleChain<Pair<Play, GameBoard>, RuleR
         val (engineResult, message) =
             when (enemyState) {
                 PlayerState.CHECKMATE -> winResult(player)
-                PlayerState.STALEMATE -> EngineResult.TIE to "It's a tie!"
+                PlayerState.STALEMATE -> tieResult(player)
                 else -> EngineResult.VALID_MOVE to "Successfully moved"
             }
 
         return RuleResult(board, play, engineResult, message)
+    }
+
+    private fun tieResult(player: Player): Pair<EngineResult, String> {
+        return when (player) {
+            Player.WHITE -> EngineResult.TIE_BY_WHITE to "White caused a tie"
+            Player.BLACK -> EngineResult.TIE_BY_BLACK to "Black caused a tie"
+        }
     }
 
     private fun winResult(player: Player): Pair<EngineResult, String> {
