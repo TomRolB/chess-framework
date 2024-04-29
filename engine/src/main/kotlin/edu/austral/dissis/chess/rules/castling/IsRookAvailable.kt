@@ -8,6 +8,7 @@ import edu.austral.dissis.chess.rules.PieceHasNeverMoved
 import edu.austral.dissis.chess.rules.PieceOfPlayer
 import edu.austral.dissis.chess.rules.Rule
 import edu.austral.dissis.chess.rules.Succeed
+import edu.austral.dissis.chess.rules.pieces.PieceOfType
 
 class IsRookAvailable(
     val board: GameBoard,
@@ -19,11 +20,12 @@ class IsRookAvailable(
             board,
             rookPos,
             player,
-            next =
-                PieceHasNeverMoved(
-                    RookPieceRules::class.java,
+            next = PieceOfType<RookPieceRules>(
+                RookPieceRules::class.java,
+                next = PieceHasNeverMoved(
                     next = Succeed(),
-                ),
+                )
+            )
         ).verify(null)
     }
 }

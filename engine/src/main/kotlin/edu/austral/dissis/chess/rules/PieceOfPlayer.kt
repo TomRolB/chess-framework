@@ -12,9 +12,7 @@ class PieceOfPlayer(
     val next: RuleChain<Piece, Boolean>,
 ) : RuleChain<Any?, Boolean> {
     override fun verify(arg: Any?): Boolean {
-        return board
-            .getPieceAt(pos).takeIf { board.containsPieceOfPlayer(pos, player) }
-            ?.let { next.verify(it) }
-            ?: false
+        return if (!board.containsPieceOfPlayer(pos, player)) false
+        else next.verify(board.getPieceAt(pos)!!)
     }
 }

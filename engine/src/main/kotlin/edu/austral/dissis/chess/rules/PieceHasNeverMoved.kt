@@ -5,24 +5,25 @@ import edu.austral.dissis.chess.engine.Piece
 import edu.austral.dissis.chess.engine.PieceRules
 
 class PieceHasNeverMoved<T : MoveDependant>(
-    val pieceType: Class<T>,
     val next: RuleChain<PieceRules, Boolean>,
-) : RuleChain<Piece, Boolean> {
-    override fun verify(arg: Piece): Boolean {
+) : RuleChain<T, Boolean> {
+    override fun verify(arg: T): Boolean {
         return if (
-            pieceType.isInstance(arg.rules) &&
-            !(arg.rules as MoveDependant).hasEverMoved
+            !arg.hasEverMoved
         ) {
-            next.verify(arg.rules)
+            next.verify(arg)
         } else {
             false
         }
 
-//        return piece.rules
-//            .takeIf {
-//                pieceType.isInstance(piece.rules)
-//                && !(piece.rules as MoveDependant).hasEverMoved
-//            }
-//            ?.let { next.verify(piece.rules) }
+//        return if (
+//            pieceType.isInstance(arg.rules) &&
+//            !(arg.rules as MoveDependant).hasEverMoved
+//        ) {
+//            next.verify(arg.rules)
+//        } else {
+//            false
+//        }
+
     }
 }

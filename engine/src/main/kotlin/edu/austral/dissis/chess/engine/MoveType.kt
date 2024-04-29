@@ -165,7 +165,8 @@ enum class ClassicMoveType : MoveType {
 
         val result: MutableList<Position> = mutableListOf()
 
-        while (true) {
+        var blocked = false
+        while (!blocked) {
             val reachablePos = Position(row, col)
 
             // We'll only add the position if it exists, does not hold
@@ -174,18 +175,19 @@ enum class ClassicMoveType : MoveType {
             if (!board.positionExists(reachablePos) ||
                 board.containsPieceOfPlayer(reachablePos, player)
             ) {
-                break
+                blocked = true
+            } else {
+
+                result.addLast(reachablePos)
+
+                // We check if there is an enemy piece after adding, since
+                // it is possible to eat that piece, but we must then
+                // break, since the rest of the path is blocked by it
+                if (board.containsPieceOfPlayer(reachablePos, !player)) blocked = true
+
+                row += rowIncrement
+                col += colIncrement
             }
-
-            result.addLast(reachablePos)
-
-            // We check if there is an enemy piece after adding, since
-            // it is possible to eat that piece, but we must then
-            // break, since the rest of the path is blocked by it
-            if (board.containsPieceOfPlayer(reachablePos, !player)) break
-
-            row += rowIncrement
-            col += colIncrement
         }
 
         return result

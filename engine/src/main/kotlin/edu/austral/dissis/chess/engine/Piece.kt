@@ -44,11 +44,11 @@ interface PieceRules {
     ): Play?
 }
 
-interface MoveDependant {
+interface MoveDependant : PieceRules {
     val hasEverMoved: Boolean
 }
 
-class PawnPieceRules : PieceRules, MoveDependant {
+class PawnPieceRules : MoveDependant {
     private val player: Player
     private val hasJustMovedTwoPlaces: Boolean
     private val increments = listOf(1 to 1, 0 to 1, -1 to 1, 0 to 2)
@@ -187,19 +187,6 @@ class PawnPieceRules : PieceRules, MoveDependant {
         board: GameBoard,
         moveData: MovementData,
     ): Play? {
-//      TOPO'S PATTERN
-
-//        val enemyPawnPosition = getStringPosition(moveData.fromRow, moveData.toCol)
-//        board.getPieceAt(enemyPawnPosition)
-//            ?.let { safeGetPieceOfColor(it, !player) }
-//            ?.let { safeGetPieceOfTypePawn(it) }
-
-//        val enemyPawn = pieceAt!!
-//        if (enemyPawn.rules !is PawnPieceRules) return null
-//
-//        val enemyRules = enemyPawn.rules as PawnPieceRules
-//        if (!enemyRules.hasJustMovedTwoPlaces) return null
-
         val enemyPawnPosition = Position(moveData.fromRow, moveData.toCol)
         if (!board.containsPieceOfPlayer(enemyPawnPosition, !player)) return null
 
@@ -208,18 +195,6 @@ class PawnPieceRules : PieceRules, MoveDependant {
 
         val enemyRules = enemyPawn.rules
         if (!enemyRules.hasJustMovedTwoPlaces) return null
-
-//        try {
-//            BooleanChain
-//                .check()
-//                .instantiate()
-//                .check()
-//                .instantiate()
-//                .check()
-//                .instantiate()
-//        } catch (Exception e) {
-//
-//        }
 
         return Play(
             listOf(
@@ -230,7 +205,7 @@ class PawnPieceRules : PieceRules, MoveDependant {
     }
 }
 
-class RookPieceRules : PieceRules, MoveDependant {
+class RookPieceRules : MoveDependant {
     private val moveType = ClassicMoveType.VERTICAL_AND_HORIZONTAL
     private val player: Player
     override val hasEverMoved: Boolean
@@ -431,7 +406,7 @@ private const val C_COLUMN = 3
 
 private const val G_COLUMN = 7
 
-class KingPieceRules : PieceRules, MoveDependant {
+class KingPieceRules : MoveDependant {
     val player: Player
     private val moveType = ClassicMoveType.ADJACENT_SQUARE
     override val hasEverMoved: Boolean
