@@ -2,14 +2,14 @@ package edu.austral.dissis.chess.engine.exam
 
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.GameBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.GameData
 import edu.austral.dissis.chess.engine.HashGameBoard
-import edu.austral.dissis.chess.engine.KingPieceRules
-import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.pieces.King
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Position
-import edu.austral.dissis.chess.engine.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.TurnManager
 import edu.austral.dissis.chess.rules.RuleChain
@@ -105,12 +105,12 @@ class AdapterTestGameRunner : TestGameRunner {
         val piecePositions = getEnginePieces(board)
         val whiteKingPosition =
             piecePositions
-                .find { it.second.rules is KingPieceRules && it.second.player == Player.WHITE }
+                .find { it.second.type is King && it.second.player == Player.WHITE }
                 ?.first
                 ?: throw IllegalArgumentException("The board must be initialized with a white king")
         val blackKingPosition =
             piecePositions
-                .find { it.second.rules is KingPieceRules && it.second.player == Player.BLACK }
+                .find { it.second.type is King && it.second.player == Player.BLACK }
                 ?.first
                 ?: throw IllegalArgumentException("The board must be initialized with a white king")
 

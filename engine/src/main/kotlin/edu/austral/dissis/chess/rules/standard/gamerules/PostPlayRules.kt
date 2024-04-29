@@ -1,15 +1,15 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.GameBoard
-import edu.austral.dissis.chess.engine.PawnPieceRules
-import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.pieces.Pawn
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Position
-import edu.austral.dissis.chess.engine.QueenPieceRules
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.Queen
 import edu.austral.dissis.chess.engine.RuleResult
-import edu.austral.dissis.chess.rules.IsKingChecked
+import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 import edu.austral.dissis.chess.rules.RuleChain
 
 class PostPlayRules(
@@ -27,8 +27,8 @@ class PostPlayRules(
         val positionAsWhite = Position(rowAsWhite, to.col)
 
         // Promote pawn
-        if (piece.rules is PawnPieceRules && board.isPositionOnUpperLimit(positionAsWhite)) {
-            val promotionPiece = Piece(piece.player, QueenPieceRules(piece.player))
+        if (piece.type is Pawn && board.isPositionOnUpperLimit(positionAsWhite)) {
+            val promotionPiece = Piece(piece.player, Queen(piece.player))
 
             board = board.setPieceAt(to, promotionPiece)
         }

@@ -1,9 +1,9 @@
 package edu.austral.dissis.chess.rules
 
-import edu.austral.dissis.chess.engine.GameBoard
-import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Position
+import edu.austral.dissis.chess.engine.board.Position
 
 class ContainsPieceOfPlayer(
     val board: GameBoard,

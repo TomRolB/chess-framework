@@ -1,16 +1,16 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.GameBoard
-import edu.austral.dissis.chess.engine.KingPieceRules
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.Move
-import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.Position
-import edu.austral.dissis.chess.engine.RookPieceRules
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.rules.Rule
 
 class Castling(
-    private val kingRules: KingPieceRules,
+    private val kingRules: King,
     private val hasEverMoved: Boolean,
     val board: GameBoard,
     val from: Position,
@@ -29,7 +29,7 @@ class Castling(
 
         return if (rules.verify(null)) {
             val (rookFrom, rookTo) = listener
-            val movedRook = Piece(kingRules.player, RookPieceRules(kingRules.player, hasEverMoved = true))
+            val movedRook = Piece(kingRules.player, Rook(kingRules.player, hasEverMoved = true))
             Play(
                 listOf(
                     Move(from, to, board, pieceNextTurn = kingRules.asMoved()),

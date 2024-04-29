@@ -1,5 +1,8 @@
 package edu.austral.dissis.chess.engine
 
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.Position
+
 fun getStringPosition(
     row: Int,
     col: Int,

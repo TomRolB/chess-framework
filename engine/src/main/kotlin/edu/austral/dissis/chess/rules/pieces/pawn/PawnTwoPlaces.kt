@@ -1,11 +1,11 @@
 package edu.austral.dissis.chess.rules.pieces.pawn
 
-import edu.austral.dissis.chess.engine.GameBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MovementData
-import edu.austral.dissis.chess.engine.PawnPieceRules
-import edu.austral.dissis.chess.engine.PawnPieceRules.State
-import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.pieces.Pawn
+import edu.austral.dissis.chess.engine.pieces.Pawn.State
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.rules.All
@@ -33,7 +33,7 @@ class PawnTwoPlaces(
                 moveData.from,
                 moveData.to,
                 board,
-                pieceNextTurn = Piece(player, rules = PawnPieceRules(player, State.MOVED_TWO_PLACES)),
+                pieceNextTurn = Piece(player, type = Pawn(player, State.MOVED_TWO_PLACES)),
             ).asPlay()
         }
     }

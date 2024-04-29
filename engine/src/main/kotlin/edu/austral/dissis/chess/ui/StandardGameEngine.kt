@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.ui
 
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.gui.BoardSize
 import edu.austral.dissis.chess.gui.ChessPiece
 import edu.austral.dissis.chess.gui.GameEngine
@@ -50,8 +50,8 @@ class StandardGameEngine(
         }
     }
 
-    private fun adapt(pos: Position): edu.austral.dissis.chess.engine.Position {
-        return edu.austral.dissis.chess.engine.Position(pos.row, pos.column)
+    private fun adapt(pos: Position): edu.austral.dissis.chess.engine.board.Position {
+        return edu.austral.dissis.chess.engine.board.Position(pos.row, pos.column)
     }
 
     override fun init(): InitialState {

@@ -1,9 +1,10 @@
-package edu.austral.dissis.chess.rules
+package edu.austral.dissis.chess.rules.pieces.king
 
-import edu.austral.dissis.chess.engine.GameBoard
-import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Position
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.rules.Rule
 
 class WillKingBeChecked(
     val board: GameBoard,
@@ -21,7 +22,7 @@ class WillKingBeChecked(
         piece: Piece,
         position: Position,
     ): Boolean {
-        return piece.rules.getValidPlays(board, position).all {
+        return piece.type.getValidPlays(board, position).all {
             val futureBoard = it.execute()
             IsKingChecked(futureBoard, piece.player).verify()
         }

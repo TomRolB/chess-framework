@@ -1,14 +1,14 @@
 package edu.austral.dissis.chess.ui
 
-import edu.austral.dissis.chess.engine.Piece
-import edu.austral.dissis.chess.engine.PieceRules
+import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.gui.ChessPiece
 import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 import kotlin.reflect.KClass
 
-class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceRules>, String>) {
+class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceType>, String>) {
     fun adapt(
         piece: Piece,
         id: String,
@@ -19,7 +19,7 @@ class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceRules>, String>
             color = adapt(piece.player),
             position = to,
             pieceId =
-                pieceIdMap[piece.rules::class] ?: throw IllegalArgumentException(
+                pieceIdMap[piece.type::class] ?: throw IllegalArgumentException(
                     "No pieceId was specified for this piece type",
                 ),
         )
@@ -27,14 +27,14 @@ class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceRules>, String>
 
     fun adaptNew(
         piece: Piece,
-        pos: edu.austral.dissis.chess.engine.Position,
+        pos: edu.austral.dissis.chess.engine.board.Position,
     ): ChessPiece {
         return ChessPiece(
             id = pos.toString(),
             color = adapt(piece.player),
             position = Position(pos.row, pos.col),
             pieceId =
-                pieceIdMap[piece.rules::class] ?: throw IllegalArgumentException(
+                pieceIdMap[piece.type::class] ?: throw IllegalArgumentException(
                     "No pieceId was specified for this piece type",
                 ),
         )

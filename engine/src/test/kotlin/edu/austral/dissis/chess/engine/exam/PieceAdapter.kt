@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine.exam
 
-import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.test.TestPiece
 
 class PieceAdapter(constructorToTestPiece: Map<() -> Piece, TestPiece>) {

@@ -1,14 +1,14 @@
 package edu.austral.dissis.chess.engine.exam
 
-import edu.austral.dissis.chess.engine.BishopPieceRules
-import edu.austral.dissis.chess.engine.KingPieceRules
-import edu.austral.dissis.chess.engine.KnightPieceRules
+import edu.austral.dissis.chess.engine.pieces.Bishop
+import edu.austral.dissis.chess.engine.pieces.King
+import edu.austral.dissis.chess.engine.pieces.Knight
 import edu.austral.dissis.chess.engine.OneToOneTurnManager
-import edu.austral.dissis.chess.engine.PawnPieceRules
-import edu.austral.dissis.chess.engine.Piece
+import edu.austral.dissis.chess.engine.pieces.Pawn
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.QueenPieceRules
-import edu.austral.dissis.chess.engine.RookPieceRules
+import edu.austral.dissis.chess.engine.pieces.Queen
+import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.engine.custom.CustomGameTester
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.test.TestBoard
@@ -83,12 +83,12 @@ class Exam {
             .zip(listOf('W', 'B'))
             .flatMap {
                 listOf(
-                    { Piece(it.first, PawnPieceRules(it.first)) } to TestPiece('P', it.second),
-                    { Piece(it.first, RookPieceRules(it.first)) } to TestPiece('R', it.second),
-                    { Piece(it.first, BishopPieceRules(it.first)) } to TestPiece('B', it.second),
-                    { Piece(it.first, QueenPieceRules(it.first)) } to TestPiece('Q', it.second),
-                    { Piece(it.first, KnightPieceRules(it.first)) } to TestPiece('N', it.second),
-                    { Piece(it.first, KingPieceRules(it.first)) } to TestPiece('K', it.second),
+                    { Piece(it.first, Pawn(it.first)) } to TestPiece('P', it.second),
+                    { Piece(it.first, Rook(it.first)) } to TestPiece('R', it.second),
+                    { Piece(it.first, Bishop(it.first)) } to TestPiece('B', it.second),
+                    { Piece(it.first, Queen(it.first)) } to TestPiece('Q', it.second),
+                    { Piece(it.first, Knight(it.first)) } to TestPiece('N', it.second),
+                    { Piece(it.first, King(it.first)) } to TestPiece('K', it.second),
                 )
             }
             .toMap()

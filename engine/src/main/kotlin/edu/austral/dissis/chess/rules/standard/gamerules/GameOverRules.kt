@@ -1,12 +1,12 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.GameBoard
-import edu.austral.dissis.chess.engine.KingPieceRules
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PlayerState
 import edu.austral.dissis.chess.engine.RuleResult
+import edu.austral.dissis.chess.engine.getPlayerState
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.RuleChain
 
@@ -14,7 +14,7 @@ class GameOverRules(val player: Player) : RuleChain<Pair<Play, GameBoard>, RuleR
     override fun verify(arg: Pair<Play, GameBoard>): RuleResult {
         val (play, board) = arg
 
-        val enemyState = KingPieceRules.getPlayerState(board, !player)
+        val enemyState = getPlayerState(board, !player)
 
         val (engineResult, message) =
             when (enemyState) {

@@ -1,5 +1,9 @@
 package edu.austral.dissis.chess.engine
 
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.Piece
+
 sealed interface Action {
     fun execute(): GameBoard
 
@@ -8,13 +12,6 @@ sealed interface Action {
 
 class Play(val actions: Iterable<Action>) : Action {
     override fun execute(): GameBoard {
-//        var gameBoardAfter = board
-//        for (action in actions) {
-//            action.javaClass.getConstructor().newInstance()
-//            gameBoardAfter = action.execute()
-//        }
-//        return gameBoardAfter
-
         return actions
             .reduce { action, next -> next.setBoard(action.execute()) }
             .execute()

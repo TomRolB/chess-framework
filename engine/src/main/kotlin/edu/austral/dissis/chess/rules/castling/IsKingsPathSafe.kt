@@ -1,10 +1,10 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.GameBoard
-import edu.austral.dissis.chess.engine.KingPieceRules
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.Move
-import edu.austral.dissis.chess.engine.Position
-import edu.austral.dissis.chess.rules.IsKingChecked
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 import edu.austral.dissis.chess.rules.Rule
 
 private const val C_COLUMN = 3
@@ -14,7 +14,7 @@ private const val D_COLUMN = 4
 private const val F_COLUMN = 6
 
 class IsKingsPathSafe(
-    private val kingRules: KingPieceRules,
+    private val kingRules: King,
     val from: Position,
     val to: Position,
     val board: GameBoard,

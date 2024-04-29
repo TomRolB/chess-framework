@@ -1,46 +1,10 @@
 package edu.austral.dissis.chess.engine
 
-data class Position(val row: Int, val col: Int) {
-    override fun toString(): String {
-        return getStringPosition(row, col)
-    }
-}
-
-interface GameBoard {
-    fun isOccupied(position: Position): Boolean
-
-    fun getPieceAt(position: Position): Piece?
-
-    fun setPieceAt(
-        position: Position,
-        piece: Piece,
-    ): GameBoard
-
-    fun delPieceAt(position: Position): GameBoard
-
-    fun positionExists(position: Position): Boolean
-
-    fun isPositionOnUpperLimit(position: Position): Boolean
-
-    fun containsPieceOfPlayer(
-        position: Position,
-        player: Player,
-    ): Boolean
-
-    fun getAllPositions(): Iterable<Position>
-
-    fun getAllPositionsOfPlayer(
-        player: Player,
-        includeKing: Boolean,
-    ): Iterable<Position>
-
-    fun getRowAsWhite(
-        position: Position,
-        player: Player,
-    ): Int
-
-    fun getKingPosition(player: Player): Position
-}
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.board.PositionValidator
+import edu.austral.dissis.chess.engine.pieces.King
+import edu.austral.dissis.chess.engine.pieces.Piece
 
 class HashGameBoard private constructor(
     private val validator: PositionValidator,
@@ -67,7 +31,7 @@ class HashGameBoard private constructor(
             val position = pair.second
 
             val king = boardMap[position]
-            require(king != null && king.rules is KingPieceRules && king.player == player) {
+            require(king != null && king.type is King && king.player == player) {
                 "The $player king is not located at $king"
             }
         }
@@ -90,7 +54,7 @@ class HashGameBoard private constructor(
         var newWhiteKingPosition = whiteKingPosition
         var newBlackKingPosition = blackKingPosition
 
-        if (piece.rules is KingPieceRules) {
+        if (piece.type is King) {
             when (piece.player) {
                 Player.WHITE -> newWhiteKingPosition = position
                 Player.BLACK -> newBlackKingPosition = position
@@ -142,7 +106,7 @@ class HashGameBoard private constructor(
             if (includeKing) {
                 piece.player == player
             } else {
-                piece.player == player && (piece.rules !is KingPieceRules)
+                piece.player == player && (piece.type !is King)
             }
         }
     }
@@ -159,37 +123,5 @@ class HashGameBoard private constructor(
             Player.WHITE -> whiteKingPosition
             Player.BLACK -> blackKingPosition
         }
-    }
-}
-
-interface PositionValidator {
-    fun positionExists(position: Position): Boolean
-
-    fun getRowAsWhite(
-        position: Position,
-        player: Player,
-    ): Int
-
-    fun isPositionOnLastRow(position: Position): Boolean
-}
-
-class RectangleBoardValidator(val numberRows: Int, val numberCols: Int) : PositionValidator {
-    override fun positionExists(position: Position): Boolean {
-        val (row, col) = position
-        return (0 < row) && (row <= numberRows) &&
-            (0 < col) && (col <= numberCols)
-    }
-
-    override fun getRowAsWhite(
-        position: Position,
-        player: Player,
-    ): Int {
-        if (player == Player.WHITE) return position.row
-
-        return numberRows - position.row + 1
-    }
-
-    override fun isPositionOnLastRow(position: Position): Boolean {
-        return position.row == numberRows
     }
 }

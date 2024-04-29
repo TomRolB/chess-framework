@@ -1,19 +1,19 @@
 package edu.austral.dissis.chess.ui
 
-import edu.austral.dissis.chess.engine.BishopPieceRules
+import edu.austral.dissis.chess.engine.pieces.Bishop
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.HashGameBoard
-import edu.austral.dissis.chess.engine.KingPieceRules
-import edu.austral.dissis.chess.engine.KnightPieceRules
+import edu.austral.dissis.chess.engine.pieces.King
+import edu.austral.dissis.chess.engine.pieces.Knight
 import edu.austral.dissis.chess.engine.OneToOneTurnManager
-import edu.austral.dissis.chess.engine.PawnPieceRules
-import edu.austral.dissis.chess.engine.Piece
-import edu.austral.dissis.chess.engine.PieceRules
+import edu.austral.dissis.chess.engine.pieces.Pawn
+import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Position
-import edu.austral.dissis.chess.engine.QueenPieceRules
-import edu.austral.dissis.chess.engine.RectangleBoardValidator
-import edu.austral.dissis.chess.engine.RookPieceRules
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.Queen
+import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.ChessPiece
 import edu.austral.dissis.chess.gui.DefaultImageResolver
@@ -59,20 +59,20 @@ class ChessGameApplication : Application() {
         ): List<Pair<Position, Piece>> {
             val firstRow =
                 listOf(
-                    RookPieceRules(player),
-                    KnightPieceRules(player),
-                    BishopPieceRules(player),
-                    QueenPieceRules(player),
-                    KingPieceRules(player),
-                    BishopPieceRules(player),
-                    KnightPieceRules(player),
-                    RookPieceRules(player),
+                    Rook(player),
+                    Knight(player),
+                    Bishop(player),
+                    Queen(player),
+                    King(player),
+                    Bishop(player),
+                    Knight(player),
+                    Rook(player),
                 )
                     .zip(ONE_TO_EIGHT)
                     .map { (pieceRules, col) -> Position(borderRow, col) to Piece(player, pieceRules) }
             val secondRow =
                 ONE_TO_EIGHT
-                    .map { Position(pawnsRow, it) to Piece(player, PawnPieceRules(player)) }
+                    .map { Position(pawnsRow, it) to Piece(player, Pawn(player)) }
             return firstRow + secondRow
         }
 
@@ -80,14 +80,14 @@ class ChessGameApplication : Application() {
             return WHITE_PIECES + BLACK_PIECES
         }
 
-        private fun getPieceIdMap(): Map<KClass<out PieceRules>, String> {
+        private fun getPieceIdMap(): Map<KClass<out PieceType>, String> {
             return listOf(
-                PawnPieceRules::class to "pawn",
-                RookPieceRules::class to "rook",
-                BishopPieceRules::class to "bishop",
-                KnightPieceRules::class to "knight",
-                QueenPieceRules::class to "queen",
-                KingPieceRules::class to "king",
+                Pawn::class to "pawn",
+                Rook::class to "rook",
+                Bishop::class to "bishop",
+                Knight::class to "knight",
+                Queen::class to "queen",
+                King::class to "king",
             ).toMap()
         }
 

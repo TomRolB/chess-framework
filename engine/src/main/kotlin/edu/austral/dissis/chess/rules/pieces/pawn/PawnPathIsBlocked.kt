@@ -1,8 +1,8 @@
 package edu.austral.dissis.chess.rules.pieces.pawn
 
-import edu.austral.dissis.chess.engine.GameBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.MovementData
-import edu.austral.dissis.chess.engine.Position
+import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.Rule
 
 class PawnPathIsBlocked(

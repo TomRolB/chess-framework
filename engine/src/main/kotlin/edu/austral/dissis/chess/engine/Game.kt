@@ -1,5 +1,7 @@
 package edu.austral.dissis.chess.engine
 
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.RuleChain
 
 data class GameData(
@@ -16,8 +18,6 @@ data class RuleResult(
     val message: String,
 )
 
-// TODO: Should it be immutable? Honestly, there's a point where
-//  you have to have mutable state, but idk
 class Game(
     val gameRules: RuleChain<GameData, RuleResult>,
     var board: GameBoard,

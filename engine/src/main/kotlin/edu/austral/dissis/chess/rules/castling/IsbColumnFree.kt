@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.GameBoard
-import edu.austral.dissis.chess.engine.Position
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.Rule
 
 class IsbColumnFree(val board: GameBoard, private val rookFrom: Position) : Rule<Boolean> {

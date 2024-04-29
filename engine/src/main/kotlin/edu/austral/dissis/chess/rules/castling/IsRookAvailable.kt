@@ -1,9 +1,9 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.GameBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Position
-import edu.austral.dissis.chess.engine.RookPieceRules
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.rules.ContainsPieceOfPlayer
 import edu.austral.dissis.chess.rules.PieceHasNeverMoved
 import edu.austral.dissis.chess.rules.Rule
@@ -22,7 +22,7 @@ class IsRookAvailable(
             player,
             next =
                 IsPieceOfType(
-                    RookPieceRules::class.java,
+                    Rook::class.java,
                     next =
                         PieceHasNeverMoved(
                             next = Succeed(),

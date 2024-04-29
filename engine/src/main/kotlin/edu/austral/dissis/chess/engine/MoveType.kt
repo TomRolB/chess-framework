@@ -1,5 +1,7 @@
 package edu.austral.dissis.chess.engine
 
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.board.Position
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
