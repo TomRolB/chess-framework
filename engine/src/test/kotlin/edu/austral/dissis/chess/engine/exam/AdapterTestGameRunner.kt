@@ -4,7 +4,7 @@ import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.GameData
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.RuleResult
+import edu.austral.dissis.chess.engine.GameResult
 import edu.austral.dissis.chess.engine.TurnManager
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.HashChessBoard
@@ -27,7 +27,7 @@ class AdapterTestGameRunner : TestGameRunner {
     private val actionAdapter: ActionAdapter
     private val pieceAdapter: PieceAdapter
 
-    private val gameRules: RuleChain<GameData, RuleResult>
+    private val gameRules: RuleChain<GameData, GameResult>
     private val turnManager: TurnManager
 
     private lateinit var game: Game
@@ -37,7 +37,7 @@ class AdapterTestGameRunner : TestGameRunner {
     constructor(
         pieceAdapter: PieceAdapter,
         postPlayProcedures: (TestBoard) -> TestBoard,
-        gameRules: RuleChain<GameData, RuleResult>,
+        gameRules: RuleChain<GameData, GameResult>,
         turnManager: TurnManager,
     ) {
         this.pieceAdapter = pieceAdapter

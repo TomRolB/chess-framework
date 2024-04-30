@@ -1,28 +1,37 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-'enum Color {
-'WHITE
-'BLACK
-'}
-'TODO: update
+
 
 enum Player {
     BLACK
     WHITE
+    + toString(): String
 }
 
 class Game {
-    - gameRules: GameRules
-    - gameBoard: GameBoard
-    - validator: MoveValidator
-    - currentTurn: Player
-    ' isMovable would be used in movePiece(): it permits, for instance, to block the rival's pieces, or piece movements when the player's king is checked.
-    + movePiece(String from, String to)
+    - gameRules: RuleChain<GameData, RuleResult>,
+    - board: ChessBoard,
+    - turnManager: TurnManager,
+    + movePiece(String from, String to): RuleResult
 }
 
-interface InputProvider {
-    + requestPlayerMove(player: Player): String
+class GameResult {
+    + board: ChessBoard,
+    + play: Play?,
+    + engineResult: EngineResult,
+    + message: String,
+}
+
+enum EngineResult {
+    GENERAL_MOVE_VIOLATION,
+    PIECE_VIOLATION,
+    POST_PLAY_VIOLATION,
+    WHITE_WINS,
+    BLACK_WINS,
+    TIE_BY_WHITE,
+    TIE_BY_BLACK,
+    VALID_MOVE,
 }
 
 interface TurnManager {
@@ -30,147 +39,109 @@ interface TurnManager {
     + nextTurn(): TurnManager
 }
 
-interface GameRules {
-    + isPieceMovable(String position): boolean
-    + isMoveValid(String from, String to): boolean
-    + playerReachedWinCondition(Player player)
-    + playerIsChecked(Player player)
+class Position{
+    + row: Int,
+    + col: Int
+    + toString(): String
 }
 
 interface GameBoard {
-    + isOccupied(String position): boolean
-    + getPieceAt(String position): Piece
-    + setPieceAt(String position, Piece piece): GameBoard
-    + detPieceAt(String position): GameBoard
-    + positionExists(String position): boolean
-    + containsPieceOfPlayer(String position, Player player): boolean
-    + getAllPiecesOfPlayer(Player player): Iterable<Piece>
+    + isOccupied(position: Position): boolean
+    + getPieceAt(position: Position): Piece?
+    + setPieceAt(position: Position, Piece piece): ChessBoard?
+    + detPieceAt(position: Position): ChessBoard
+    + positionExists(position: Position): boolean
+    + isPositionOnUpperLimit(position: Position): boolean
+    + containsPieceOfPlayer(position: Position, Player player): boolean
+    + getAllPositions(): Iterable<Position>
 }
 
-'interface MoveValidator {
-'    + isPieceMovable(String position): boolean
-'    + isMoveValid(String from, String to): boolean
-'    'TODO: Maybe instead have a method that gets all movable pieces? Or maybe isMovable() should support polymorphism by Piece. In that case, it should be a method of that interface.
-'}
+interface ChessBoardOps {
+    + getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<Position>
+    + getRowAsWhite(position: Position,player: Player): Int
+    + getKingPosition(player: Player): Position
+}
 
-class HashGameBoard implements GameBoard {
-    - squares: HashMap<String, Piece>
-    - validator: PositionValidator
-    + isOccupied(String position): boolean
-    + getPieceAt(String position): Piece
-    + detPieceAt(String position, Piece piece): GameBoard
-    + detPieceAt(String position): GameBoard
-    + positionExists(String position): boolean
-    + containsPieceOfPlayer(String position, Player player): boolean
-    + getAllPiecesOfPlayer(Player player): Iterable<Piece>
-    + unpackPosition(position: String): RowAndCol
-    + getRowAsWhite(position: String, player: Player): Int
+interface ChessBoard extends GameBoard, ChessBoardOps
+
+class HashChessBoard implements ChessBoard {
+    - validator: PositionValidator,
+    - boardMap: Map<Position, Piece>,
+    - whiteKingPosition: Position,
+    - blackKingPosition: Position,
+    + isOccupied(position: Position): boolean
+    + getPieceAt(position: Position): Piece?
+    + setPieceAt(position: Position, Piece piece): ChessBoard?
+    + detPieceAt(position: Position): ChessBoard
+    + positionExists(position: Position): boolean
+    + isPositionOnUpperLimit(position: Position): boolean
+    + containsPieceOfPlayer(position: Position, Player player): boolean
+    + getAllPositions(): Iterable<Position>
+    + getAllPositionsOfPlayer(player: Player, includeKing: Boolean): Iterable<Position>
+    + getRowAsWhite(position: Position,player: Player): Int
+    + getKingPosition(player: Player): Position
 }
 
 interface PositionValidator {
-    ' Allows to define different kinds of game board
-    + positionExists(): boolean
+    + positionExists(position: Position): Boolean
+    + getRowAsWhite(position: Position, player: Player): Int
+    + isPositionOnLastRow(position: Position): Boolean
 }
 
 class RectangleBoardValidator implements PositionValidator {
-    - numOfRows: int
-    + positionExists(): boolean
-    + getRowAsWhite(): Int
-    + unpackPosition(position: String): RowAndCol
+    - numberRows: int
+    - numberCols: int
+    + positionExists(position: Position): Boolean
+    + getRowAsWhite(position: Position, player: Player): Int
+    + isPositionOnLastRow(position: Position): Boolean
 }
 
-'class Square {
-'    - x: Character
-'    - y: int
-'    - pieceOccupying: Piece
-'
-'    + getX(): Character
-'    + getY(): int
-'    + isOccupied(): boolean
-'    + getPieceOccupying(): Piece
-'}
-
-'interface Rule {
-'    + isViolated(Square currSquare, Square newSquare): boolean
-'}
-
-'class BoardLimitsRule implements Rule {
-'}
-
-'class RuleSet implements Rule {
-'    - rules: Iterable<Rule>
-'    + isViolated(Square currSquare, Square newSquare): boolean
-'}
-
-'class MoveRuleSet {
-'
-'    + getValidMoves(): Iterable<String>
-'}
-
-'class MoveFilter {
-'}
-
-' class PawnMove implements Rule {
-'   boolean isViolated(Square currSquare, Square newSquare) {
-'       return currSquare.y == newSquare.y + 1;
-'   }
-'}
-'
-' class
-'
-'
-
 class Play implements Action {
-    - board: GameBoard
     - actions: Iterable<Action>
     + execute(): void
 }
 
 interface Action {
-    + execute(): GameBoard
+    + execute(): ChessBoard
+    + setBoard(board: ChessBoard): Action
 }
 
 class Move implements Action {
-    - from: String
-    - to: String
-    - board: GameBoard
+    - from: Position
+    - to: Position
+    - board: ChessBoard
     - pieceNextTurn: Piece
-    + execute(): GameBoard
+    + execute(): ChessBoard
+    + setBoard(board: ChessBoard): Move
+    + asPlay(): Play
 }
 
 class Take implements Action {
-    - position: String
-    - board: GameBoard
-    + execute(): GameBoard
-    ' TODO: Sometimes moving our piece implicitly includes taking the rival's piece (we reassign the latter's board position to the former, so the reference is replaced). Think about this.
-}
-
-class Promote implements Action {
-    - position: String
-    - promotionPiece: Class
-    - board: GameBoard
-    + execute(): GameBoard
+    - position: Position
+    - board: ChessBoard
+    + execute(): ChessBoard
 }
 
 class Piece {
-    - player: Player
-    - rules: PieceRules
-    + getPlayer(): Player
-    + getRules(): PieceRules
+    + player: Player
+    + rules: PieceType
+    + toString(): String
+    + hashCode(): Int
+    + equals(other: Any?): Boolean
 }
 
-interface PieceRules {
+interface PieceType {
     + isPlayValid(): boolean
     + getValidPlays(): Set<Play>
     + getPlayIfValid() Play
 }
 
-class KingPieceRules implements PieceRules {
+class KingPieceType implements PieceType {
     - player: Player
     + isPlayValid(): boolean
     + getValidPlays(): Set<Play>
     + getPlayIfValid() Play
-    + isChecked(board: GameBoard): Boolean
+    + isChecked(board: ChessBoard): Boolean
 }
 
 enum PlayerState {
@@ -180,15 +151,24 @@ enum PlayerState {
     CHECKMATE
 }
 
-enum Path {
-    VERTICAL_AND_HORIZONTAL,
-    DIAGONAL,
-    ANY_STRAIGHT_LINE,
+interface MoveType {
+    + isViolated(moveData: MovementData): Boolean
+    + isPathBlocked( moveData: MovementData, board: ChessBoard): Boolean
+    + getPossiblePositions( board: ChessBoard, position: Position): Iterable<Position>
+}
+
+enum ClassicMoveType implements MoveType {
+    VERTICAL_AND_HORIZONTAL
+    DIAGONAL
+    ANY_STRAIGHT_LINE
     L_SHAPED
+    ADJACENT_SQUARE
 
     + isViolated(moveData: MovementData): Boolean
-    + isPathBlocked(moveData: MovementData, board: GameBoard): boolean
-    ' Checks whether something is blocking the path between a piece and a position.
+    + isPathBlocked(moveData: MovementData, board: ChessBoard): boolean
+    - getIncrements(): Iterable<Pair<Int, Int>>
+    + getPossiblePositions(board: ChessBoard, position: Position): Iterable<Position>
+    - getLineOfPositions( board: ChessBoard, position: Position, increments: Pair<Int, Int>): List<Position>
 }
 
 class MovementData {
@@ -202,56 +182,26 @@ class MovementData {
     + colDelta: Int
 }
 
-'enum StandardPiece {
-'    KING
-'    ROOK
-'    QUEEN
-'    BISHOP
-'    KNIGHT
-'    PAWN
-'
-'    + getInstanceOf(StandardPiece piece, Player player)
-'}
-
-'class King extends Piece {
-'    move(Square): void
-'}
-'class Rook extends Piece {
-'    move(Square): void
-'}
-'class Bishop extends Piece {
-'    move(Square): void
-'}
-'class Queen extends Piece {
-'    move(Square): void
-'}
-'class Knight extends Piece {
-'    move(Square): void
-'}
-'class Pawn extends Piece {
-'    move(Square): void
-'}
-
 Game *--> GameRules
-Game *-> GameBoard
+Game *-> ChessBoard
 Game *-> TurnManager
 Game *-> Player
-Game *-> InputProvider
-'MoveValidator -> GameRules
 
-GameRules o-> GameBoard
-GameBoard *-> Piece
-HashGameBoard *--> PositionValidator
+Game o-> GameResult
+GameResult *-> EngineResult
+
+GameRules o-> ChessBoard
+ChessBoard *-> Piece
+HashChessBoard *--> PositionValidator
 'Piece -> MoveRuleSet
 'RuleSet -> Rule
 'Piece -> Rule
 Piece *-> Player
-Piece *-> PieceRules
-PieceRules --> Path
-PieceRules -> Play
+Piece *-> PieceType
+PieceType -> Play
 Play *--> Action
-Play *--> GameBoard
-Path -> MovementData
+Play *--> ChessBoard
+ClassicMoveType -> MovementData
 
 
 

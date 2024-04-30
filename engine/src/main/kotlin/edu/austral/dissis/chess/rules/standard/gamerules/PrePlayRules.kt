@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.RuleResult
+import edu.austral.dissis.chess.engine.GameResult
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Piece
@@ -14,9 +14,9 @@ class PrePlayRules(
     val from: Position,
     val to: Position,
     val player: Player,
-    val next: RuleChain<Piece, RuleResult>,
-) : Rule<RuleResult> {
-    override fun verify(): RuleResult {
+    val next: RuleChain<Piece, GameResult>,
+) : Rule<GameResult> {
+    override fun verify(): GameResult {
         return when {
             !board.positionExists(from) -> "Starting position does not exist"
             !board.positionExists(to) -> "Final position does not exist"
@@ -25,7 +25,7 @@ class PrePlayRules(
             board.containsPieceOfPlayer(to, player) -> "Cannot move over piece of yours"
             else -> null
         }
-            ?.let { RuleResult(board, null, EngineResult.GENERAL_MOVE_VIOLATION, it) }
+            ?.let { GameResult(board, null, EngineResult.GENERAL_MOVE_VIOLATION, it) }
             ?: let {
                 val piece = board.getPieceAt(from)!!
                 next.verify(piece)

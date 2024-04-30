@@ -4,14 +4,14 @@ import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PlayerState
-import edu.austral.dissis.chess.engine.RuleResult
+import edu.austral.dissis.chess.engine.GameResult
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.getPlayerState
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.RuleChain
 
-class GameOverRules(val player: Player) : RuleChain<Pair<Play, ChessBoard>, RuleResult> {
-    override fun verify(arg: Pair<Play, ChessBoard>): RuleResult {
+class GameOverRules(val player: Player) : RuleChain<Pair<Play, ChessBoard>, GameResult> {
+    override fun verify(arg: Pair<Play, ChessBoard>): GameResult {
         val (play, board) = arg
 
         val enemyState = getPlayerState(board, !player)
@@ -23,7 +23,7 @@ class GameOverRules(val player: Player) : RuleChain<Pair<Play, ChessBoard>, Rule
                 else -> EngineResult.VALID_MOVE to "Successfully moved"
             }
 
-        return RuleResult(board, play, engineResult, message)
+        return GameResult(board, play, engineResult, message)
     }
 
     private fun tieResult(player: Player): Pair<EngineResult, String> {

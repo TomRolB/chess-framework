@@ -11,7 +11,7 @@ data class GameData(
     val to: Position,
 )
 
-data class RuleResult(
+data class GameResult(
     val board: ChessBoard,
     val play: Play?,
     val engineResult: EngineResult,
@@ -19,14 +19,14 @@ data class RuleResult(
 )
 
 class Game(
-    val gameRules: RuleChain<GameData, RuleResult>,
+    val gameRules: RuleChain<GameData, GameResult>,
     var board: ChessBoard,
     var turnManager: TurnManager,
 ) {
     fun movePiece(
         from: Position,
         to: Position,
-    ): RuleResult {
+    ): GameResult {
         val gameData = GameData(board, turnManager, from, to)
         val ruleResult = gameRules.verify(gameData)
 
