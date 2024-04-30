@@ -21,18 +21,6 @@ class HashChessBoard private constructor(
         }
     }
 
-    init {
-        for (pair in listOf(Player.WHITE, Player.BLACK).zip(listOf(whiteKingPosition, blackKingPosition))) {
-            val player = pair.first
-            val position = pair.second
-
-            val king = boardMap[position]
-            require(king != null && king.type is King && king.player == player) {
-                "The $player king is not located at $king"
-            }
-        }
-    }
-
     override fun isOccupied(position: Position): Boolean {
         return boardMap[position] != null
     }
@@ -61,9 +49,9 @@ class HashChessBoard private constructor(
     }
 
     override fun delPieceAt(position: Position): HashChessBoard {
-        require(position != whiteKingPosition && position != blackKingPosition) {
-            "A king cannot be deleted without being set in other position first"
-        }
+//        require(position != whiteKingPosition && position != blackKingPosition) {
+//            "A king cannot be deleted without being set in other position first"
+//        }
 
         val newMap: HashMap<Position, Piece> = HashMap(boardMap)
         newMap.remove(position)
