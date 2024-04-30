@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor user
+
+user -> Game: movePiece(from: String, to: String)
+Game -> StandardGameRules: verify(gameData: GameData)
+
+'TODO: intermediate steps in each RuleChain below
+StandardGameRules -> PrePlayRules: verify()
+PrePlayRules -> IsPlayValid: verify(arg: Piece)
+IsPlayValid -> PostPlayRules: verify(arg: Play)
+PostPlayRules -> GameOverRules: verify(arg: Pair<Play, ChessBoard>)
+
+@enduml
