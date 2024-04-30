@@ -1,9 +1,9 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
+import edu.austral.dissis.chess.engine.GameResult
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.GameResult
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Pawn

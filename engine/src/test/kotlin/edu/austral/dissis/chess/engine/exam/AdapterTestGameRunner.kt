@@ -3,8 +3,8 @@ package edu.austral.dissis.chess.engine.exam
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.GameData
-import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.GameResult
+import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.TurnManager
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.HashChessBoard
