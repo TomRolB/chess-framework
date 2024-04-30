@@ -7,10 +7,6 @@ class All : Rule<Boolean> {
         this.rules = rules
     }
 
-    constructor(vararg conditions: Boolean) {
-        this.rules = conditions.map { SimpleRule(it) }.toTypedArray()
-    }
-
     override fun verify(): Boolean {
         return rules.all { it.verify() }
     }

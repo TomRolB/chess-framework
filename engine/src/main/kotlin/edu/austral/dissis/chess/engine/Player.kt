@@ -7,14 +7,6 @@ import edu.austral.dissis.chess.rules.pieces.king.WillKingBeChecked
 enum class Player {
     BLACK,
     WHITE,
-    ;
-
-    override fun toString(): String {
-        return when (this) {
-            BLACK -> "black"
-            WHITE -> "white"
-        }
-    }
 }
 
 enum class PlayerState {

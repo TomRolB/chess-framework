@@ -1,14 +1,9 @@
 package edu.austral.dissis.chess.engine.board
 
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.getStringPosition
 import edu.austral.dissis.chess.engine.pieces.Piece
 
-data class Position(val row: Int, val col: Int) {
-    override fun toString(): String {
-        return getStringPosition(row, col)
-    }
-}
+data class Position(val row: Int, val col: Int)
 
 interface ChessBoard : GameBoard, ChessBoardOps
 

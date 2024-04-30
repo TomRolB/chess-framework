@@ -30,7 +30,7 @@ class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceType>, String>)
         pos: edu.austral.dissis.chess.engine.board.Position,
     ): ChessPiece {
         return ChessPiece(
-            id = pos.toString(),
+            id = pos.row.toString() + pos.col.toString(),
             color = adapt(piece.player),
             position = Position(pos.row, pos.col),
             pieceId =

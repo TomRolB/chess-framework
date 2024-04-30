@@ -3,25 +3,6 @@ package edu.austral.dissis.chess.engine
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 
-fun getStringPosition(
-    row: Int,
-    col: Int,
-): String {
-    return String(charArrayOf(col.colToChar(), row.digitToChar()))
-}
-
-fun stringToPosition(position: String): Position {
-    return Position(position[1].digitToInt(), position[0].charToCol())
-}
-
-fun Char.charToCol(): Int {
-    return this.code - 'a'.code + 1
-}
-
-fun Int.colToChar(): Char {
-    return (this + 'a'.code - 1).toChar()
-}
-
 class MovementData {
     val from: Position
     val to: Position
