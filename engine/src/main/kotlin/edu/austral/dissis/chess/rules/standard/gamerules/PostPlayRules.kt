@@ -1,16 +1,16 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.board.ChessBoard
-import edu.austral.dissis.chess.engine.pieces.Pawn
-import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.pieces.Queen
 import edu.austral.dissis.chess.engine.RuleResult
-import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
+import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.Pawn
+import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.pieces.Queen
 import edu.austral.dissis.chess.rules.RuleChain
+import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
 class PostPlayRules(
     val from: Position,

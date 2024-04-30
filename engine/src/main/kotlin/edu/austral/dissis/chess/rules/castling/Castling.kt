@@ -1,11 +1,11 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.board.ChessBoard
-import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.Move
-import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.King
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.rules.Rule
 
@@ -27,7 +27,7 @@ class Castling(
                 next = CastlingSubRules(kingRules, hasEverMoved, board, from, to),
             )
 
-        return if (rules.verify(null)) {
+        return if (rules.verify()) {
             val (rookFrom, rookTo) = listener
             val movedRook = Piece(kingRules.player, Rook(kingRules.player, hasEverMoved = true))
             Play(

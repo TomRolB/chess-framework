@@ -1,15 +1,15 @@
 package edu.austral.dissis.chess.engine.exam
 
+import edu.austral.dissis.chess.engine.OneToOneTurnManager
+import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.custom.CustomGameTester
 import edu.austral.dissis.chess.engine.pieces.Bishop
 import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.pieces.Knight
-import edu.austral.dissis.chess.engine.OneToOneTurnManager
 import edu.austral.dissis.chess.engine.pieces.Pawn
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Queen
 import edu.austral.dissis.chess.engine.pieces.Rook
-import edu.austral.dissis.chess.engine.custom.CustomGameTester
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPiece

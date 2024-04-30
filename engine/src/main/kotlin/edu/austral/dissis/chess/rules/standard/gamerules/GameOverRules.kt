@@ -1,11 +1,11 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PlayerState
 import edu.austral.dissis.chess.engine.RuleResult
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.getPlayerState
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.RuleChain

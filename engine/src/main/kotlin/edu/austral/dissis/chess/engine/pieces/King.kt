@@ -1,14 +1,14 @@
 package edu.austral.dissis.chess.engine.pieces
 
 import edu.austral.dissis.chess.engine.ClassicMoveType
-import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 import edu.austral.dissis.chess.rules.castling.Castling
+import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
 private const val C_COLUMN = 3
 
@@ -66,7 +66,6 @@ class King : MoveDependantPieceType {
     ): PlayResult {
         val moveData = MovementData(from, to)
         return when {
-            // TODO: Could be better
             moveType.isViolated(moveData) -> {
                 Castling(this, hasEverMoved, board, from, to).verify()
                     ?.let { PlayResult(it, "Valid play") }
@@ -74,7 +73,10 @@ class King : MoveDependantPieceType {
             }
             else -> {
                 val pieceNextTurn = Piece(player, King(player, hasEverMoved = true))
-                PlayResult(Move(from, to, board, pieceNextTurn).asPlay(), "Valid play")
+                PlayResult(
+                    Move(from, to, board, pieceNextTurn).asPlay(),
+                    "Valid play",
+                )
             }
         }
     }

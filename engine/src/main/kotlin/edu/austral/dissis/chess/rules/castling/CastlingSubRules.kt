@@ -1,13 +1,13 @@
 package edu.austral.dissis.chess.rules.castling
 
 import edu.austral.dissis.chess.engine.board.ChessBoard
-import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.rules.All
-import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 import edu.austral.dissis.chess.rules.Not
 import edu.austral.dissis.chess.rules.RuleChain
 import edu.austral.dissis.chess.rules.SimpleRule
+import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
 class CastlingSubRules(
     private val kingRules: King,

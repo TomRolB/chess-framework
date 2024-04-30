@@ -1,8 +1,8 @@
 package edu.austral.dissis.chess.engine.pieces
 
-import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 import edu.austral.dissis.chess.rules.pieces.pawn.PawnValidMove
@@ -13,8 +13,7 @@ class Pawn : MoveDependantPieceType {
     val hasJustMovedTwoPlaces: Boolean
     override val hasEverMoved: Boolean
 
-    // TODO: consider modifying this
-    enum class State {
+    enum class PawnState {
         MOVED,
         MOVED_TWO_PLACES,
     }
@@ -25,14 +24,14 @@ class Pawn : MoveDependantPieceType {
         this.hasJustMovedTwoPlaces = false
     }
 
-    constructor(player: Player, state: State) {
+    constructor(player: Player, pawnState: PawnState) {
         this.player = player
-        when (state) {
-            State.MOVED -> {
+        when (pawnState) {
+            PawnState.MOVED -> {
                 this.hasEverMoved = true
                 this.hasJustMovedTwoPlaces = false
             }
-            State.MOVED_TWO_PLACES -> {
+            PawnState.MOVED_TWO_PLACES -> {
                 this.hasEverMoved = true
                 this.hasJustMovedTwoPlaces = true
             }

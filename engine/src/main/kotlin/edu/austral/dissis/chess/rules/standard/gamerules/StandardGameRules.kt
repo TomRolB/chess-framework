@@ -33,6 +33,6 @@ class StandardGameRules : RuleChain<GameData, RuleResult> {
                     ),
             )
 
-        return rules.verify(null)
+        return rules.verify()
     }
 }

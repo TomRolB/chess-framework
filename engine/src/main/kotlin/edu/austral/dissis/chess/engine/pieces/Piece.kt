@@ -1,14 +1,14 @@
 package edu.austral.dissis.chess.engine.pieces
 
-import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MoveType
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
-//TODO: put pieces in different file?
+// TODO: put pieces in different file?
 // TODO: we are supposed to make rules easy to change. Should see if
 //  this applies to each implementation of PieceRules.
 

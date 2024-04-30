@@ -24,7 +24,6 @@ enum class PlayerState {
     CHECKMATE,
 }
 
-
 fun getPlayerState(
     board: ChessBoard,
     player: Player,
@@ -35,7 +34,6 @@ fun getPlayerState(
 
     return PlayerState.entries[combinedStatus]
 }
-
 
 operator fun Player.not(): Player {
     return when (this) {

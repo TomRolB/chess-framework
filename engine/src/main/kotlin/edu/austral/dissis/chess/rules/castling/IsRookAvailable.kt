@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.rules.ContainsPieceOfPlayer
@@ -28,6 +28,6 @@ class IsRookAvailable(
                             next = Succeed(),
                         ),
                 ),
-        ).verify(null)
+        ).verify()
     }
 }

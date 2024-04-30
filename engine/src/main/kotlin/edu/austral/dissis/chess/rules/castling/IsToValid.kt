@@ -1,6 +1,7 @@
 package edu.austral.dissis.chess.rules.castling
 
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.rules.Rule
 import edu.austral.dissis.chess.rules.RuleChain
 
 private const val A_COLUMN = 1
@@ -15,8 +16,8 @@ class IsToValid(
     private val to: Position,
     private val listener: RookMoveListener,
     private val next: RuleChain<Pair<Position, Position>, Boolean>,
-) : RuleChain<Any?, Boolean> {
-    override fun verify(arg: Any?): Boolean {
+) : Rule<Boolean> {
+    override fun verify(): Boolean {
         val isToValid: Boolean
         val rookFrom: Position
         val rookTo: Position

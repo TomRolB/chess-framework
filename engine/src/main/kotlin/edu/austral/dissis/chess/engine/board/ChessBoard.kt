@@ -10,6 +10,8 @@ data class Position(val row: Int, val col: Int) {
     }
 }
 
+interface ChessBoard : GameBoard, ChessBoardOps
+
 interface GameBoard {
     fun isOccupied(position: Position): Boolean
 
@@ -47,5 +49,3 @@ interface ChessBoardOps {
 
     fun getKingPosition(player: Player): Position
 }
-
-interface ChessBoard : GameBoard, ChessBoardOps
