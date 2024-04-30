@@ -3,54 +3,157 @@
 
 autonumber
 
-title Sequence diagram: en passant
-'TODO: correct mistakes
-'TODO: update
+title Moving a piece
 
 actor user
-    user -> Game: movePiece(String from, String to)
-    Game -> Game: isMovable(String position)
-    Game -> HashGameBoard: positionExists(String position)
-    HashGameBoard -> SquaredBoardValidator: positionExists(String position)
-    HashGameBoard <-- SquaredBoardValidator: boolean
 
-    Game <-- HashGameBoard: boolean
+user -> Game: movePiece(from: String, to: String)
+activate Game
 
-alt Position exists in board
-    Game -> HashGameBoard: getPieceAt(String pos)
-    Game <-- HashGameBoard: Piece
-    Game -> Piece: isPlayValid(String position)
-    Piece -> Piece: getAvailablePlays(): Set<Plays>
+Game -> StandardGameRules: verify(gameData: GameData)
+activate StandardGameRules
 
-    ' Check 'to' is in the set of available moves
-alt valid play
-    ' Example: en passant
-    Piece -> Play: executeActions()
+StandardGameRules -> PrePlayRules: verify()
+activate PrePlayRules
 
-    ' Move
-    Play -> Move: execute()
-    Move -> HashGameBoard: getPieceAt(String position)
-    Move <-- HashGameBoard: void
-    Move -> HashGameBoard: setPieceAt(String position, Piece piece)
-    Move <-- HashGameBoard: void
-    Move -> HashGameBoard: setPieceAt(String position, Piece piece)
-    Move <-- HashGameBoard: void
-    Play <-- Move: void
 
-    ' Take
-    Play -> Take: execute()
-    Take -> HashGameBoard: setPieceAt(String position, Piece piece)
-    Take <-- HashGameBoard: void
-    Play <-- Take: void
+PrePlayRules -> HashChessBoard: !positionExists(position = from)
+activate HashChessBoard
 
-    Game <-- Play: void
-    user <-- Game: void
-else invalid play
-    Game <-- Piece: void
-    user <-- Game: void
+HashChessBoard -> RectanglePositionValidator: positionExists(position = from)
+activate RectanglePositionValidator
+HashChessBoard <-- RectanglePositionValidator: boolean
+deactivate RectanglePositionValidator
+
+PrePlayRules <-- HashChessBoard: boolean
+deactivate HashChessBoard
+
+PrePlayRules -> HashChessBoard: !positionExists(position = to)
+activate HashChessBoard
+HashChessBoard -> RectanglePositionValidator: positionExists(position = to)
+activate RectanglePositionValidator
+HashChessBoard <-- RectanglePositionValidator: boolean
+deactivate RectanglePositionValidator
+PrePlayRules <-- HashChessBoard: boolean
+deactivate HashChessBoard
+
+PrePlayRules -> HashChessBoard: !board.containsPieceOfPlayer(position = from, player)
+activate HashChessBoard
+PrePlayRules <-- HashChessBoard: boolean
+deactivate HashChessBoard
+
+PrePlayRules -> HashChessBoard: board.containsPieceOfPlayer(position = to, player)
+activate HashChessBoard
+PrePlayRules <-- HashChessBoard: boolean
+deactivate HashChessBoard
+
+alt first failure of the conditions above
+
+StandardGameRules <-- PrePlayRules: GameResult(engineResult = GENERAL_MOVE_VIOLATION)
+Game <-- StandardGameRules: GameResult(engineResult = GENERAL_MOVE_VIOLATION)
+user <-- Game: GameResult(engineResult = GENERAL_MOVE_VIOLATION)
+
 end
-else Position does not exist
-    user <-- Game: void
+
+
+PrePlayRules -> IsPlayValid: verify(arg: Piece)
+activate IsPlayValid
+
+IsPlayValid -> PieceType: getPlayIfValid(from: Position, to: Position)
+activate PieceType
+
+IsPlayValid <- PieceType: PlayResult
+deactivate PieceType
+
+alt play not valid
+
+PrePlayRules <-- IsPlayValid: GameResult(engineResult = PIECE_VIOLATION)
+StandardGameRules <-- PrePlayRules: GameResult(engineResult = PIECE_VIOLATION)
+Game <-- StandardGameRules: GameResult(engineResult = PIECE_VIOLATION)
+user <-- Game: GameResult(engineResult = PIECE_VIOLATION)
+
 end
+
+IsPlayValid -> PostPlayRules: verify(arg: Play)
+activate PostPlayRules
+
+PostPlayRules -> Play: execute()
+activate Play
+
+PostPlayRules <-- Play: ChessBoard
+deactivate Play
+
+PostPlayRules -> ChessBoard: getPieceAt(to)!!
+activate ChessBoard
+PostPlayRules <-- ChessBoard: Piece
+deactivate ChessBoard
+
+PostPlayRules -> ChessBoard: getRowAsWhite(to: Position, player)
+activate ChessBoard
+PostPlayRules <-- ChessBoard: Int
+deactivate ChessBoard
+
+PostPlayRules -> ChessBoard : isPositionOnUpperLimit(positionAsWhite)
+activate ChessBoard
+PostPlayRules <-- ChessBoard : boolean
+deactivate ChessBoard
+
+alt pawn on upper limit
+    PostPlayRules -> ChessBoard: setPieceAt(to, promotionPiece)
+end
+
+PostPlayRules -> IsKingChecked: verify()
+activate IsKingChecked
+PostPlayRules <-- IsKingChecked: boolean
+deactivate IsKingChecked
+
+alt king is checked after play
+
+IsPlayValid <-- PostPlayRules: GameResult(engineResult = POST_PLAY_VIOLATION)
+PrePlayRules <-- IsPlayValid: GameResult(engineResult = POST_PLAY_VIOLATION)
+StandardGameRules <-- PrePlayRules: GameResult(engineResult = POST_PLAY_VIOLATION)
+Game <-- StandardGameRules: GameResult(engineResult = POST_PLAY_VIOLATION)
+user <-- Game: GameResult(engineResult = POST_PLAY_VIOLATION)
+
+end
+
+
+PostPlayRules -> GameOverRules: verify(arg: Pair<Play, HashChessBoard>)
+activate GameOverRules
+
+alt win or tie
+
+PostPlayRules <-- GameOverRules: GameResult(engineResult = [any of the win/tie states])
+IsPlayValid <-- PostPlayRules: GameResult(engineResult = [any of the win/tie states])
+PrePlayRules <-- IsPlayValid: GameResult(engineResult = [any of the win/tie states])
+StandardGameRules <-- PrePlayRules: GameResult(engineResult = [any of the win/tie states])
+Game <-- StandardGameRules: GameResult(engineResult = [any of the win/tie states])
+user <-- Game: GameResult(engineResult = [any of the win/tie states])
+
+end
+
+PostPlayRules <-- GameOverRules: GameResult(engineResult = VALID_MOVE)
+deactivate GameOverRules
+
+IsPlayValid <-- PostPlayRules: GameResult(engineResult = VALID_MOVE)
+deactivate PostPlayRules
+
+PrePlayRules <-- IsPlayValid: GameResult(engineResult = VALID_MOVE)
+deactivate IsPlayValid
+
+StandardGameRules <-- PrePlayRules: GameResult(engineResult = VALID_MOVE)
+deactivate PrePlayRules
+
+Game <-- StandardGameRules: GameResult(engineResult = VALID_MOVE)
+deactivate StandardGameRules
+
+Game -> TurnManager: nextTurn()
+activate TurnManager
+
+Game <-- TurnManager: TurnManager
+deactivate TurnManager
+
+user <-- Game: GameResult(engineResult = VALID_MOVE)
+deactivate Game
 
 @enduml
