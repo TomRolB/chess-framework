@@ -13,7 +13,6 @@ activate Game
 Game -> StandardGameRules: verify(gameData: GameData)
 activate StandardGameRules
 
-'TODO: intermediate steps in each RuleChain below
 'TODO: fail case of each rule
 StandardGameRules -> PrePlayRules: verify()
 activate PrePlayRules
@@ -72,6 +71,38 @@ deactivate Bishop
 
 IsPlayValid -> PostPlayRules: verify(arg: Play)
 activate PostPlayRules
+
+PostPlayRules -> Play: execute()
+activate Play
+'TODO: execute() details
+
+PostPlayRules <-- Play: ChessBoard
+deactivate Play
+
+PostPlayRules -> ChessBoard: getPieceAt(to)!!
+activate ChessBoard
+PostPlayRules <-- ChessBoard: Piece
+deactivate ChessBoard
+
+PostPlayRules -> ChessBoard: getRowAsWhite(to: Position, player)
+activate ChessBoard
+PostPlayRules <-- ChessBoard: Int
+deactivate ChessBoard
+
+PostPlayRules -> ChessBoard : isPositionOnUpperLimit(positionAsWhite)
+activate ChessBoard
+PostPlayRules <-- ChessBoard : false
+deactivate ChessBoard
+
+alt pawn on upper limit
+    PostPlayRules -> ChessBoard: setPieceAt(to, promotionPiece)
+end
+
+PostPlayRules -> IsKingChecked: verify()
+activate IsKingChecked
+PostPlayRules <-- IsKingChecked: false
+deactivate IsKingChecked
+
 
 PostPlayRules -> GameOverRules: verify(arg: Pair<Play, HashChessBoard>)
 activate GameOverRules
