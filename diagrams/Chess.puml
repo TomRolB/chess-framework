@@ -136,14 +136,6 @@ interface PieceType {
     + getPlayIfValid() Play
 }
 
-class KingPieceType implements PieceType {
-    - player: Player
-    + isPlayValid(): boolean
-    + getValidPlays(): Set<Play>
-    + getPlayIfValid() Play
-    + isChecked(board: ChessBoard): Boolean
-}
-
 enum PlayerState {
     NORMAL,
     CHECKED
@@ -182,25 +174,20 @@ class MovementData {
     + colDelta: Int
 }
 
-Game *--> GameRules
-Game *-> ChessBoard
+Game *--> ChessBoard
 Game *-> TurnManager
-Game *-> Player
 
-Game o-> GameResult
+Game o--> GameResult
 GameResult *-> EngineResult
 
-GameRules o-> ChessBoard
 ChessBoard *-> Piece
-HashChessBoard *--> PositionValidator
-'Piece -> MoveRuleSet
-'RuleSet -> Rule
-'Piece -> Rule
-Piece *-> Player
-Piece *-> PieceType
+ChessBoard *--> Position
+HashChessBoard *-> PositionValidator
+Piece *--> Player
+Piece *--> PieceType
 PieceType -> Play
 Play *--> Action
-Play *--> ChessBoard
+Action *-> ChessBoard
 ClassicMoveType -> MovementData
 
 

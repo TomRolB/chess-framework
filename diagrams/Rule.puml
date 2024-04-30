@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+'TODO: Update
+
+interface Rule<T> {
+    + verify(): T
+}
+
+class All<Boolean> implements Rule {
+    - rules: Array<Rule<Boolean>>
+    + verify(): Boolean
+}
+
+class Not<Boolean> implements Rule {
+    - rule: Rule<Boolean>
+}
+
+class SimpleRule<Boolean> implements Rule {
+- condition: Boolean
++ verify(): Boolean
+}
+
+interface RuleChain<In, Out> {
+    fun verify(arg: In): Out
+}
+
+RuleChain *--> RuleChain
+
+
+@enduml
