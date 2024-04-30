@@ -8,10 +8,6 @@ import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
-// TODO: put pieces in different file?
-// TODO: we are supposed to make rules easy to change. Should see if
-//  this applies to each implementation of PieceRules.
-
 data class Piece(val player: Player, val type: PieceType) {
     override fun toString(): String {
         return "$player, $type"
