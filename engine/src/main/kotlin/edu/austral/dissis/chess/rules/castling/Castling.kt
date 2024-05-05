@@ -1,16 +1,12 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.ClassicMoveType
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.King
-import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.getRook
 import edu.austral.dissis.chess.rules.Rule
-import edu.austral.dissis.chess.rules.pieces.MovedUpdater
-import edu.austral.dissis.chess.rules.pieces.PathMovementRules
 
 class Castling(
     private val kingRules: King,
