@@ -32,6 +32,7 @@ class Piece {
         return "$player, $rules"
     }
 
+    // TODO: May have to change hashCode
     override fun hashCode(): Int {
         return (player to rules::class).hashCode()
     }

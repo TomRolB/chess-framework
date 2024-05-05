@@ -1,5 +1,6 @@
 package edu.austral.dissis.chess.rules.castling
 
+import edu.austral.dissis.chess.engine.ClassicMoveType
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
@@ -8,6 +9,8 @@ import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.rules.Rule
+import edu.austral.dissis.chess.rules.pieces.MovedUpdater
+import edu.austral.dissis.chess.rules.pieces.PathMovement
 
 class Castling(
     private val kingRules: King,
@@ -29,7 +32,11 @@ class Castling(
 
         return if (rules.verify()) {
             val (rookFrom, rookTo) = listener
-            val movedRook = Piece(kingRules.player, Rook(kingRules.player, hasEverMoved = true))
+            val movedRook = Piece(
+                kingRules.player,
+                MovedUpdater(PathMovement(ClassicMoveType.VERTICAL_AND_HORIZONTAL))
+            ).withState("moved")
+
             Play(
                 listOf(
                     Move(from, to, board, pieceNextTurn = kingRules.asMoved()),
