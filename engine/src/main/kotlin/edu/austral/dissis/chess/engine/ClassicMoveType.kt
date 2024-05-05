@@ -85,7 +85,7 @@ enum class ClassicMoveType : MoveType {
 
                 var anyPieceBlocking = false
 
-                while (!(row == moveData.toRow && col == moveData.toCol)) {
+                while (didNotReachDestination(row, moveData, col)) {
                     val position = Position(row, col)
                     if (board.isOccupied(position)) {
                         anyPieceBlocking = true
@@ -104,6 +104,12 @@ enum class ClassicMoveType : MoveType {
             }
         }
     }
+
+    private fun didNotReachDestination(
+        row: Int,
+        moveData: MovementData,
+        col: Int,
+    ) = !(row == moveData.toRow && col == moveData.toCol)
 
     private fun getIncrements(): Iterable<Pair<Int, Int>> {
         return when (this) {

@@ -14,7 +14,7 @@ private const val C_COLUMN = 3
 
 private const val G_COLUMN = 7
 
-class King : MoveDependantPieceType {
+class King : MoveDependantPieceRule {
     val player: Player
     private val moveType = ClassicMoveType.ADJACENT_SQUARE
     override val hasEverMoved: Boolean

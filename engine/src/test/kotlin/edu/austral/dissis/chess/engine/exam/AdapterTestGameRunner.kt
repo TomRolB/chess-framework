@@ -105,12 +105,12 @@ class AdapterTestGameRunner : TestGameRunner {
         val piecePositions = getEnginePieces(board)
         val whiteKingPosition =
             piecePositions
-                .find { it.second.type is King && it.second.player == Player.WHITE }
+                .find { it.second.rules is King && it.second.player == Player.WHITE }
                 ?.first
                 ?: throw IllegalArgumentException("The board must be initialized with a white king")
         val blackKingPosition =
             piecePositions
-                .find { it.second.type is King && it.second.player == Player.BLACK }
+                .find { it.second.rules is King && it.second.player == Player.BLACK }
                 ?.first
                 ?: throw IllegalArgumentException("The board must be initialized with a white king")
 

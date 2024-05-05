@@ -8,7 +8,7 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 
-class Queen(val player: Player) : PieceType {
+class Queen(val player: Player) : PieceRule {
     private val moveType = ClassicMoveType.ANY_STRAIGHT_LINE
 
     override fun getValidPlays(

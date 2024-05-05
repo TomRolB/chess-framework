@@ -27,7 +27,7 @@ class PostPlayRules(
         val positionAsWhite = Position(rowAsWhite, to.col)
 
         // Promote pawn
-        if (piece.type is Pawn && board.isPositionOnUpperLimit(positionAsWhite)) {
+        if (piece.rules is Pawn && board.isPositionOnUpperLimit(positionAsWhite)) {
             val promotionPiece = Piece(piece.player, Queen(piece.player))
 
             board = board.setPieceAt(to, promotionPiece)

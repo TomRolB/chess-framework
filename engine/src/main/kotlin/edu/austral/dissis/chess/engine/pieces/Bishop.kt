@@ -8,7 +8,7 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 
-class Bishop(val player: Player) : PieceType {
+class Bishop(val player: Player) : PieceRule {
     private val moveType = ClassicMoveType.DIAGONAL
 
     override fun getValidPlays(
@@ -32,5 +32,16 @@ class Bishop(val player: Player) : PieceType {
             -> PlayResult(null, "Cannot move there: the path is blocked")
             else -> PlayResult(Move(from, to, board).asPlay(), "Valid move")
         }
+
+//        return IndependentRuleChain(
+//            !moveType.isViolated(moveData)
+//                    to PlayResult(null, "A bishop cannot move this way"),
+//            !moveType.isPathBlocked(moveData, board)
+//                    to PlayResult(null, "Cannot move there: the path is blocked"),
+//            false
+//                    to PlayResult(Move(from, to, board).asPlay(), "Valid move")
+//        )
+//            .onSuccess(PlayResult(Move(from, to, board).asPlay(), "Valid move"))
+//            .verify()!!
     }
 }

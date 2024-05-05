@@ -21,12 +21,8 @@ class IsRookAvailable(
             rookPos,
             player,
             next =
-                IsPieceOfType(
-                    Rook::class.java,
-                    next =
-                        PieceHasNeverMoved(
-                            next = Succeed(),
-                        ),
+                PieceHasNeverMoved(
+                    next = Succeed(),
                 ),
         ).verify()
     }

@@ -15,7 +15,7 @@ class IsPlayValid(
     val next: RuleChain<Play, GameResult>,
 ) : RuleChain<Piece, GameResult> {
     override fun verify(arg: Piece): GameResult {
-        val (play, message) = arg.type.getPlayIfValid(board, from, to)
+        val (play, message) = arg.rules.getPlayIfValid(board, from, to)
 
         return if (play == null) {
             GameResult(board, null, EngineResult.PIECE_VIOLATION, message)

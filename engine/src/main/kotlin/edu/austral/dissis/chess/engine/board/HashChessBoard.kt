@@ -38,7 +38,7 @@ class HashChessBoard private constructor(
         var newWhiteKingPosition = whiteKingPosition
         var newBlackKingPosition = blackKingPosition
 
-        if (piece.type is King) {
+        if (piece.rules is King) {
             when (piece.player) {
                 Player.WHITE -> newWhiteKingPosition = position
                 Player.BLACK -> newBlackKingPosition = position
@@ -90,7 +90,7 @@ class HashChessBoard private constructor(
             if (includeKing) {
                 piece.player == player
             } else {
-                piece.player == player && (piece.type !is King)
+                piece.player == player && (piece.rules !is King)
             }
         }
     }

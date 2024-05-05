@@ -31,5 +31,15 @@ class PawnValidMove(
             )
 
         return subRules[ moveData.colDelta to moveData.rowDelta ]?.verify()
+
+//        val moveData = MovementData(from, to, board, player)
+//        val pawnDiagonal = PawnDiagonal(board, moveData, player)
+//
+//        PieceRuleMap(
+//            (0 to 1) to PawnFront(board, moveData, player),
+//            (1 to 1) to pawnDiagonal,
+//            (-1 to 1) to pawnDiagonal,
+//            (0 to 2) to PawnTwoPlaces(board, moveData, player, hasEverMoved),
+//        )
     }
 }

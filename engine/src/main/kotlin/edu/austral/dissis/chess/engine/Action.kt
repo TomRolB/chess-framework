@@ -58,6 +58,10 @@ class Move : Action {
     fun asPlay(): Play {
         return Play(listOf(this))
     }
+
+    fun withPiece(piece: Piece): Move {
+        return Move(from, to, board, piece)
+    }
 }
 
 class Take(val position: Position, val board: ChessBoard) : Action {

@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 import edu.austral.dissis.chess.rules.pieces.pawn.PawnValidMove
 
-class Pawn : MoveDependantPieceType {
+class Pawn : MoveDependantPieceRule {
     private val player: Player
     private val increments = listOf(1 to 1, 0 to 1, -1 to 1, 0 to 2)
     val hasJustMovedTwoPlaces: Boolean
@@ -53,6 +53,8 @@ class Pawn : MoveDependantPieceType {
             }
     }
 
+
+    //TODO: One possibility is to simply create an AND for Piece Rules
     override fun getPlayIfValid(
         board: ChessBoard,
         from: Position,

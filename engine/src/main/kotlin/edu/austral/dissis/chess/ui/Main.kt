@@ -11,7 +11,7 @@ import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.pieces.Knight
 import edu.austral.dissis.chess.engine.pieces.Pawn
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.engine.pieces.PieceType
+import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.Queen
 import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.gui.CachedImageResolver
@@ -44,11 +44,13 @@ class ChessGameApplication : Application() {
     }
 
     companion object {
+
+        // TODO: All below is weird. Should define a better way of creating boards with pieces
         const val GAME_TITLE = "Chess"
         private val ONE_TO_EIGHT = 1..8
         private val WHITE_PIECES = getFromPlayer(1, 2, Player.WHITE)
-        private val BLACK_PIECES = getFromPlayer(8, 7, Player.BLACK)
-        private val VALIDATOR = RectangleBoardValidator(8, 8)
+        private val BLACK_PIECES = getFromPlayer(6, 5, Player.BLACK)
+        private val VALIDATOR = RectangleBoardValidator(8, 6)
         private val WK_POSITION = Position(1, 5)
         private val BK_POSITION = Position(8, 5)
 
@@ -80,7 +82,7 @@ class ChessGameApplication : Application() {
             return WHITE_PIECES + BLACK_PIECES
         }
 
-        private fun getPieceIdMap(): Map<KClass<out PieceType>, String> {
+        private fun getPieceIdMap(): Map<KClass<out PieceRule>, String> {
             return listOf(
                 Pawn::class to "pawn",
                 Rook::class to "rook",
