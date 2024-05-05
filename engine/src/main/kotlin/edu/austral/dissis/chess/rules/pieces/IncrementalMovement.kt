@@ -28,7 +28,7 @@ class IncrementalMovement(val rowDelta: Int, val colDelta: Int): PieceRule {
 
         return PlayResult(
             play = Move(from, to, board).asPlay().takeIf{ isPlayValid },
-            message = if (isPlayValid) "Valid play" else "Invalid play"
+            message = if (isPlayValid) "Valid play" else "Piece cannot move this way"
         )
     }
 }

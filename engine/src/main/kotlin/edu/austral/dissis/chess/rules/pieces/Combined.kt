@@ -6,16 +6,29 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class Combined(val first: PieceRule, val second: PieceRule): PieceRule {
+class Combined(vararg rules: PieceRule) : PieceRule {
+    val rules: Iterable<PieceRule> = rules.toList()
+
     override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
-        return first.getValidPlays(board, position) + second.getValidPlays(board, position)
+        return rules.flatMap { it.getValidPlays(board, position) }
+
+    // TODO: clean
+    // return first.getValidPlays(board, position) + second.getValidPlays(board, position)
     }
 
     override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
-        val firstResult = first.getPlayIfValid(board, from, to)
+        for (rule in rules) {
+            val playResult = rule.getPlayIfValid(board, from, to)
+            if (playResult.play != null) return playResult
+        }
 
-        return if (firstResult.play != null) firstResult
-        // TODO: consider actually returning a combination of failure messages
-        else second.getPlayIfValid(board, from, to)
+        //TODO: consider returning more descriptive messages
+        return PlayResult(null, "Piece cannot move this way")
+
+    //        val firstResult = first.getPlayIfValid(board, from, to)
+//
+//        return if (firstResult.play != null) firstResult
+//        // TODO: consider actually returning a combination of failure messages
+//        else second.getPlayIfValid(board, from, to)
     }
 }

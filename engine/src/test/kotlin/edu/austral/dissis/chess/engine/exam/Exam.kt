@@ -10,6 +10,8 @@ import edu.austral.dissis.chess.engine.pieces.Pawn
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.Queen
 import edu.austral.dissis.chess.engine.pieces.getBishop
+import edu.austral.dissis.chess.engine.pieces.getKnight
+import edu.austral.dissis.chess.engine.pieces.getQueen
 import edu.austral.dissis.chess.engine.pieces.getRook
 import edu.austral.dissis.chess.rules.NoSelfCheck
 import edu.austral.dissis.chess.rules.pieces.MovedUpdater
@@ -35,8 +37,8 @@ class Exam {
                 turnManager = OneToOneTurnManager(),
             ),
         )
-            .test()
-//            .debug("short_castling.md")
+//            .test()
+            .debug("movements_knight.md")
     }
 
     @TestFactory
@@ -88,11 +90,10 @@ class Exam {
             .flatMap {
                 listOf(
                     { Piece("pawn", it.first, Pawn(it.first)) } to TestPiece('P', it.second),
-//                    { Piece(it.first, Rook(it.first)) } to TestPiece('R', it.second),
                     { getRook(it.first) } to TestPiece('R', it.second),
                     { getBishop(it.first) } to TestPiece('B', it.second),
-                    { Piece("queen", it.first, Queen(it.first)) } to TestPiece('Q', it.second),
-                    { Piece("knight", it.first, Knight(it.first)) } to TestPiece('N', it.second),
+                    { getQueen(it.first) } to TestPiece('Q', it.second),
+                    { getKnight(it.first) } to TestPiece('N', it.second),
                     { Piece("king", it.first, King(it.first)) } to TestPiece('K', it.second),
                 )
             }
