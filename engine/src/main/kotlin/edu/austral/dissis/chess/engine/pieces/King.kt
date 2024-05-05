@@ -31,7 +31,7 @@ class King : MoveDependantPieceRule {
 
     fun asMoved(): Piece {
         // Return this piece with hasEverMoved = true
-        return Piece(player, King(player, hasEverMoved = true))
+        return Piece("king", player, King(player, hasEverMoved = true))
     }
 
     override fun getValidPlays(
@@ -41,7 +41,7 @@ class King : MoveDependantPieceRule {
         return moveType
             .getPossiblePositions(board, position)
             .map {
-                val pieceNextTurn = Piece(player, King(player, hasEverMoved = true))
+                val pieceNextTurn = Piece("king", player, King(player, hasEverMoved = true))
                 Move(position, it, board, pieceNextTurn).asPlay()
             }
             .filter {
@@ -72,7 +72,7 @@ class King : MoveDependantPieceRule {
                     ?: PlayResult(null, "King cannot move this way")
             }
             else -> {
-                val pieceNextTurn = Piece(player, King(player, hasEverMoved = true))
+                val pieceNextTurn = Piece("king", player, King(player, hasEverMoved = true))
                 PlayResult(
                     Move(from, to, board, pieceNextTurn).asPlay(),
                     "Valid play",

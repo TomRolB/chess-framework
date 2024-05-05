@@ -10,22 +10,24 @@ import edu.austral.dissis.chess.rules.pieces.PathMovementRules
 
 fun getRook(player: Player) =
     Piece(
+        type = "rook",
         player = player,
-        type =
-//        NoSelfCheck(
-//            player = player,
-//            subRule =
+        rules =
+        NoSelfCheck(
+            player = player,
+            subRule =
             MovedUpdater(
                 subRule =
                 PathMovementRules(ClassicMoveType.VERTICAL_AND_HORIZONTAL)
             )
-//        )
+        )
     )
 
 fun getBishop(player: Player) =
     Piece(
+        type = "bishop",
         player = player,
-        type =
+        rules =
         NoSelfCheck(
             player = player,
             subRule =

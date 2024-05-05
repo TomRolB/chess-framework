@@ -18,11 +18,14 @@ class PawnDiagonal(
 ) : Rule<Play?> {
     override fun verify(): Play? {
         return if (board.containsPieceOfPlayer(moveData.to, !player)) {
+            //TODO: See if this line could be more simple.
+            // Or maybe there isn't so much inefficiency in getting the piece again
+            val type = board.getPieceAt(moveData.from)!!.type
             Move(
                 moveData.from,
                 moveData.to,
                 board,
-                pieceNextTurn = Piece(player, Pawn(player, PawnState.MOVED)),
+                pieceNextTurn = Piece(type, player, Pawn(player, PawnState.MOVED)),
             ).asPlay()
         } else {
             EnPassant(board, moveData, !player).verify()

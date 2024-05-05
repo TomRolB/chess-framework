@@ -9,19 +9,22 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
 class Piece {
+    val type: String
     val player: Player
     val rules: PieceRule
     val states: Set<String>
 
-    constructor(player: Player, type: PieceRule) {
+    constructor(type: String, player: Player, rules: PieceRule) {
+        this.type = type
         this.player = player
-        this.rules = type
+        this.rules = rules
         this.states = emptySet()
     }
 
-    private constructor(player: Player, type: PieceRule, states: Set<String>) {
+    private constructor(type: String, player: Player, rules: PieceRule, states: Set<String>) {
+        this.type = type
         this.player = player
-        this.rules = type
+        this.rules = rules
         this.states = states
     }
 
@@ -29,12 +32,12 @@ class Piece {
     //  actually be renamed to PieceRules), so that we don't have
     //  to access the field 'type' each time.
     override fun toString(): String {
-        return "$player, $rules"
+        return "$player $type"
     }
 
     // TODO: May have to change hashCode
     override fun hashCode(): Int {
-        return (player to rules::class).hashCode()
+        return (player to type).hashCode()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -43,11 +46,11 @@ class Piece {
     }
 
     fun withState(state: String): Piece {
-        return Piece(player, rules, states.plus(state))
+        return Piece(type, player, rules, states.plus(state))
     }
 
     fun withoutState(state: String): Piece {
-        return Piece(player, rules, states.minus(state))
+        return Piece(type, player, rules, states.minus(state))
     }
 
     fun hasState(state: String): Boolean {

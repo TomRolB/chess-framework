@@ -38,7 +38,7 @@ class Rook : MoveDependantPieceRule {
         return moveType
             .getPossiblePositions(board, position)
             .map {
-                val pieceNextTurn = Piece(player, Rook(player, hasEverMoved = true))
+                val pieceNextTurn = Piece("rook", player, Rook(player, hasEverMoved = true))
                 Play(listOf(Move(position, it, board, pieceNextTurn)))
             }
             .filter {
@@ -63,7 +63,7 @@ class Rook : MoveDependantPieceRule {
             //TODO: is it possible to decouple hasEverMoved from the piece?
             !hasEverMoved -> {
                 val rulesNextTurn = Rook(player, true)
-                val pieceNextTurn = Piece(player, rulesNextTurn)
+                val pieceNextTurn = Piece("rook", player, rulesNextTurn)
                 PlayResult(Move(from, to, board, pieceNextTurn).asPlay(), "Valid play")
             }
             else -> PlayResult(Move(from, to, board).asPlay(), "Valid play")

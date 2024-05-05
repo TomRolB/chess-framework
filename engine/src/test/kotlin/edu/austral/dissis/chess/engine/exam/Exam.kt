@@ -87,13 +87,13 @@ class Exam {
             .zip(listOf('W', 'B'))
             .flatMap {
                 listOf(
-                    { Piece(it.first, Pawn(it.first)) } to TestPiece('P', it.second),
+                    { Piece("pawn", it.first, Pawn(it.first)) } to TestPiece('P', it.second),
 //                    { Piece(it.first, Rook(it.first)) } to TestPiece('R', it.second),
                     { getRook(it.first) } to TestPiece('R', it.second),
                     { getBishop(it.first) } to TestPiece('B', it.second),
-                    { Piece(it.first, Queen(it.first)) } to TestPiece('Q', it.second),
-                    { Piece(it.first, Knight(it.first)) } to TestPiece('N', it.second),
-                    { Piece(it.first, King(it.first)) } to TestPiece('K', it.second),
+                    { Piece("queen", it.first, Queen(it.first)) } to TestPiece('Q', it.second),
+                    { Piece("knight", it.first, Knight(it.first)) } to TestPiece('N', it.second),
+                    { Piece("king", it.first, King(it.first)) } to TestPiece('K', it.second),
                 )
             }
             .toMap()

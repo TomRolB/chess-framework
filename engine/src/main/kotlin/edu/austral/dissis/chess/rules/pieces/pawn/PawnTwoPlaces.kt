@@ -29,11 +29,12 @@ class PawnTwoPlaces(
         return if (!subRules.verify()) {
             null
         } else {
+            val type = board.getPieceAt(moveData.from)!!.type
             Move(
                 moveData.from,
                 moveData.to,
                 board,
-                pieceNextTurn = Piece(player, type = Pawn(player, PawnState.MOVED_TWO_PLACES)),
+                pieceNextTurn = Piece(type, player, rules = Pawn(player, PawnState.MOVED_TWO_PLACES)),
             ).asPlay()
         }
     }

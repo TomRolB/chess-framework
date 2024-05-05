@@ -59,23 +59,25 @@ class ChessGameApplication : Application() {
             pawnsRow: Int,
             player: Player,
         ): List<Pair<Position, Piece>> {
-            val firstRow =
-                listOf(
-                    Rook(player),
-                    Knight(player),
-                    Bishop(player),
-                    Queen(player),
-                    King(player),
-                    Bishop(player),
-                    Knight(player),
-                    Rook(player),
-                )
-                    .zip(ONE_TO_EIGHT)
-                    .map { (pieceRules, col) -> Position(borderRow, col) to Piece(player, pieceRules) }
-            val secondRow =
-                ONE_TO_EIGHT
-                    .map { Position(pawnsRow, it) to Piece(player, Pawn(player)) }
-            return firstRow + secondRow
+//            val firstRow =
+//                listOf(
+//                    Rook(player),
+//                    Knight(player),
+//                    Bishop(player),
+//                    Queen(player),
+//                    King(player),
+//                    Bishop(player),
+//                    Knight(player),
+//                    Rook(player),
+//                )
+//                    .zip(ONE_TO_EIGHT)
+//                    .map { (pieceRules, col) -> Position(borderRow, col) to Piece(player, pieceRules) }
+//            val secondRow =
+//                ONE_TO_EIGHT
+//                    .map { Position(pawnsRow, it) to Piece(player, Pawn(player)) }
+//            return firstRow + secondRow
+            // TODO: implement all of this later
+            return emptyList()
         }
 
         private fun getInitialPieces(): List<Pair<Position, Piece>> {

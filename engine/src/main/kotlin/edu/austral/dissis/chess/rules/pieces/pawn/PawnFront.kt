@@ -16,6 +16,10 @@ class PawnFront(
     private val player: Player,
 ) : Rule<Play?> {
     override fun verify(): Play? {
+        //TODO: See if this line could be more simple.
+        // Or maybe there isn't so much inefficiency in getting the piece again
+        val type = board.getPieceAt(moveData.from)!!.type
+
         return if (board.isOccupied(moveData.to)) {
             null
         } else {
@@ -25,6 +29,7 @@ class PawnFront(
                 board,
                 pieceNextTurn =
                     Piece(
+                        type,
                         player,
                         Pawn(player, PawnState.MOVED),
                     ),
