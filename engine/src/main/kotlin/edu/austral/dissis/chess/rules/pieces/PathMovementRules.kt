@@ -9,7 +9,7 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class PathMovement(val moveType: MoveType) : PieceRule {
+class PathMovementRules(val moveType: MoveType) : PieceRule {
     override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)

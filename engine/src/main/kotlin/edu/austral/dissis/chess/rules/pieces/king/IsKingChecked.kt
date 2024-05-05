@@ -12,9 +12,6 @@ class IsKingChecked(val board: ChessBoard, val player: Player) : Rule<Boolean> {
     override fun verify(): Boolean {
         val kingPosition = board.getKingPosition(player)
 
-        // Return true if any enemy piece "can capture" the King
-        // We don't include the enemy king, since the kings cannot
-        // check each other
         return board.getAllPositionsOfPlayer(!player, true).any {
             val enemyPosition: Position = it
             val enemyPiece: Piece = board.getPieceAt(enemyPosition)!!

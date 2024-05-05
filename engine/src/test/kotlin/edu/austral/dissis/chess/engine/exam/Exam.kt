@@ -4,15 +4,16 @@ import edu.austral.dissis.chess.engine.ClassicMoveType
 import edu.austral.dissis.chess.engine.OneToOneTurnManager
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.custom.CustomGameTester
-import edu.austral.dissis.chess.engine.pieces.Bishop
 import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.pieces.Knight
 import edu.austral.dissis.chess.engine.pieces.Pawn
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.Queen
-import edu.austral.dissis.chess.engine.pieces.Rook
+import edu.austral.dissis.chess.engine.pieces.getBishop
+import edu.austral.dissis.chess.engine.pieces.getRook
+import edu.austral.dissis.chess.rules.NoSelfCheck
 import edu.austral.dissis.chess.rules.pieces.MovedUpdater
-import edu.austral.dissis.chess.rules.pieces.PathMovement
+import edu.austral.dissis.chess.rules.pieces.PathMovementRules
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPiece
@@ -51,12 +52,11 @@ class Exam {
             ),
         )
             .test()
-//            .debug("queen_can_move_front_left.md")
+//            .debug("black_bishop_saves_but_checkmate.md")
     }
 
     private fun promotePawns(): (TestBoard) -> TestBoard {
-        return {
-                testBoard: TestBoard ->
+        return { testBoard: TestBoard ->
             TestBoard(
                 testBoard.size,
                 testBoard.pieces.map {
@@ -81,6 +81,7 @@ class Exam {
         }
     }
 
+    // TODO: This is horrible. Should create a Factory?
     private fun getPieceTypes(): Map<() -> Piece, TestPiece> {
         return listOf(Player.WHITE, Player.BLACK)
             .zip(listOf('W', 'B'))
@@ -88,8 +89,8 @@ class Exam {
                 listOf(
                     { Piece(it.first, Pawn(it.first)) } to TestPiece('P', it.second),
 //                    { Piece(it.first, Rook(it.first)) } to TestPiece('R', it.second),
-                    { Piece(it.first, MovedUpdater(PathMovement(ClassicMoveType.VERTICAL_AND_HORIZONTAL))) } to TestPiece('R', it.second),
-                    { Piece(it.first, Bishop(it.first)) } to TestPiece('B', it.second),
+                    { getRook(it.first) } to TestPiece('R', it.second),
+                    { getBishop(it.first) } to TestPiece('B', it.second),
                     { Piece(it.first, Queen(it.first)) } to TestPiece('Q', it.second),
                     { Piece(it.first, Knight(it.first)) } to TestPiece('N', it.second),
                     { Piece(it.first, King(it.first)) } to TestPiece('K', it.second),
