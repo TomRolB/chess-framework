@@ -87,8 +87,8 @@ class Exam {
             .flatMap {
                 listOf(
                     { Piece(it.first, Pawn(it.first)) } to TestPiece('P', it.second),
-                    { Piece(it.first, Rook(it.first)) } to TestPiece('R', it.second),
-//                    { Piece(it.first, MovedUpdater(PathMovement(ClassicMoveType.VERTICAL_AND_HORIZONTAL))) } to TestPiece('R', it.second),
+//                    { Piece(it.first, Rook(it.first)) } to TestPiece('R', it.second),
+                    { Piece(it.first, MovedUpdater(PathMovement(ClassicMoveType.VERTICAL_AND_HORIZONTAL))) } to TestPiece('R', it.second),
                     { Piece(it.first, Bishop(it.first)) } to TestPiece('B', it.second),
                     { Piece(it.first, Queen(it.first)) } to TestPiece('Q', it.second),
                     { Piece(it.first, Knight(it.first)) } to TestPiece('N', it.second),
