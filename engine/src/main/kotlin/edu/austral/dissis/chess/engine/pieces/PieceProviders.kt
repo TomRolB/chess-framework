@@ -63,6 +63,7 @@ fun getKnight(player: Player) =
                 IncrementalMovement(-1, 2),
                 IncrementalMovement(-2, 1),
                 IncrementalMovement(-2, -1),
+                IncrementalMovement(-1, -2),
                 IncrementalMovement(1, -2),
                 IncrementalMovement(2, -1),
             )

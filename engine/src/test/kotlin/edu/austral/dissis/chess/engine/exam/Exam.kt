@@ -37,8 +37,8 @@ class Exam {
                 turnManager = OneToOneTurnManager(),
             ),
         )
-//            .test()
-            .debug("movements_knight.md")
+            .test()
+//            .debug("movements_knight.md")
     }
 
     @TestFactory
