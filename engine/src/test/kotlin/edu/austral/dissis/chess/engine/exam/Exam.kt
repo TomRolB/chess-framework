@@ -47,8 +47,8 @@ class Exam {
                 postPlayProcedures = promotePawns(),
             ),
         )
-            .test()
-//            .debug("black_bishop_saves_but_checkmate.md")
+//            .test()
+            .debug("en_passant.md")
     }
 
     private fun promotePawns(): (TestBoard) -> TestBoard {

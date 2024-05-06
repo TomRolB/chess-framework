@@ -6,6 +6,7 @@ import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.NoSelfCheckInValidPlays
 import edu.austral.dissis.chess.rules.castling.Castling
 import edu.austral.dissis.chess.rules.pieces.CombinedRules
+import edu.austral.dissis.chess.rules.pieces.EnPassant
 import edu.austral.dissis.chess.rules.pieces.FinalPositionContainsPieceOfPlayer
 import edu.austral.dissis.chess.rules.pieces.HasMovedUpdater
 import edu.austral.dissis.chess.rules.pieces.IncrementalMovement
@@ -132,7 +133,7 @@ fun getPawn(player: Player) =
                                 NoPieceAtFinalPosition(IncrementalMovement(1, 0, player)),
                                 FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, 1, player)),
                                 FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, -1, player)),
-                                //TODO: En Passant
+                                EnPassant(),
                                 MoveTwoPlaces(player)
                             )
                         )

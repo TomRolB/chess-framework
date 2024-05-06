@@ -10,6 +10,8 @@ package edu.austral.dissis.chess.rules
 *  2. verify()'s parameter 'arg': used for data which is known at
 *     runtime (the previous RuleChain object has to pass it down)
 */
+//TODO: May replace all RuleChain implementations by sth else
+
 interface RuleChain<In, Out> {
     fun verify(arg: In): Out
 }
