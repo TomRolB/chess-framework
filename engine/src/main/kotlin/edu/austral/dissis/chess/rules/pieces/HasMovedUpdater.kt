@@ -12,7 +12,7 @@ class HasMovedUpdater: PlayUpdater {
             .actions
             .map {
                 if (it is Move) {
-                    val pieceNextTurn = board.getPieceAt(it.from)!!.withState("moved")
+                    val pieceNextTurn = it.pieceNextTurn.withState("moved")
                     it.withPiece(pieceNextTurn)
                 }
                 else it

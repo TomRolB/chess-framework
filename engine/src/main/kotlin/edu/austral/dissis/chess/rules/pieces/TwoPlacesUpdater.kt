@@ -26,10 +26,10 @@ class TwoPlacesUpdater: PlayUpdater {
         board: ChessBoard,
     ): Move {
         return if (movedTwoPlaces(move)) {
-            val pieceNextTurn = board.getPieceAt(move.from)!!.withState("moved two places")
+            val pieceNextTurn = move.pieceNextTurn.withState("moved two places")
             move.withPiece(pieceNextTurn)
         } else {
-            val pieceNextTurn = board.getPieceAt(move.from)!!.withoutState("moved two places")
+            val pieceNextTurn = move.pieceNextTurn.withoutState("moved two places")
             move.withPiece(pieceNextTurn)
         }
     }
