@@ -8,7 +8,7 @@ import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 import kotlin.reflect.KClass
 
-class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceRule>, String>) {
+class UiPieceAdapter(private val pieceIdMap: Map<String, String>) {
     fun adapt(
         piece: Piece,
         id: String,
@@ -19,7 +19,7 @@ class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceRule>, String>)
             color = adapt(piece.player),
             position = to,
             pieceId =
-                pieceIdMap[piece.rules::class] ?: throw IllegalArgumentException(
+                pieceIdMap[piece.type] ?: throw IllegalArgumentException(
                     "No pieceId was specified for this piece type",
                 ),
         )
@@ -34,7 +34,7 @@ class UiPieceAdapter(private val pieceIdMap: Map<KClass<out PieceRule>, String>)
             color = adapt(piece.player),
             position = Position(pos.row, pos.col),
             pieceId =
-                pieceIdMap[piece.rules::class] ?: throw IllegalArgumentException(
+                pieceIdMap[piece.type] ?: throw IllegalArgumentException(
                     "No pieceId was specified for this piece type",
                 ),
         )

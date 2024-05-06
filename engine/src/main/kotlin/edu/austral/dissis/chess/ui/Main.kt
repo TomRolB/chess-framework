@@ -14,6 +14,11 @@ import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.Queen
 import edu.austral.dissis.chess.engine.pieces.Rook
+import edu.austral.dissis.chess.engine.pieces.getBishop
+import edu.austral.dissis.chess.engine.pieces.getKnight
+import edu.austral.dissis.chess.engine.pieces.getPawn
+import edu.austral.dissis.chess.engine.pieces.getQueen
+import edu.austral.dissis.chess.engine.pieces.getRook
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.ChessPiece
 import edu.austral.dissis.chess.gui.DefaultImageResolver
@@ -59,39 +64,37 @@ class ChessGameApplication : Application() {
             pawnsRow: Int,
             player: Player,
         ): List<Pair<Position, Piece>> {
-//            val firstRow =
-//                listOf(
-//                    Rook(player),
-//                    Knight(player),
-//                    Bishop(player),
-//                    Queen(player),
-//                    King(player),
-//                    Bishop(player),
-//                    Knight(player),
-//                    Rook(player),
-//                )
-//                    .zip(ONE_TO_EIGHT)
-//                    .map { (pieceRules, col) -> Position(borderRow, col) to Piece(player, pieceRules) }
-//            val secondRow =
-//                ONE_TO_EIGHT
-//                    .map { Position(pawnsRow, it) to Piece(player, Pawn(player)) }
-//            return firstRow + secondRow
-            // TODO: implement all of this later
-            return emptyList()
+            val firstRow =
+                listOf(
+                    getRook(player),
+                    getKnight(player),
+                    getBishop(player),
+                    getQueen(player),
+                    Piece("king", player, King(player)),
+                    getBishop(player),
+                    getKnight(player),
+                    getRook(player),
+                )
+                    .zip(ONE_TO_EIGHT)
+                    .map { (piece, col) -> Position(borderRow, col) to piece }
+            val secondRow =
+                ONE_TO_EIGHT
+                    .map { Position(pawnsRow, it) to getPawn(player) }
+            return firstRow + secondRow
         }
 
         private fun getInitialPieces(): List<Pair<Position, Piece>> {
             return WHITE_PIECES + BLACK_PIECES
         }
 
-        private fun getPieceIdMap(): Map<KClass<out PieceRule>, String> {
+        private fun getPieceIdMap(): Map<String, String> {
             return listOf(
-                Pawn::class to "pawn",
-                Rook::class to "rook",
-                Bishop::class to "bishop",
-                Knight::class to "knight",
-                Queen::class to "queen",
-                King::class to "king",
+                "pawn" to "pawn",
+                "rook" to "rook",
+                "bishop" to "bishop",
+                "knight" to "knight",
+                "queen" to "queen",
+                "king" to "king",
             ).toMap()
         }
 
