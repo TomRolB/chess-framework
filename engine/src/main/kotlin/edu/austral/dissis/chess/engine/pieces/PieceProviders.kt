@@ -14,6 +14,7 @@ import edu.austral.dissis.chess.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.rules.pieces.PathMovementRules
 import edu.austral.dissis.chess.rules.pieces.TwoPlacesUpdater
 import edu.austral.dissis.chess.rules.pieces.Update
+import edu.austral.dissis.chess.rules.pieces.pawn.PromotionUpdater
 
 //TODO: Think how to provide pieces more conveniently
 //TODO: Many rules are actually general, such as NoSelfCheckInValidPlays.
@@ -105,7 +106,8 @@ fun getKnight(player: Player) =
     )
 
 fun getPawn(player: Player) =
-    //TODO: Promotion
+//TODO: Promotion
+    //TODO: Chaining updates?
     Piece(
         "pawn",
         player,
@@ -118,17 +120,21 @@ fun getPawn(player: Player) =
                 shouldContain = false,
                 subRule =
                 Update(
-                    updater = HasMovedUpdater(),
+                    updater = PromotionUpdater(),
                     subRule =
                     Update(
-                        updater = TwoPlacesUpdater(),
+                        updater = HasMovedUpdater(),
                         subRule =
-                        CombinedRules(
-                            NoPieceAtFinalPosition(IncrementalMovement(1, 0, player)),
-                            FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, 1, player)),
-                            FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, -1, player)),
-                            //TODO: En Passant
-                            MoveTwoPlaces(player)
+                        Update(
+                            updater = TwoPlacesUpdater(),
+                            subRule =
+                            CombinedRules(
+                                NoPieceAtFinalPosition(IncrementalMovement(1, 0, player)),
+                                FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, 1, player)),
+                                FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, -1, player)),
+                                //TODO: En Passant
+                                MoveTwoPlaces(player)
+                            )
                         )
                     )
                 )

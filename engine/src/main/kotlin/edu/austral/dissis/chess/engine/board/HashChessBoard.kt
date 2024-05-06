@@ -62,8 +62,8 @@ class HashChessBoard private constructor(
         return validator.positionExists(position)
     }
 
-    override fun isPositionOnUpperLimit(position: Position): Boolean {
-        return validator.isPositionOnLastRow(position)
+    override fun isPositionOnUpperLimit(position: Position, player: Player): Boolean {
+        return validator.isPositionOnLastRow(position, player)
     }
 
     override fun containsPieceOfPlayer(

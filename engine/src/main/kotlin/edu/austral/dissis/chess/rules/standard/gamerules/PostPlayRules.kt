@@ -19,20 +19,7 @@ class PostPlayRules(
     val next: RuleChain<Pair<Play, ChessBoard>, GameResult>,
 ) : RuleChain<Play, GameResult> {
     override fun verify(arg: Play): GameResult {
-        var board = arg.execute()
-        val piece = board.getPieceAt(to)!!
-
-        // Get the piece's position as if it was the white player
-        val rowAsWhite: Int = board.getRowAsWhite(to, player)
-        val positionAsWhite = Position(rowAsWhite, to.col)
-
-        // TODO: delegate to pawn rule:
-        // Promote pawn
-        if (piece.rules is Pawn && board.isPositionOnUpperLimit(positionAsWhite)) {
-            val promotionPiece = Piece("queen", piece.player, Queen(piece.player))
-
-            board = board.setPieceAt(to, promotionPiece)
-        }
+        val board = arg.execute()
 
         // King should not be checked
         return if (IsKingChecked(board, player).verify()) {

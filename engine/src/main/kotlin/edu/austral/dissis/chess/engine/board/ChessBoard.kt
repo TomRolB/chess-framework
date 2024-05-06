@@ -21,7 +21,7 @@ interface GameBoard {
 
     fun positionExists(position: Position): Boolean
 
-    fun isPositionOnUpperLimit(position: Position): Boolean
+    fun isPositionOnUpperLimit(position: Position, player: Player): Boolean
 
     fun containsPieceOfPlayer(
         position: Position,
