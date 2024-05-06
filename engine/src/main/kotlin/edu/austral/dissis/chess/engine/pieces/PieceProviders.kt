@@ -2,10 +2,12 @@ package edu.austral.dissis.chess.engine.pieces
 
 import edu.austral.dissis.chess.engine.ClassicMoveType
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.NoSelfCheck
 import edu.austral.dissis.chess.rules.pieces.Combined
 import edu.austral.dissis.chess.rules.pieces.FinalPositionContainsPieceOfPlayer
 import edu.austral.dissis.chess.rules.pieces.IncrementalMovement
+import edu.austral.dissis.chess.rules.pieces.MoveTwoPlaces
 import edu.austral.dissis.chess.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.rules.pieces.UpdateMoveState
 import edu.austral.dissis.chess.rules.pieces.PathMovementRules
@@ -85,11 +87,11 @@ fun getPawn(player: Player) =
             UpdateMoveState(UpdateTwoPlacesState(
                 subRule =
                 Combined(
-                    NoPieceAtFinalPosition(IncrementalMovement(1, 0)),
-                    FinalPositionContainsPieceOfPlayer(player, IncrementalMovement(1, 1)),
-                    FinalPositionContainsPieceOfPlayer(player, IncrementalMovement(1, -1)),
+                    NoPieceAtFinalPosition(IncrementalMovement(1, 0, player)),
+                    FinalPositionContainsPieceOfPlayer(!player, IncrementalMovement(1, 1, player)),
+                    FinalPositionContainsPieceOfPlayer(!player, IncrementalMovement(1, -1, player)),
                     //TODO: En Passant
-                    IncrementalMovement(2, 0)
+                    MoveTwoPlaces(player)
                 )
             ))
         )

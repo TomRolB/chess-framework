@@ -1,13 +1,31 @@
 package edu.austral.dissis.chess.rules.pieces
 
 import edu.austral.dissis.chess.engine.Move
+import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class IncrementalMovement(val rowDelta: Int, val colDelta: Int): PieceRule {
+class IncrementalMovement : PieceRule {
+    val rowDelta: Int
+    val colDelta: Int
+    val player: Player?
+
+    constructor(rowDelta: Int, colDelta: Int) {
+        this.rowDelta = rowDelta
+        this.colDelta = colDelta
+        this.player = null
+    }
+
+    constructor(rowDelta: Int, colDelta: Int, player: Player) {
+        this.rowDelta = rowDelta
+        this.colDelta = colDelta
+        this.player = player
+    }
+
     override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
         val to = Position(position.row + rowDelta, position.col + colDelta)
 
@@ -22,8 +40,12 @@ class IncrementalMovement(val rowDelta: Int, val colDelta: Int): PieceRule {
         from: Position,
         to: Position
     ): PlayResult {
-        val isRowDeltaValid = (from.row - to.row) == rowDelta
-        val isColDeltaValid = (from.col - to.col) == colDelta
+        val moveData =
+            if (player != null) MovementData(from, to, board, player)
+            else MovementData(from, to)
+
+        val isRowDeltaValid = moveData.rowDelta == rowDelta
+        val isColDeltaValid = moveData.colDelta == colDelta
         val isPlayValid = isRowDeltaValid && isColDeltaValid
 
         return PlayResult(

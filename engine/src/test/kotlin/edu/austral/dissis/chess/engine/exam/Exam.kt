@@ -8,6 +8,7 @@ import edu.austral.dissis.chess.engine.pieces.Pawn
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.getBishop
 import edu.austral.dissis.chess.engine.pieces.getKnight
+import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
 import edu.austral.dissis.chess.engine.pieces.getRook
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
@@ -31,8 +32,8 @@ class Exam {
                 turnManager = OneToOneTurnManager(),
             ),
         )
-            .test()
-//            .debug("movements_knight.md")
+//            .test()
+            .debug("mate_pawn.md")
     }
 
     @TestFactory
@@ -83,7 +84,7 @@ class Exam {
             .zip(listOf('W', 'B'))
             .flatMap {
                 listOf(
-                    { Piece("pawn", it.first, Pawn(it.first)) } to TestPiece('P', it.second),
+                    { getPawn(it.first) } to TestPiece('P', it.second),
                     { getRook(it.first) } to TestPiece('R', it.second),
                     { getBishop(it.first) } to TestPiece('B', it.second),
                     { getQueen(it.first) } to TestPiece('Q', it.second),

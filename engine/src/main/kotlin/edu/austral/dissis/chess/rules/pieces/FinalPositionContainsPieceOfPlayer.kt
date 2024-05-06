@@ -5,6 +5,7 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
@@ -14,7 +15,7 @@ class FinalPositionContainsPieceOfPlayer(val player: Player, val subRule: PieceR
             .getValidPlays(board, position)
             .filter {
                 val finalPosition = extractMove(it).to
-                !board.containsPieceOfPlayer(finalPosition, player)
+                board.containsPieceOfPlayer(finalPosition, player)
             }
     }
 
@@ -31,7 +32,7 @@ class FinalPositionContainsPieceOfPlayer(val player: Player, val subRule: PieceR
         val playResult = subRule.getPlayIfValid(board, from, to)
 
         // TODO: Could this be more readable?
-        return if (playResult.play != null && !board.containsPieceOfPlayer(to, player)) playResult
+        return if (playResult.play != null && board.containsPieceOfPlayer(to, player)) playResult
         else PlayResult(null, "There must be a $player piece at destination")
     }
 }

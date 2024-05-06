@@ -68,6 +68,7 @@ interface PieceRule {
         position: Position,
     ): Iterable<Play>
 
+    //TODO: should be renamed to getPlayResult
     fun getPlayIfValid(
         board: ChessBoard,
         from: Position,
