@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.engine.pieces
 
 import edu.austral.dissis.chess.engine.Move
-import edu.austral.dissis.chess.engine.MoveType
+import edu.austral.dissis.chess.engine.PathType
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.ChessBoard
@@ -91,11 +91,11 @@ interface MoveDependantPieceRule : PieceRule {
 }
 
 fun getValidPlaysFromMoveType(
-    moveType: MoveType,
+    pathType: PathType,
     board: ChessBoard,
     position: Position,
     player: Player,
-) = moveType
+) = pathType
     .getPossiblePositions(board, position)
     .map {
         Play(listOf(Move(position, it, board)))

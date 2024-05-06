@@ -11,6 +11,7 @@ import edu.austral.dissis.chess.engine.pieces.PlayResult
 class FinalPositionContainsPieceOfPlayer(
     val player: Player,
     val shouldContain: Boolean,
+    val onFailMessage: String,
     val subRule: PieceRule,
 ) : PieceRule {
     override fun getValidPlays(
@@ -39,7 +40,7 @@ class FinalPositionContainsPieceOfPlayer(
         ) {
             playResult
         } else {
-            PlayResult(null, "There must be a $player piece at destination")
+            PlayResult(null, onFailMessage)
         }
     }
 }

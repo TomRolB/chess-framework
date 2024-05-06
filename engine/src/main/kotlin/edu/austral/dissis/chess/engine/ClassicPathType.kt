@@ -17,94 +17,54 @@ import kotlin.math.sign
 * (different MoveTypes may be defined apart from the ones below)
 */
 
-enum class ClassicMoveType : MoveType {
+enum class ClassicPathType : PathType {
     VERTICAL_AND_HORIZONTAL,
     DIAGONAL,
     ANY_STRAIGHT_LINE,
-    L_SHAPED,
-    ADJACENT_SQUARE,
     ;
 
     // TODO: we will be capable of having jumping paths by using increments of 2, for instance.
 
-    companion object {
-        val VH = listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
-        val D = listOf(1 to 1, -1 to 1, 1 to -1, 1 to -1)
-        val L = listOf(2 to 1, 1 to 2, -2 to 1, -1 to 2, 2 to -1, 1 to -2, -2 to -1, -1 to -2)
-    }
-
     override fun isViolated(moveData: MovementData): Boolean {
-        return when (this) {
-            VERTICAL_AND_HORIZONTAL -> {
-                val movedVertically = (moveData.rowDelta != 0)
-                val movedHorizontally = (moveData.colDelta != 0)
-                val movedBothWays = (movedVertically && movedHorizontally)
-
-                movedBothWays
-            }
-            DIAGONAL -> {
-                val movedDiagonally = moveData.rowDelta.absoluteValue == moveData.colDelta.absoluteValue
-
-                !movedDiagonally
-            }
-            ANY_STRAIGHT_LINE -> {
-                val noStraightLine =
-                    VERTICAL_AND_HORIZONTAL.isViolated(moveData) &&
-                        DIAGONAL.isViolated(moveData)
-
-                noStraightLine
-            }
-            L_SHAPED -> {
-                val absRowDelta = moveData.rowDelta.absoluteValue
-                val absColDelta = moveData.colDelta.absoluteValue
-                val movedInL =
-                    (absRowDelta == 1 && absColDelta == 2) ||
-                        (absRowDelta == 2 && absColDelta == 1)
-
-                !movedInL
-            }
-            ADJACENT_SQUARE -> {
-                val movedToAdjSquare =
-                    moveData.rowDelta.absoluteValue <= 1 &&
-                        moveData.colDelta.absoluteValue <= 1
-
-                !movedToAdjSquare
-            }
+        return this.getIncrements().none {
+            areVectorsParallel(moveData, it)
+                    && doVectorsShareOrientation(moveData, it)
         }
     }
+
+    private fun doVectorsShareOrientation(moveData: MovementData, increment: Pair<Int, Int>): Boolean {
+        return moveData.rowDelta.sign == increment.first.sign
+    }
+
+    private fun areVectorsParallel(
+        moveData: MovementData,
+        it: Pair<Int, Int>,
+    ) = moveData.colDelta * it.first == moveData.rowDelta * it.second
 
     override fun isPathBlocked(
         moveData: MovementData,
         board: ChessBoard,
     ): Boolean {
-        return when (this) {
-            VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT_LINE -> {
-                val rowIncrement = moveData.rowDelta.sign
-                val colIncrement = moveData.colDelta.sign
+        val rowIncrement = moveData.rowDelta.sign
+        val colIncrement = moveData.colDelta.sign
 
-                var row = moveData.fromRow + rowIncrement
-                var col = moveData.fromCol + colIncrement
+        var row = moveData.fromRow + rowIncrement
+        var col = moveData.fromCol + colIncrement
 
-                var anyPieceBlocking = false
+        var anyPieceBlocking = false
 
-                while (didNotReachDestination(row, moveData, col)) {
-                    val position = Position(row, col)
-                    if (board.isOccupied(position)) {
-                        anyPieceBlocking = true
-                        break
-                    }
-
-                    row += rowIncrement
-                    col += colIncrement
-                }
-
-                anyPieceBlocking
+        while (didNotReachDestination(row, moveData, col)) {
+            val position = Position(row, col)
+            if (board.isOccupied(position)) {
+                anyPieceBlocking = true
+                break
             }
 
-            L_SHAPED, ADJACENT_SQUARE -> {
-                throw UnsupportedOperationException("There's no path calculation for this")
-            }
+            row += rowIncrement
+            col += colIncrement
         }
+
+        return anyPieceBlocking
     }
 
     private fun didNotReachDestination(
@@ -115,12 +75,11 @@ enum class ClassicMoveType : MoveType {
 
     private fun getIncrements(): Iterable<Pair<Int, Int>> {
         return when (this) {
-            VERTICAL_AND_HORIZONTAL -> VH
-            DIAGONAL -> D
-            ANY_STRAIGHT_LINE, ADJACENT_SQUARE -> {
+            VERTICAL_AND_HORIZONTAL -> listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
+            DIAGONAL -> listOf(1 to 1, -1 to 1, 1 to -1, 1 to -1)
+            ANY_STRAIGHT_LINE -> {
                 VERTICAL_AND_HORIZONTAL.getIncrements() + DIAGONAL.getIncrements()
             }
-            L_SHAPED -> L
         }
     }
 
@@ -132,17 +91,6 @@ enum class ClassicMoveType : MoveType {
             VERTICAL_AND_HORIZONTAL, DIAGONAL, ANY_STRAIGHT_LINE -> {
                 this.getIncrements()
                     .flatMap { getLineOfPositions(board, position, it) }
-            }
-            L_SHAPED, ADJACENT_SQUARE -> {
-                val (row, col) = position
-                val player = board.getPieceAt(position)!!.player
-
-                this.getIncrements()
-                    .map { Position(row + it.first, col + it.second) }
-                    .filter {
-                        board.positionExists(it) &&
-                            !board.containsPieceOfPlayer(it, player)
-                    }
             }
         }
     }

@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.board.Position
 //  composing the knight's movement of a rule of moving 2 times in
 //  one direction, and another of moving one time in other direction.
 
-interface MoveType {
+interface PathType {
     fun isViolated(moveData: MovementData): Boolean
 
     fun isPathBlocked(
