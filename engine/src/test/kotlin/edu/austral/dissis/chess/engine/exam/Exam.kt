@@ -32,8 +32,8 @@ class Exam {
                 turnManager = OneToOneTurnManager(),
             ),
         )
-//            .test()
-            .debug("mate_pawn.md")
+            .test()
+//            .debug("mate_pawn.md")
     }
 
     @TestFactory

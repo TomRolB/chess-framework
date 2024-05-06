@@ -3,7 +3,7 @@ package edu.austral.dissis.chess.engine.pieces
 import edu.austral.dissis.chess.engine.ClassicMoveType
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.not
-import edu.austral.dissis.chess.rules.NoSelfCheck
+import edu.austral.dissis.chess.rules.NoSelfCheckInValidPlays
 import edu.austral.dissis.chess.rules.pieces.Combined
 import edu.austral.dissis.chess.rules.pieces.FinalPositionContainsPieceOfPlayer
 import edu.austral.dissis.chess.rules.pieces.IncrementalMovement
@@ -20,7 +20,7 @@ fun getRook(player: Player) =
         type = "rook",
         player = player,
         rules =
-        NoSelfCheck(
+        NoSelfCheckInValidPlays(
             player = player,
             subRule =
             UpdateMoveState(
@@ -35,7 +35,7 @@ fun getBishop(player: Player) =
         type = "bishop",
         player = player,
         rules =
-        NoSelfCheck(
+        NoSelfCheckInValidPlays(
             player = player,
             subRule =
             PathMovementRules(ClassicMoveType.DIAGONAL)
@@ -47,7 +47,7 @@ fun getQueen(player: Player) =
         type = "queen",
         player = player,
         rules =
-        NoSelfCheck(
+        NoSelfCheckInValidPlays(
             player = player,
             subRule =
             PathMovementRules(ClassicMoveType.ANY_STRAIGHT_LINE)
@@ -59,7 +59,7 @@ fun getKnight(player: Player) =
         "knight",
         player = player,
         rules =
-        NoSelfCheck(
+        NoSelfCheckInValidPlays(
             player = player,
             subRule =
             //TODO: How to save this to a class? Simply wrapping it in a piece rule?
@@ -77,11 +77,12 @@ fun getKnight(player: Player) =
     )
 
 fun getPawn(player: Player) =
+    //TODO: Promotion
     Piece(
         "pawn",
         player,
         rules =
-        NoSelfCheck(
+        NoSelfCheckInValidPlays(
             player,
             subRule =
             UpdateMoveState(UpdateTwoPlacesState(

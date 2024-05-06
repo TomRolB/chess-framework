@@ -8,26 +8,23 @@ import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
-class NoSelfCheck(val player: Player, val subRule: PieceRule): PieceRule {
+// TODO: the reason the mate is failing is because the black queen puts
+//  the white king in danger (even though this should not be happening,
+//  considering her king is checked before moving)
+class NoSelfCheckInValidPlays(val player: Player, val subRule: PieceRule): PieceRule {
     override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
         return subRule
             .getValidPlays(board, position)
             .filter {
-                !playLeavesKingInChecked(it)
+                !playLeavesKingChecked(it)
             }
     }
 
     override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
-        val result = subRule.getPlayIfValid(board, from, to)
-        val play = result.play
-
-        return if (play != null && playLeavesKingInChecked(play)) {
-            PlayResult(null, "This movement would leave your king checked")
-        }
-        else result
+        return subRule.getPlayIfValid(board, from, to)
     }
 
-    private fun playLeavesKingInChecked(play: Play): Boolean {
+    private fun playLeavesKingChecked(play: Play): Boolean {
         val futureBoard = play.execute()
         return IsKingChecked(futureBoard, player).verify()
     }

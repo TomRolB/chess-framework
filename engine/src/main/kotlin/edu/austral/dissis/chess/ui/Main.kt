@@ -54,8 +54,8 @@ class ChessGameApplication : Application() {
         const val GAME_TITLE = "Chess"
         private val ONE_TO_EIGHT = 1..8
         private val WHITE_PIECES = getFromPlayer(1, 2, Player.WHITE)
-        private val BLACK_PIECES = getFromPlayer(6, 5, Player.BLACK)
-        private val VALIDATOR = RectangleBoardValidator(8, 6)
+        private val BLACK_PIECES = getFromPlayer(8, 7, Player.BLACK)
+        private val VALIDATOR = RectangleBoardValidator(8, 8)
         private val WK_POSITION = Position(1, 5)
         private val BK_POSITION = Position(8, 5)
 
