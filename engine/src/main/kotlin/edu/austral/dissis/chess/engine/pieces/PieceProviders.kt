@@ -4,7 +4,8 @@ import edu.austral.dissis.chess.engine.ClassicMoveType
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.rules.NoSelfCheckInValidPlays
-import edu.austral.dissis.chess.rules.pieces.Combined
+import edu.austral.dissis.chess.rules.castling.Castling
+import edu.austral.dissis.chess.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.rules.pieces.FinalPositionContainsPieceOfPlayer
 import edu.austral.dissis.chess.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.rules.pieces.MoveTwoPlaces
@@ -14,6 +15,11 @@ import edu.austral.dissis.chess.rules.pieces.PathMovementRules
 import edu.austral.dissis.chess.rules.pieces.UpdateTwoPlacesState
 
 //TODO: Think how to provide pieces more conveniently
+//TODO: Many rules are actually general, such as NoSelfCheckInValidPlays.
+// Consider whether this can be unified somewhere, or if it's better to keep it this way
+// (for instance, we may want a piece to not be affected by checks at all)
+
+//TODO: could use let{} to avoid nesting
 
 fun getRook(player: Player) =
     Piece(
@@ -23,9 +29,14 @@ fun getRook(player: Player) =
         NoSelfCheckInValidPlays(
             player = player,
             subRule =
-            UpdateMoveState(
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
                 subRule =
-                PathMovementRules(ClassicMoveType.VERTICAL_AND_HORIZONTAL)
+                UpdateMoveState(
+                    subRule =
+                    PathMovementRules(ClassicMoveType.VERTICAL_AND_HORIZONTAL)
+                )
             )
         )
     )
@@ -38,7 +49,12 @@ fun getBishop(player: Player) =
         NoSelfCheckInValidPlays(
             player = player,
             subRule =
-            PathMovementRules(ClassicMoveType.DIAGONAL)
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
+                subRule =
+                PathMovementRules(ClassicMoveType.DIAGONAL)
+            )
         )
     )
 
@@ -50,7 +66,12 @@ fun getQueen(player: Player) =
         NoSelfCheckInValidPlays(
             player = player,
             subRule =
-            PathMovementRules(ClassicMoveType.ANY_STRAIGHT_LINE)
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
+                subRule =
+                PathMovementRules(ClassicMoveType.ANY_STRAIGHT_LINE)
+            )
         )
     )
 
@@ -62,16 +83,21 @@ fun getKnight(player: Player) =
         NoSelfCheckInValidPlays(
             player = player,
             subRule =
-            //TODO: How to save this to a class? Simply wrapping it in a piece rule?
-            Combined(
-                IncrementalMovement(2, 1),
-                IncrementalMovement(1, 2),
-                IncrementalMovement(-1, 2),
-                IncrementalMovement(-2, 1),
-                IncrementalMovement(-2, -1),
-                IncrementalMovement(-1, -2),
-                IncrementalMovement(1, -2),
-                IncrementalMovement(2, -1),
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
+                subRule =
+                //TODO: How to save this to a class? Simply wrapping it in a piece rule?
+                CombinedRules(
+                    IncrementalMovement(2, 1),
+                    IncrementalMovement(1, 2),
+                    IncrementalMovement(-1, 2),
+                    IncrementalMovement(-2, 1),
+                    IncrementalMovement(-2, -1),
+                    IncrementalMovement(-1, -2),
+                    IncrementalMovement(1, -2),
+                    IncrementalMovement(2, -1),
+                )
             )
         )
     )
@@ -85,15 +111,51 @@ fun getPawn(player: Player) =
         NoSelfCheckInValidPlays(
             player,
             subRule =
-            UpdateMoveState(UpdateTwoPlacesState(
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
                 subRule =
-                Combined(
-                    NoPieceAtFinalPosition(IncrementalMovement(1, 0, player)),
-                    FinalPositionContainsPieceOfPlayer(!player, IncrementalMovement(1, 1, player)),
-                    FinalPositionContainsPieceOfPlayer(!player, IncrementalMovement(1, -1, player)),
-                    //TODO: En Passant
-                    MoveTwoPlaces(player)
+                UpdateMoveState(UpdateTwoPlacesState(
+                    subRule =
+                    CombinedRules(
+                        NoPieceAtFinalPosition(IncrementalMovement(1, 0, player)),
+                        FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, 1, player)),
+                        FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, -1, player)),
+                        //TODO: En Passant
+                        MoveTwoPlaces(player)
+                    )
                 )
-            ))
+                )
+            )
+        )
+    )
+
+fun getKing(player: Player) =
+    Piece(
+        "king",
+        player,
+        rules =
+        NoSelfCheckInValidPlays(
+            player,
+            subRule =
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
+                subRule =
+                UpdateMoveState(
+                    subRule =
+                    CombinedRules(
+                        IncrementalMovement(1, 0),
+                        IncrementalMovement(1, 1),
+                        IncrementalMovement(0, 1),
+                        IncrementalMovement(-1, 1),
+                        IncrementalMovement(-1, 0),
+                        IncrementalMovement(-1, -1),
+                        IncrementalMovement(0, -1),
+                        IncrementalMovement(1, -1),
+                        Castling()
+                    )
+                )
+            )
         )
     )

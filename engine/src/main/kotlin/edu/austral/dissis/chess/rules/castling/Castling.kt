@@ -4,40 +4,50 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.pieces.King
+import edu.austral.dissis.chess.engine.pieces.PieceRule
+import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.getRook
-import edu.austral.dissis.chess.rules.Rule
 
-class Castling(
-    private val kingRules: King,
-    private val hasEverMoved: Boolean,
-    val board: ChessBoard,
-    val from: Position,
-    val to: Position,
-) : Rule<Play?> {
-    override fun verify(): Play? {
+private const val C_COLUMN = 3
+
+private const val G_COLUMN = 7
+
+//TODO: shouldn't be tied to rook
+class Castling : PieceRule {
+    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+        return listOfNotNull(
+            getPlayIfValid(board, position, Position(position.row, C_COLUMN)).play,
+            getPlayIfValid(board, position, Position(position.row, G_COLUMN)).play
+        )
+    }
+
+    override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
         val listener = RookMoveListener()
+        val king = board.getPieceAt(from)!!
 
         val rules =
             IsToValid(
                 from,
                 to,
                 listener,
-                next = CastlingSubRules(kingRules, hasEverMoved, board, from, to),
+                next = CastlingSubRules(king, board, from, to),
             )
 
         return if (rules.verify()) {
             val (rookFrom, rookTo) = listener
-            val movedRook = getRook(kingRules.player).withState("moved")
+            val movedRook = getRook(king.player).withState("moved")
 
-            Play(
-                listOf(
-                    Move(from, to, board, pieceNextTurn = kingRules.asMoved()),
-                    Move(rookFrom!!, rookTo!!, board, pieceNextTurn = movedRook),
+            PlayResult(
+                Play(
+                    listOf(
+                        Move(from, to, board, pieceNextTurn = king.withState("moved")),
+                        Move(rookFrom!!, rookTo!!, board, pieceNextTurn = movedRook),
+                    ),
                 ),
+                "Valid play"
             )
         } else {
-            null
+            PlayResult(null, "Cannot perform castling")
         }
     }
 }

@@ -25,6 +25,8 @@ enum class ClassicMoveType : MoveType {
     ADJACENT_SQUARE,
     ;
 
+    // TODO: we will be capable of having jumping paths by using increments of 2, for instance.
+
     companion object {
         val VH = listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
         val D = listOf(1 to 1, -1 to 1, 1 to -1, 1 to -1)

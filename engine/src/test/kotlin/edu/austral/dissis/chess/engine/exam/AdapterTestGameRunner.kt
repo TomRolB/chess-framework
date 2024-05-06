@@ -10,7 +10,6 @@ import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.HashChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
-import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.rules.RuleChain
 import edu.austral.dissis.chess.test.TestBoard
@@ -105,12 +104,12 @@ class AdapterTestGameRunner : TestGameRunner {
         val piecePositions = getEnginePieces(board)
         val whiteKingPosition =
             piecePositions
-                .find { it.second.rules is King && it.second.player == Player.WHITE }
+                .find { it.second.type == "king" && it.second.player == Player.WHITE }
                 ?.first
                 ?: throw IllegalArgumentException("The board must be initialized with a white king")
         val blackKingPosition =
             piecePositions
-                .find { it.second.rules is King && it.second.player == Player.BLACK }
+                .find { it.second.type == "king" && it.second.player == Player.BLACK }
                 ?.first
                 ?: throw IllegalArgumentException("The board must be initialized with a white king")
 

@@ -8,10 +8,19 @@ import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
+// TODO: maybe it's possible to completely decouple rules from Piece.
+//  It would be done by getting the piece type on IsPlayValid and
+//  mapping it to the corresponding rule.
+//  The first question to be asked, anyway, is whether this is strictly
+//  necessary, since we are good with polymorphism.
+
 class Piece {
+    // TODO: may have to find some way of replacing string by a class implementing an interface
+    //  (will probably use an enum that implements an interface PieceType)
     val type: String
     val player: Player
     val rules: PieceRule
+    // TODO: may have to find some way of replacing strings by classes implementing an interface
     val states: Set<String>
 
     constructor(type: String, player: Player, rules: PieceRule) {

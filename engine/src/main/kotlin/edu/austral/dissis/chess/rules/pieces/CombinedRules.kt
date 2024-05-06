@@ -6,7 +6,7 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class Combined(vararg rules: PieceRule) : PieceRule {
+class CombinedRules(vararg rules: PieceRule) : PieceRule {
     val rules: Iterable<PieceRule> = rules.toList()
 
     override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {

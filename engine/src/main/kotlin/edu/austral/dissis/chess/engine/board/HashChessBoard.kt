@@ -1,7 +1,6 @@
 package edu.austral.dissis.chess.engine.board
 
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.pieces.King
 import edu.austral.dissis.chess.engine.pieces.Piece
 
 class HashChessBoard private constructor(
@@ -38,7 +37,7 @@ class HashChessBoard private constructor(
         var newWhiteKingPosition = whiteKingPosition
         var newBlackKingPosition = blackKingPosition
 
-        if (piece.rules is King) {
+        if (piece.type == "king") {
             when (piece.player) {
                 Player.WHITE -> newWhiteKingPosition = position
                 Player.BLACK -> newBlackKingPosition = position
@@ -90,7 +89,7 @@ class HashChessBoard private constructor(
             if (includeKing) {
                 piece.player == player
             } else {
-                piece.player == player && (piece.rules !is King)
+                piece.player == player && (piece.type == "king")
             }
         }
     }

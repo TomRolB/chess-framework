@@ -9,21 +9,23 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
+// TODO: may be replaced by PathMovementRules limited by 1 space
+//  or not really, since it would be inefficient, and knight should jump.
 class IncrementalMovement : PieceRule {
     val rowDelta: Int
     val colDelta: Int
-    val player: Player?
+    val playerToBeMirrored: Player?
 
     constructor(rowDelta: Int, colDelta: Int) {
         this.rowDelta = rowDelta
         this.colDelta = colDelta
-        this.player = null
+        this.playerToBeMirrored = null
     }
 
     constructor(rowDelta: Int, colDelta: Int, player: Player) {
         this.rowDelta = rowDelta
         this.colDelta = colDelta
-        this.player = player
+        this.playerToBeMirrored = player
     }
 
     override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
@@ -41,12 +43,17 @@ class IncrementalMovement : PieceRule {
         to: Position
     ): PlayResult {
         val moveData =
-            if (player != null) MovementData(from, to, board, player)
+            if (playerToBeMirrored != null) MovementData(from, to, board, playerToBeMirrored)
             else MovementData(from, to)
 
         val isRowDeltaValid = moveData.rowDelta == rowDelta
         val isColDeltaValid = moveData.colDelta == colDelta
-        val isPlayValid = isRowDeltaValid && isColDeltaValid
+        val isPlayValid = (
+            isRowDeltaValid
+                    && isColDeltaValid
+                    && board.positionExists(from)
+                    && board.positionExists(to)
+        )
 
         return PlayResult(
             play = Move(from, to, board).asPlay().takeIf{ isPlayValid },

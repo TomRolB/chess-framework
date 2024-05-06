@@ -6,15 +6,9 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.HashChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
-import edu.austral.dissis.chess.engine.pieces.Bishop
-import edu.austral.dissis.chess.engine.pieces.King
-import edu.austral.dissis.chess.engine.pieces.Knight
-import edu.austral.dissis.chess.engine.pieces.Pawn
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.engine.pieces.PieceRule
-import edu.austral.dissis.chess.engine.pieces.Queen
-import edu.austral.dissis.chess.engine.pieces.Rook
 import edu.austral.dissis.chess.engine.pieces.getBishop
+import edu.austral.dissis.chess.engine.pieces.getKing
 import edu.austral.dissis.chess.engine.pieces.getKnight
 import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
@@ -29,7 +23,6 @@ import javafx.application.Application
 import javafx.application.Application.launch
 import javafx.scene.Scene
 import javafx.stage.Stage
-import kotlin.reflect.KClass
 
 fun main() {
     launch(ChessGameApplication::class.java)
@@ -70,7 +63,7 @@ class ChessGameApplication : Application() {
                     getKnight(player),
                     getBishop(player),
                     getQueen(player),
-                    Piece("king", player, King(player)),
+                    getKing(player),
                     getBishop(player),
                     getKnight(player),
                     getRook(player),

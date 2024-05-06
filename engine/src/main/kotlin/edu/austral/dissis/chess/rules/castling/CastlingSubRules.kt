@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.rules.castling
 
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.pieces.King
+import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.rules.All
 import edu.austral.dissis.chess.rules.Not
 import edu.austral.dissis.chess.rules.RuleChain
@@ -10,8 +10,7 @@ import edu.austral.dissis.chess.rules.SimpleRule
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
 class CastlingSubRules(
-    private val kingRules: King,
-    private val hasEverMoved: Boolean,
+    private val king: Piece,
     val board: ChessBoard,
     val from: Position,
     val to: Position,
@@ -20,11 +19,11 @@ class CastlingSubRules(
         val (rookFrom, _) = arg
         val rules =
             All(
-                SimpleRule(!hasEverMoved),
-                IsRookAvailable(board, rookFrom, kingRules.player),
-                IsKingsPathSafe(kingRules, from, to, board),
+                SimpleRule(!king.hasState("moved")),
+                IsRookAvailable(board, rookFrom, king.player),
+                IsKingsPathSafe(king, from, to, board),
                 IsbColumnFree(board, rookFrom),
-                Not(IsKingChecked(board, kingRules.player)),
+                Not(IsKingChecked(board, king.player)),
             )
 
         return rules.verify()

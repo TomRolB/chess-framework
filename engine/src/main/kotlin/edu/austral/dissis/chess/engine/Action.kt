@@ -74,3 +74,12 @@ class Take(val position: Position, val board: ChessBoard) : Action {
         return Take(position, board)
     }
 }
+
+fun Play.extractMove(): Move {
+    return this.actions
+        .find { it is Move }
+        ?.let { it as Move }
+        ?: throw IllegalArgumentException(
+            "There is no Move in this Play"
+        )
+}

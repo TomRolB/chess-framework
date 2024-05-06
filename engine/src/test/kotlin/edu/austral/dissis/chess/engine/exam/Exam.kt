@@ -3,10 +3,9 @@ package edu.austral.dissis.chess.engine.exam
 import edu.austral.dissis.chess.engine.OneToOneTurnManager
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.custom.CustomGameTester
-import edu.austral.dissis.chess.engine.pieces.King
-import edu.austral.dissis.chess.engine.pieces.Pawn
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.getBishop
+import edu.austral.dissis.chess.engine.pieces.getKing
 import edu.austral.dissis.chess.engine.pieces.getKnight
 import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
@@ -89,7 +88,7 @@ class Exam {
                     { getBishop(it.first) } to TestPiece('B', it.second),
                     { getQueen(it.first) } to TestPiece('Q', it.second),
                     { getKnight(it.first) } to TestPiece('N', it.second),
-                    { Piece("king", it.first, King(it.first)) } to TestPiece('K', it.second),
+                    { getKing(it.first) } to TestPiece('K', it.second),
                 )
             }
             .toMap()
