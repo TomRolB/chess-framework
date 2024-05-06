@@ -1,17 +1,16 @@
 package edu.austral.dissis.chess.rules.pieces
 
-import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class UpdateMoveState(val subRule: PieceRule): PieceRule {
+class Update(val updater: PlayUpdater, val subRule: PieceRule): PieceRule {
     override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
         return subRule
             .getValidPlays(board, position)
-            .map { updatePieceStateInMovements(it, board) }
+            .map { updater.update(it, board) }
     }
 
     override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
@@ -20,25 +19,9 @@ class UpdateMoveState(val subRule: PieceRule): PieceRule {
 
         return if (result.play == null) result
         else PlayResult(
-            play = updatePieceStateInMovements(result.play, board),
+            play = updater.update(result.play, board),
             message = result.message
         )
     }
 
-    fun updatePieceStateInMovements(play: Play, board: ChessBoard): Play {
-        // TODO: make clear
-
-        return play
-            .actions
-            .map {
-                if (it is Move) {
-                    val pieceNextTurn = board.getPieceAt(it.from)!!.withState("moved")
-                    it.withPiece(pieceNextTurn)
-                }
-                else it
-            }
-            .let {
-                Play(it)
-            }
-    }
 }

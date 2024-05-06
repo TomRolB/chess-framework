@@ -7,12 +7,13 @@ import edu.austral.dissis.chess.rules.NoSelfCheckInValidPlays
 import edu.austral.dissis.chess.rules.castling.Castling
 import edu.austral.dissis.chess.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.rules.pieces.FinalPositionContainsPieceOfPlayer
+import edu.austral.dissis.chess.rules.pieces.HasMovedUpdater
 import edu.austral.dissis.chess.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.rules.pieces.MoveTwoPlaces
 import edu.austral.dissis.chess.rules.pieces.NoPieceAtFinalPosition
-import edu.austral.dissis.chess.rules.pieces.UpdateMoveState
 import edu.austral.dissis.chess.rules.pieces.PathMovementRules
-import edu.austral.dissis.chess.rules.pieces.UpdateTwoPlacesState
+import edu.austral.dissis.chess.rules.pieces.TwoPlacesUpdater
+import edu.austral.dissis.chess.rules.pieces.Update
 
 //TODO: Think how to provide pieces more conveniently
 //TODO: Many rules are actually general, such as NoSelfCheckInValidPlays.
@@ -33,7 +34,8 @@ fun getRook(player: Player) =
                 player,
                 shouldContain = false,
                 subRule =
-                UpdateMoveState(
+                Update(
+                    updater = HasMovedUpdater(),
                     subRule =
                     PathMovementRules(ClassicMoveType.VERTICAL_AND_HORIZONTAL)
                 )
@@ -115,16 +117,20 @@ fun getPawn(player: Player) =
                 player,
                 shouldContain = false,
                 subRule =
-                UpdateMoveState(UpdateTwoPlacesState(
+                Update(
+                    updater = HasMovedUpdater(),
                     subRule =
-                    CombinedRules(
-                        NoPieceAtFinalPosition(IncrementalMovement(1, 0, player)),
-                        FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, 1, player)),
-                        FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, -1, player)),
-                        //TODO: En Passant
-                        MoveTwoPlaces(player)
+                    Update(
+                        updater = TwoPlacesUpdater(),
+                        subRule =
+                        CombinedRules(
+                            NoPieceAtFinalPosition(IncrementalMovement(1, 0, player)),
+                            FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, 1, player)),
+                            FinalPositionContainsPieceOfPlayer(!player, true, IncrementalMovement(1, -1, player)),
+                            //TODO: En Passant
+                            MoveTwoPlaces(player)
+                        )
                     )
-                )
                 )
             )
         )
@@ -142,7 +148,8 @@ fun getKing(player: Player) =
                 player,
                 shouldContain = false,
                 subRule =
-                UpdateMoveState(
+                Update(
+                    updater = HasMovedUpdater(),
                     subRule =
                     CombinedRules(
                         IncrementalMovement(1, 0),
