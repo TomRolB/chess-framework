@@ -11,8 +11,11 @@ import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 // TODO: the reason the mate is failing is because the black queen puts
 //  the white king in danger (even though this should not be happening,
 //  considering her king is checked before moving)
-class NoSelfCheckInValidPlays(val player: Player, val subRule: PieceRule): PieceRule {
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+class NoSelfCheckInValidPlays(val player: Player, val subRule: PieceRule) : PieceRule {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         return subRule
             .getValidPlays(board, position)
             .filter {
@@ -20,7 +23,11 @@ class NoSelfCheckInValidPlays(val player: Player, val subRule: PieceRule): Piece
             }
     }
 
-    override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
+    override fun getPlayIfValid(
+        board: ChessBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
         return subRule.getPlayIfValid(board, from, to)
     }
 

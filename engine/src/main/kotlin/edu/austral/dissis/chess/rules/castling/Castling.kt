@@ -12,16 +12,23 @@ private const val C_COLUMN = 3
 
 private const val G_COLUMN = 7
 
-//TODO: shouldn't be tied to rook
+// TODO: shouldn't be tied to rook
 class Castling : PieceRule {
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         return listOfNotNull(
             getPlayIfValid(board, position, Position(position.row, C_COLUMN)).play,
-            getPlayIfValid(board, position, Position(position.row, G_COLUMN)).play
+            getPlayIfValid(board, position, Position(position.row, G_COLUMN)).play,
         )
     }
 
-    override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
+    override fun getPlayIfValid(
+        board: ChessBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
         val listener = RookMoveListener()
         val king = board.getPieceAt(from)!!
 
@@ -44,7 +51,7 @@ class Castling : PieceRule {
                         Move(rookFrom!!, rookTo!!, board, pieceNextTurn = movedRook),
                     ),
                 ),
-                "Valid play"
+                "Valid play",
             )
         } else {
             PlayResult(null, "Cannot perform castling")

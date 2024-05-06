@@ -80,6 +80,6 @@ fun Play.extractMove(): Move {
         .find { it is Move }
         ?.let { it as Move }
         ?: throw IllegalArgumentException(
-            "There is no Move in this Play"
+            "There is no Move in this Play",
         )
 }

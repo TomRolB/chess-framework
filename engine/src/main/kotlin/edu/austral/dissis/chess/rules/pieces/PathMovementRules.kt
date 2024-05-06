@@ -10,7 +10,10 @@ import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
 class PathMovementRules(val moveType: MoveType) : PieceRule {
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         return moveType
             .getPossiblePositions(board, position)
             .map {
@@ -18,7 +21,11 @@ class PathMovementRules(val moveType: MoveType) : PieceRule {
             }
     }
 
-    override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
+    override fun getPlayIfValid(
+        board: ChessBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
         val moveData = MovementData(from, to)
         return when {
             moveType.isViolated(moveData) -> PlayResult(null, "Piece cannot move this way")
@@ -26,7 +33,7 @@ class PathMovementRules(val moveType: MoveType) : PieceRule {
             else -> PlayResult(Move(from, to, board).asPlay(), "Valid move")
         }
 
-        //TODO: problem is now how to maintain state for rook, for instance.
+        // TODO: problem is now how to maintain state for rook, for instance.
         // Set of attributes?
     }
 }

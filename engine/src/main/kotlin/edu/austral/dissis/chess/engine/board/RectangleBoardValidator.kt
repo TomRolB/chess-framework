@@ -18,7 +18,10 @@ class RectangleBoardValidator(val numberRows: Int, val numberCols: Int) : Positi
         return numberRows - position.row + 1
     }
 
-    override fun isPositionOnLastRow(position: Position, player: Player): Boolean {
+    override fun isPositionOnLastRow(
+        position: Position,
+        player: Player,
+    ): Boolean {
         return getRowAsWhite(position, player) == numberRows
     }
 }

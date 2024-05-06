@@ -13,7 +13,10 @@ import edu.austral.dissis.chess.rules.ContainsPieceOfPlayer
 import edu.austral.dissis.chess.rules.pieces.pawn.EnemyMovedTwoPlaces
 
 class EnPassant() : PieceRule {
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         val rowDelta = getRowDelta(board, position)
 
         val upAndLeft = Position(position.row + rowDelta, position.col - 1)
@@ -39,20 +42,21 @@ class EnPassant() : PieceRule {
         val player = board.getPieceAt(from)!!.player
 
         return if (
-            areSubRulesValid(board, possibleEnemyPawnPosition, player)
-            && movingDiagonally(player, board, from, to))
-        {
+            areSubRulesValid(board, possibleEnemyPawnPosition, player) &&
+            movingDiagonally(player, board, from, to)
+        ) {
             PlayResult(
                 Play(
                     listOf(
                         Move(from, to, board),
                         Take(possibleEnemyPawnPosition, board),
-                    )
+                    ),
                 ),
-                "valid play"
+                "valid play",
             )
+        } else {
+            PlayResult(null, "Piece cannot move this way")
         }
-        else PlayResult(null, "Piece cannot move this way")
     }
 
     private fun areSubRulesValid(
@@ -60,16 +64,17 @@ class EnPassant() : PieceRule {
         possibleEnemyPawnPosition: Position,
         player: Player,
     ): Boolean {
-        val subRules = ContainsPieceOfPlayer(
-            board,
-            possibleEnemyPawnPosition,
-            !player,
-            next =
-            IsPieceOfType(
-                pieceType = "pawn",
-                next = EnemyMovedTwoPlaces(),
-            ),
-        )
+        val subRules =
+            ContainsPieceOfPlayer(
+                board,
+                possibleEnemyPawnPosition,
+                !player,
+                next =
+                    IsPieceOfType(
+                        pieceType = "pawn",
+                        next = EnemyMovedTwoPlaces(),
+                    ),
+            )
         return subRules.verify()
     }
 
@@ -79,10 +84,11 @@ class EnPassant() : PieceRule {
         from: Position,
         to: Position,
     ): Boolean {
-        val validMovements = CombinedRules(
-            IncrementalMovement(1, 1, player),
-            IncrementalMovement(1, -1, player)
-        )
+        val validMovements =
+            CombinedRules(
+                IncrementalMovement(1, 1, player),
+                IncrementalMovement(1, -1, player),
+            )
         return validMovements.getPlayIfValid(board, from, to).play != null
     }
 }

@@ -11,9 +11,12 @@ import edu.austral.dissis.chess.engine.pieces.PlayResult
 class FinalPositionContainsPieceOfPlayer(
     val player: Player,
     val shouldContain: Boolean,
-    val subRule: PieceRule
-): PieceRule {
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+    val subRule: PieceRule,
+) : PieceRule {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         return subRule
             .getValidPlays(board, position)
             .filter {
@@ -22,14 +25,21 @@ class FinalPositionContainsPieceOfPlayer(
             }
     }
 
-    override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
+    override fun getPlayIfValid(
+        board: ChessBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
         val playResult = subRule.getPlayIfValid(board, from, to)
 
         // TODO: Could this be more readable?
         return if (
-            playResult.play != null
-            && board.containsPieceOfPlayer(to, player) == shouldContain
-        ) playResult
-        else PlayResult(null, "There must be a $player piece at destination")
+            playResult.play != null &&
+            board.containsPieceOfPlayer(to, player) == shouldContain
+        ) {
+            playResult
+        } else {
+            PlayResult(null, "There must be a $player piece at destination")
+        }
     }
 }

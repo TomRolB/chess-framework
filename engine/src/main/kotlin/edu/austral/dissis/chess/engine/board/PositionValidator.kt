@@ -10,5 +10,8 @@ interface PositionValidator {
         player: Player,
     ): Int
 
-    fun isPositionOnLastRow(position: Position, player: Player): Boolean
+    fun isPositionOnLastRow(
+        position: Position,
+        player: Player,
+    ): Boolean
 }

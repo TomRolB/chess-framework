@@ -20,6 +20,7 @@ class Piece {
     val type: String
     val player: Player
     val rules: PieceRule
+
     // TODO: may have to find some way of replacing strings by classes implementing an interface
     val states: Set<String>
 
@@ -67,7 +68,7 @@ class Piece {
     }
 }
 
-//TODO: Consider converting this to the kind of result we saw in class,
+// TODO: Consider converting this to the kind of result we saw in class,
 // since sometimes we have null plays or unnecessary messages.
 data class PlayResult(val play: Play?, val message: String)
 
@@ -77,7 +78,7 @@ interface PieceRule {
         position: Position,
     ): Iterable<Play>
 
-    //TODO: should be renamed to getPlayResult
+    // TODO: should be renamed to getPlayResult
     fun getPlayIfValid(
         board: ChessBoard,
         from: Position,

@@ -18,7 +18,7 @@ data class GameResult(
     val message: String,
 )
 
-//TODO: Should be immutable
+// TODO: Should be immutable
 class Game(
     val gameRules: RuleChain<GameData, GameResult>,
     var board: ChessBoard,

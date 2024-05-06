@@ -12,21 +12,31 @@ import edu.austral.dissis.chess.rules.Not
 import edu.austral.dissis.chess.rules.SimpleRule
 import edu.austral.dissis.chess.rules.pieces.pawn.PawnPathIsBlocked
 
-//TODO: could be replaced if MoveType can be passed a limit in a future
+// TODO: could be replaced if MoveType can be passed a limit in a future
 class MoveTwoPlaces(
     private val player: Player,
 ) : PieceRule {
     val subRule = IncrementalMovement(2, 0, player)
 
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         val destination = Position(position.row + subRule.rowDelta, position.col + subRule.colDelta)
         val play = getPlayIfValid(board, position, destination).play
 
-        return if (play == null) emptyList()
-        else listOf(play)
+        return if (play == null) {
+            emptyList()
+        } else {
+            listOf(play)
+        }
     }
 
-    override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
+    override fun getPlayIfValid(
+        board: ChessBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
         val moveData = MovementData(from, to, board, player)
         val hasEverMoved = board.getPieceAt(from)!!.hasState("moved")
         val result = subRule.getPlayIfValid(board, from, to)

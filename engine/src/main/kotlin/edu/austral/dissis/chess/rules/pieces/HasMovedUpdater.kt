@@ -4,8 +4,11 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
 
-class HasMovedUpdater: PlayUpdater {
-    override fun update(play: Play, board: ChessBoard): Play {
+class HasMovedUpdater : PlayUpdater {
+    override fun update(
+        play: Play,
+        board: ChessBoard,
+    ): Play {
         // TODO: make clear
 
         return play
@@ -14,8 +17,9 @@ class HasMovedUpdater: PlayUpdater {
                 if (it is Move) {
                     val pieceNextTurn = it.pieceNextTurn.withState("moved")
                     it.withPiece(pieceNextTurn)
+                } else {
+                    it
                 }
-                else it
             }
             .let {
                 Play(it)

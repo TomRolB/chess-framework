@@ -8,7 +8,10 @@ class IsPieceOfType(
     val next: RuleChain<Piece, Boolean>,
 ) : RuleChain<Piece, Boolean> {
     override fun verify(arg: Piece): Boolean {
-        return if (arg.type == pieceType) next.verify(arg)
-        else false
+        return if (arg.type == pieceType) {
+            next.verify(arg)
+        } else {
+            false
+        }
     }
 }

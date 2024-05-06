@@ -7,8 +7,11 @@ import edu.austral.dissis.chess.engine.extractMove
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class NoPieceAtFinalPosition(val subRule: PieceRule): PieceRule {
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+class NoPieceAtFinalPosition(val subRule: PieceRule) : PieceRule {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         return subRule
             .getValidPlays(board, position)
             .filter {
@@ -17,11 +20,18 @@ class NoPieceAtFinalPosition(val subRule: PieceRule): PieceRule {
             }
     }
 
-    override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
+    override fun getPlayIfValid(
+        board: ChessBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
         val playResult = subRule.getPlayIfValid(board, from, to)
 
         // TODO: Could this be more readable?
-        return if (playResult.play != null && !board.isOccupied(to)) playResult
-        else PlayResult(null, "There is a piece blocking that position")
+        return if (playResult.play != null && !board.isOccupied(to)) {
+            playResult
+        } else {
+            PlayResult(null, "There is a piece blocking that position")
+        }
     }
 }

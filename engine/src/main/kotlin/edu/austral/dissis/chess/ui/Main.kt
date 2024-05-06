@@ -42,7 +42,6 @@ class ChessGameApplication : Application() {
     }
 
     companion object {
-
         // TODO: All below is weird. Should define a better way of creating boards with pieces
         const val GAME_TITLE = "Chess"
         private val ONE_TO_EIGHT = 1..8

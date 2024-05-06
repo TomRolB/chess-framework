@@ -6,7 +6,10 @@ class PieceHasNeverMoved(
     val next: RuleChain<Piece, Boolean>,
 ) : RuleChain<Piece, Boolean> {
     override fun verify(arg: Piece): Boolean {
-        return if (!arg.hasState("moved")) next.verify(arg)
-        else false
+        return if (!arg.hasState("moved")) {
+            next.verify(arg)
+        } else {
+            false
+        }
     }
 }

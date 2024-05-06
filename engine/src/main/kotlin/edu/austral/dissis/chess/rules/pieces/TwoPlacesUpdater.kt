@@ -5,8 +5,11 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import kotlin.math.absoluteValue
 
-class TwoPlacesUpdater: PlayUpdater {
-    override fun update(play: Play, board: ChessBoard): Play {
+class TwoPlacesUpdater : PlayUpdater {
+    override fun update(
+        play: Play,
+        board: ChessBoard,
+    ): Play {
         // TODO: make clear
 
         return play
@@ -14,7 +17,9 @@ class TwoPlacesUpdater: PlayUpdater {
             .map {
                 if (it is Move) {
                     removeOrAddState(it, board)
-                } else it
+                } else {
+                    it
+                }
             }
             .let {
                 Play(it)

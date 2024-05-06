@@ -6,22 +6,30 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class Update(val updater: PlayUpdater, val subRule: PieceRule): PieceRule {
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+class Update(val updater: PlayUpdater, val subRule: PieceRule) : PieceRule {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         return subRule
             .getValidPlays(board, position)
             .map { updater.update(it, board) }
     }
 
-    override fun getPlayIfValid(board: ChessBoard, from: Position, to: Position): PlayResult {
+    override fun getPlayIfValid(
+        board: ChessBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
         val result = subRule.getPlayIfValid(board, from, to)
 
-
-        return if (result.play == null) result
-        else PlayResult(
-            play = updater.update(result.play, board),
-            message = result.message
-        )
+        return if (result.play == null) {
+            result
+        } else {
+            PlayResult(
+                play = updater.update(result.play, board),
+                message = result.message,
+            )
+        }
     }
-
 }

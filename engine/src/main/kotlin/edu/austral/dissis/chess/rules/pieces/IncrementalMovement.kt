@@ -28,7 +28,10 @@ class IncrementalMovement : PieceRule {
         this.playerToBeMirrored = player
     }
 
-    override fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+    override fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         val to = Position(position.row + rowDelta, position.col + colDelta)
 
         return getPlayIfValid(board, position, to)
@@ -40,24 +43,27 @@ class IncrementalMovement : PieceRule {
     override fun getPlayIfValid(
         board: ChessBoard,
         from: Position,
-        to: Position
+        to: Position,
     ): PlayResult {
         val moveData =
-            if (playerToBeMirrored != null) MovementData(from, to, board, playerToBeMirrored)
-            else MovementData(from, to)
+            if (playerToBeMirrored != null) {
+                MovementData(from, to, board, playerToBeMirrored)
+            } else {
+                MovementData(from, to)
+            }
 
         val isRowDeltaValid = moveData.rowDelta == rowDelta
         val isColDeltaValid = moveData.colDelta == colDelta
         val isPlayValid = (
-            isRowDeltaValid
-                    && isColDeltaValid
-                    && board.positionExists(from)
-                    && board.positionExists(to)
+            isRowDeltaValid &&
+                isColDeltaValid &&
+                board.positionExists(from) &&
+                board.positionExists(to)
         )
 
         return PlayResult(
-            play = Move(from, to, board).asPlay().takeIf{ isPlayValid },
-            message = if (isPlayValid) "Valid play" else "Piece cannot move this way"
+            play = Move(from, to, board).asPlay().takeIf { isPlayValid },
+            message = if (isPlayValid) "Valid play" else "Piece cannot move this way",
         )
     }
 }

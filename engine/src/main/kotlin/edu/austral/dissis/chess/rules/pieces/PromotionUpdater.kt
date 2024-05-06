@@ -1,13 +1,15 @@
-package edu.austral.dissis.chess.rules.pieces.pawn
+package edu.austral.dissis.chess.rules.pieces
 
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.pieces.getQueen
-import edu.austral.dissis.chess.rules.pieces.PlayUpdater
 
-class PromotionUpdater: PlayUpdater {
-    override fun update(play: Play, board: ChessBoard): Play {
+class PromotionUpdater : PlayUpdater {
+    override fun update(
+        play: Play,
+        board: ChessBoard,
+    ): Play {
         // TODO: make clear
 
         return play
@@ -15,8 +17,9 @@ class PromotionUpdater: PlayUpdater {
             .map {
                 if (it is Move) {
                     replaceByQueenIfValid(it, board)
+                } else {
+                    it
                 }
-                else it
             }
             .let {
                 Play(it)
@@ -32,6 +35,8 @@ class PromotionUpdater: PlayUpdater {
         return if (board.isPositionOnUpperLimit(move.to, move.pieceNextTurn.player)) {
             val pieceNextTurn = getQueen(player)
             move.withPiece(pieceNextTurn)
-        } else move
+        } else {
+            move
+        }
     }
 }
