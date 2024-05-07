@@ -35,8 +35,8 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
     }
 
     fun isViolated(moveData: MovementData): Boolean {
-        return !areVectorsParallel(moveData, increments)
-                && doVectorsShareOrientation(moveData, increments)
+        return !(areVectorsParallel(moveData, increments)
+                && doVectorsShareOrientation(moveData, increments))
     }
 
     private fun areVectorsParallel(

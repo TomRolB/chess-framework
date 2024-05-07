@@ -47,8 +47,8 @@ class Exam {
                 postPlayProcedures = promotePawns(),
             ),
         )
-//            .test()
-            .debug("rook_can_move_left.md")
+            .test()
+//            .debug("bishop_can_move_to_corner.md")
     }
 
     private fun promotePawns(): (TestBoard) -> TestBoard {

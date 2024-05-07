@@ -73,10 +73,10 @@ fun getBishop(player: Player) =
                         onFailMessage = FRIENDLY_FIRE_MESSAGE,
                         subRule =
                             CombinedRules(
-                                PathMovementRules(0 to 1),
-                                PathMovementRules(0 to -1),
-                                PathMovementRules(1 to 0),
-                                PathMovementRules(-1 to 0),
+                                PathMovementRules(1 to 1),
+                                PathMovementRules(1 to -1),
+                                PathMovementRules(-1 to 1),
+                                PathMovementRules(-1 to -1),
                             )
                     ),
             ),
@@ -96,10 +96,10 @@ fun getQueen(player: Player) =
                         onFailMessage = FRIENDLY_FIRE_MESSAGE,
                         subRule =
                             CombinedRules(
-                                PathMovementRules(1 to 1),
-                                PathMovementRules(1 to -1),
-                                PathMovementRules(-1 to 1),
-                                PathMovementRules(-1 to -1),
+                                PathMovementRules(0 to 1),
+                                PathMovementRules(0 to -1),
+                                PathMovementRules(1 to 0),
+                                PathMovementRules(-1 to 0),
                                 PathMovementRules(1 to 1),
                                 PathMovementRules(1 to -1),
                                 PathMovementRules(-1 to 1),
