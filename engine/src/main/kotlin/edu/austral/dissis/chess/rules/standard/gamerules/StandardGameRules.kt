@@ -28,7 +28,8 @@ class StandardGameRules : RuleChain<GameData, GameResult> {
                                 from,
                                 to,
                                 playerOnTurn,
-                                next = GameOverRules(playerOnTurn),
+                                next =
+                                    GameOverRules(playerOnTurn),
                             ),
                     ),
             )

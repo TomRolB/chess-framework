@@ -10,3 +10,8 @@ enum class ClassicPieceType: PieceType {
     KNIGHT,
     KING
 }
+
+enum class CapablancaPieceTypes: PieceType {
+    ARCHBISHOP,
+    CHANCELLOR
+}
