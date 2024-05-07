@@ -14,9 +14,6 @@ class CombinedRules(vararg rules: PieceRule) : PieceRule {
         position: Position,
     ): Iterable<Play> {
         return rules.flatMap { it.getValidPlays(board, position) }
-
-        // TODO: clean
-        // return first.getValidPlays(board, position) + second.getValidPlays(board, position)
     }
 
     override fun getPlayResult(
