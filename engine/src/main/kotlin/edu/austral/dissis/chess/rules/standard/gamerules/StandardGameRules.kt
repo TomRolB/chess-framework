@@ -2,10 +2,12 @@ package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.GameData
 import edu.austral.dissis.chess.engine.GameResult
+import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.WinCondition
 import edu.austral.dissis.chess.rules.RuleChain
 
 class StandardGameRules(
+    val postPlayValidator: PostPlayValidator,
     val winCondition: WinCondition
 ) : RuleChain<GameData, GameResult> {
     override fun verify(arg: GameData): GameResult {
@@ -31,6 +33,7 @@ class StandardGameRules(
                                 from,
                                 to,
                                 playerOnTurn,
+                                postPlayValidator,
                                 next =
                                     GameOverRules(
                                         playerOnTurn,

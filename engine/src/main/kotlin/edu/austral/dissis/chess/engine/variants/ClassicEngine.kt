@@ -20,6 +20,7 @@ import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
 import edu.austral.dissis.chess.engine.pieces.getRook
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
+import edu.austral.dissis.chess.rules.standard.gamerules.ClassicPostPlayValidator
 import edu.austral.dissis.chess.rules.standard.gamerules.ClassicWinCondition
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.ui.StandardGameEngine
@@ -31,7 +32,10 @@ fun getClassicEngine(): StandardGameEngine {
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
 
-    val gameRules = StandardGameRules(ClassicWinCondition())
+    val gameRules = StandardGameRules(
+        ClassicPostPlayValidator(),
+        ClassicWinCondition()
+    )
 
     val game = Game(gameRules, board, OneToOneTurnManager())
 
