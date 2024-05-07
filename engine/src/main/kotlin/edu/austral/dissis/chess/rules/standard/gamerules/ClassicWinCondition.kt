@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.GameResult
+import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PlayerState
@@ -15,7 +15,7 @@ class ClassicWinCondition : WinCondition {
         board: ChessBoard,
         play: Play,
         player: Player
-    ): GameResult {
+    ): PlayResult {
         val enemyState = getPlayerState(board, !player)
 
         val (engineResult, message) =
@@ -25,7 +25,7 @@ class ClassicWinCondition : WinCondition {
                 else -> EngineResult.VALID_MOVE to "Successfully moved"
             }
 
-        val finalResult = GameResult(board, play, engineResult, message)
+        val finalResult = PlayResult(board, play, engineResult, message)
         return finalResult
     }
 

@@ -18,21 +18,21 @@ import edu.austral.dissis.chess.gui.Position
 typealias UiBoard = Map<Position, ChessPiece>
 
 class StandardGameEngine(
-    private val game: Game,
+    private var game: Game,
     private val validator: RectangleBoardValidator,
     private val pieceAdapter: UiPieceAdapter,
 ) : GameEngine {
-    var board: UiBoard = mapOf()
+    var uiBoard: UiBoard = mapOf()
     private val actionAdapter = UiActionAdapter(pieceAdapter)
 
     override fun applyMove(move: Move): MoveResult {
         val (from, to) = move
-        val ruleResult = game.movePiece(adapt(from), adapt(to))
+        val (ruleResult, newGame) = game.movePiece(adapt(from), adapt(to))
         val play = ruleResult.play
         val engineResult = ruleResult.engineResult
         val message = ruleResult.message
 
-        board = actionAdapter.applyPlay(board, play)
+        uiBoard = actionAdapter.applyPlay(uiBoard, play)
 
         return when (engineResult) {
             EngineResult.GENERAL_MOVE_VIOLATION, EngineResult.PIECE_VIOLATION, EngineResult.POST_PLAY_VIOLATION -> {
@@ -41,8 +41,10 @@ class StandardGameEngine(
             EngineResult.WHITE_WINS, EngineResult.TIE_BY_WHITE -> GameOver(PlayerColor.WHITE)
             EngineResult.BLACK_WINS, EngineResult.TIE_BY_BLACK -> GameOver(PlayerColor.BLACK)
             EngineResult.VALID_MOVE -> {
+                this.game = newGame
+
                 NewGameState(
-                    pieces = board.values.toList(),
+                    pieces = uiBoard.values.toList(),
                     currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
                 )
             }
@@ -54,7 +56,7 @@ class StandardGameEngine(
     }
 
     override fun init(): InitialState {
-        board =
+        uiBoard =
             game.board
                 .getAllPositions().associate {
                     val chessPiece = pieceAdapter.adaptNew(game.board.getPieceAt(it)!!, it)
@@ -63,7 +65,7 @@ class StandardGameEngine(
 
         return InitialState(
             boardSize = BoardSize(validator.numberRows, validator.numberCols),
-            pieces = board.values.toList(),
+            pieces = uiBoard.values.toList(),
             currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
         )
     }

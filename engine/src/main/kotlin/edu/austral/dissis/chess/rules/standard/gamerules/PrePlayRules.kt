@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.GameResult
+import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PrePlayValidator
 import edu.austral.dissis.chess.engine.board.ChessBoard
@@ -16,9 +16,9 @@ class PrePlayRules(
     val to: Position,
     val player: Player,
     val validator: PrePlayValidator,
-    val next: RuleChain<Piece, GameResult>,
-) : Rule<GameResult> {
-    override fun verify(): GameResult {
+    val next: RuleChain<Piece, PlayResult>,
+) : Rule<PlayResult> {
+    override fun verify(): PlayResult {
         val resultOnViolation = validator.getResultOnViolation(board, from, to, player)
 
         return resultOnViolation ?: let {
@@ -38,8 +38,8 @@ class PrePlayRules(
 //        }
     }
 
-    private fun getViolationResult(message: String): GameResult {
-        return GameResult(
+    private fun getViolationResult(message: String): PlayResult {
+        return PlayResult(
             board,
             null,
             EngineResult.GENERAL_MOVE_VIOLATION,

@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.GameResult
+import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PrePlayValidator
 import edu.austral.dissis.chess.engine.board.ChessBoard
@@ -13,7 +13,7 @@ class ClassicPrePlayValidator : PrePlayValidator {
         from: Position,
         to: Position,
         player: Player
-    ): GameResult? {
+    ): PlayResult? {
         return when {
             !board.containsPieceOfPlayer(from, player) ->
                 getViolationResult(board, "This tile does not contain a piece of yours")
@@ -23,8 +23,8 @@ class ClassicPrePlayValidator : PrePlayValidator {
         }
     }
 
-    private fun getViolationResult(board: ChessBoard, message: String): GameResult {
-        return GameResult(
+    private fun getViolationResult(board: ChessBoard, message: String): PlayResult {
+        return PlayResult(
             board,
             null,
             EngineResult.GENERAL_MOVE_VIOLATION,

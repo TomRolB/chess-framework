@@ -12,7 +12,7 @@ data class GameData(
     val to: Position,
 )
 
-data class GameResult(
+data class PlayResult(
     val board: ChessBoard,
     val play: Play?,
     val engineResult: EngineResult,
@@ -21,23 +21,21 @@ data class GameResult(
 
 // TODO: Should be immutable
 class Game(
-    val gameRules: RuleChain<GameData, GameResult>,
-    var board: ChessBoard,
-    var turnManager: TurnManager,
+    val gameRules: RuleChain<GameData, PlayResult>,
+    val board: ChessBoard,
+    val turnManager: TurnManager,
 ) {
     fun movePiece(
         from: Position,
         to: Position,
-    ): GameResult {
+    ): Pair<PlayResult, Game> {
         val gameData = GameData(board, turnManager, from, to)
-        val ruleResult = gameRules.verify(gameData)
 
-        if (ruleResult.engineResult == EngineResult.VALID_MOVE) {
-            board = ruleResult.board
-            turnManager = turnManager.nextTurn()
-        }
+        val playResult = gameRules.verify(gameData)
 
-        return ruleResult
+        val newGame = Game(gameRules, playResult.board, turnManager.nextTurn())
+
+        return playResult to newGame
     }
 }
 

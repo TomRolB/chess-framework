@@ -3,7 +3,7 @@ package edu.austral.dissis.chess.engine.exam
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.GameData
-import edu.austral.dissis.chess.engine.GameResult
+import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.turns.TurnManager
 import edu.austral.dissis.chess.engine.board.ChessBoard
@@ -27,7 +27,7 @@ class AdapterTestGameRunner : TestGameRunner {
     private val actionAdapter: ActionAdapter
     private val pieceAdapter: PieceAdapter
 
-    private val gameRules: RuleChain<GameData, GameResult>
+    private val gameRules: RuleChain<GameData, PlayResult>
     private val turnManager: TurnManager
 
     private lateinit var game: Game
@@ -36,7 +36,7 @@ class AdapterTestGameRunner : TestGameRunner {
     // Lazy constructor to initialize game once withBoard() is called
     constructor(
         pieceAdapter: PieceAdapter,
-        gameRules: RuleChain<GameData, GameResult>,
+        gameRules: RuleChain<GameData, PlayResult>,
         turnManager: TurnManager,
     ) {
         this.pieceAdapter = pieceAdapter
@@ -59,7 +59,7 @@ class AdapterTestGameRunner : TestGameRunner {
         from: TestPosition,
         to: TestPosition,
     ): TestMoveResult {
-        val ruleResult = game.movePiece(adapt(from), adapt(to))
+        val (ruleResult, newGame) = game.movePiece(adapt(from), adapt(to))
         val play = ruleResult.play
         val engineResult = ruleResult.engineResult
 
@@ -73,6 +73,8 @@ class AdapterTestGameRunner : TestGameRunner {
             EngineResult.BLACK_WINS -> BlackCheckMate(boardAfterMove)
             EngineResult.TIE_BY_WHITE, EngineResult.TIE_BY_BLACK -> TestMoveDraw(boardAfterMove)
             EngineResult.VALID_MOVE -> {
+                this.game = newGame
+
                 val adapterNextTurn = AdapterTestGameRunner(game, boardAfterMove, pieceAdapter, actionAdapter)
                 TestMoveSuccess(adapterNextTurn)
             }
