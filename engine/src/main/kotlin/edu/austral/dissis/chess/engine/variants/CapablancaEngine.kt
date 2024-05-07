@@ -24,6 +24,7 @@ import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
 import edu.austral.dissis.chess.engine.pieces.getRook
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
+import edu.austral.dissis.chess.rules.standard.gamerules.ClassicWinCondition
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
@@ -34,7 +35,9 @@ fun getCapablancaEngine(): StandardGameEngine {
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
 
-    val game = Game(StandardGameRules(), board, OneToOneTurnManager())
+    val gameRules = StandardGameRules(ClassicWinCondition())
+
+    val game = Game(gameRules, board, OneToOneTurnManager())
 
     return StandardGameEngine(game, validator, pieceAdapter)
 }

@@ -18,14 +18,23 @@ class PrePlayRules(
 ) : Rule<GameResult> {
     override fun verify(): GameResult {
         return when {
-            !board.containsPieceOfPlayer(from, player) -> "This tile does not contain a piece of yours"
-            (from == to) -> "Cannot stay in the same place"
-            else -> null
-        }
-            ?.let { GameResult(board, null, EngineResult.GENERAL_MOVE_VIOLATION, it) }
-            ?: let {
+            !board.containsPieceOfPlayer(from, player) ->
+                getViolationResult("This tile does not contain a piece of yours")
+            (from == to) ->
+                getViolationResult("Cannot stay in the same place")
+            else -> {
                 val piece = board.getPieceAt(from)!!
                 next.verify(piece)
             }
+        }
+    }
+
+    private fun getViolationResult(message: String): GameResult {
+        return GameResult(
+            board,
+            null,
+            EngineResult.GENERAL_MOVE_VIOLATION,
+            message
+        )
     }
 }

@@ -10,6 +10,7 @@ import edu.austral.dissis.chess.engine.pieces.getKnight
 import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
 import edu.austral.dissis.chess.engine.pieces.getRook
+import edu.austral.dissis.chess.rules.standard.gamerules.ClassicWinCondition
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.test.TestPiece
 import edu.austral.dissis.chess.test.game.GameTester
@@ -25,7 +26,7 @@ class Exam {
         return GameTester(
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
-                gameRules = StandardGameRules(),
+                gameRules = StandardGameRules(ClassicWinCondition()),
                 turnManager = OneToOneTurnManager(),
             ),
         )
@@ -40,7 +41,7 @@ class Exam {
         return CustomGameTester(
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
-                gameRules = StandardGameRules(),
+                gameRules = StandardGameRules(ClassicWinCondition()),
                 turnManager = OneToOneTurnManager(),
             ),
         )
