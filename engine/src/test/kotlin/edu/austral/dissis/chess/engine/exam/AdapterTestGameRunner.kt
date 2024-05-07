@@ -5,7 +5,7 @@ import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.GameData
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.HashChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
@@ -95,13 +95,13 @@ class AdapterTestGameRunner : TestGameRunner {
         // Set pieces at Game (also map board size to validator)
         // (board is initialized here)
 
-        val engineBoard: ChessBoard = initEngineBoard(board)
+        val engineBoard: GameBoard = initEngineBoard(board)
         val game = Game(gameRules, engineBoard, turnManager)
 
         return AdapterTestGameRunner(game, board, pieceAdapter, actionAdapter)
     }
 
-    private fun initEngineBoard(board: TestBoard): ChessBoard {
+    private fun initEngineBoard(board: TestBoard): GameBoard {
         val validator = RectangleBoardValidator(board.size.rows, board.size.cols)
         val piecePositions = getEnginePieces(board)
         val whiteKingPosition =
@@ -115,7 +115,7 @@ class AdapterTestGameRunner : TestGameRunner {
                 ?.first
                 ?: throw IllegalArgumentException("The board must be initialized with a white king")
 
-        return HashChessBoard.build(validator, piecePositions, whiteKingPosition, blackKingPosition)
+        return HashChessBoard.build(validator, piecePositions)
     }
 
     private fun getEnginePieces(board: TestBoard): List<Pair<Position, Piece>> {

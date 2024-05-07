@@ -4,12 +4,12 @@ import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PrePlayValidator
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 
 class ClassicPrePlayValidator : PrePlayValidator {
     override fun getResultOnViolation(
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
         player: Player,
@@ -24,7 +24,7 @@ class ClassicPrePlayValidator : PrePlayValidator {
     }
 
     private fun getViolationResult(
-        board: ChessBoard,
+        board: GameBoard,
         message: String,
     ): PlayResult {
         return PlayResult(

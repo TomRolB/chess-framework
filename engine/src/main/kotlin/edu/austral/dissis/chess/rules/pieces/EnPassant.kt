@@ -4,7 +4,7 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Take
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.PAWN
@@ -15,7 +15,7 @@ import edu.austral.dissis.chess.rules.pieces.pawn.EnemyMovedTwoPlaces
 
 class EnPassant : PieceRule {
     override fun getValidPlays(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ): Iterable<Play> {
         val rowDelta = getRowDelta(board, position)
@@ -30,12 +30,12 @@ class EnPassant : PieceRule {
     }
 
     private fun getRowDelta(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ) = if (board.containsPieceOfPlayer(position, Player.WHITE)) 1 else -1
 
     override fun getPlayResult(
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
     ): PlayResult {
@@ -61,7 +61,7 @@ class EnPassant : PieceRule {
     }
 
     private fun areSubRulesValid(
-        board: ChessBoard,
+        board: GameBoard,
         possibleEnemyPawnPosition: Position,
         player: Player,
     ): Boolean {
@@ -81,7 +81,7 @@ class EnPassant : PieceRule {
 
     private fun movingDiagonally(
         player: Player,
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
     ): Boolean {

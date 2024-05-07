@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.rules.castling
 
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.pieces.PieceRule
@@ -16,7 +16,7 @@ private const val G_COLUMN = 7
 // TODO: shouldn't be tied to rook
 class Castling : PieceRule {
     override fun getValidPlays(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ): Iterable<Play> {
         return listOfNotNull(
@@ -26,7 +26,7 @@ class Castling : PieceRule {
     }
 
     override fun getPlayResult(
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
     ): PlayResult {

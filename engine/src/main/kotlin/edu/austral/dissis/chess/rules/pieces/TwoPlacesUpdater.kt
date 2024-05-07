@@ -2,14 +2,14 @@ package edu.austral.dissis.chess.rules.pieces
 
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceState.MOVED_TWO_PLACES
 import kotlin.math.absoluteValue
 
 class TwoPlacesUpdater : PlayUpdater {
     override fun update(
         play: Play,
-        board: ChessBoard,
+        board: GameBoard,
     ): Play {
         // TODO: make clear
 
@@ -29,7 +29,7 @@ class TwoPlacesUpdater : PlayUpdater {
 
     private fun removeOrAddState(
         move: Move,
-        board: ChessBoard,
+        board: GameBoard,
     ): Move {
         return if (movedTwoPlaces(move)) {
             val pieceNextTurn = move.pieceNextTurn.withState(MOVED_TWO_PLACES)

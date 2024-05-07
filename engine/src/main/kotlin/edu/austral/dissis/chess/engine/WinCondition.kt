@@ -1,10 +1,10 @@
 package edu.austral.dissis.chess.engine
 
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 
 interface WinCondition {
     fun getGameResult(
-        board: ChessBoard,
+        board: GameBoard,
         play: Play,
         player: Player,
     ): PlayResult

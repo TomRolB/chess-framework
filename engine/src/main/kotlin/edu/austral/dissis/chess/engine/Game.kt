@@ -1,19 +1,19 @@
 package edu.austral.dissis.chess.engine
 
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.turns.TurnManager
 import edu.austral.dissis.chess.rules.RuleChain
 
 data class GameData(
-    val board: ChessBoard,
+    val board: GameBoard,
     val turnManager: TurnManager,
     val from: Position,
     val to: Position,
 )
 
 data class PlayResult(
-    val board: ChessBoard,
+    val board: GameBoard,
     val play: Play?,
     val engineResult: EngineResult,
     val message: String,
@@ -22,7 +22,7 @@ data class PlayResult(
 // TODO: Should be immutable
 class Game(
     val gameRules: RuleChain<GameData, PlayResult>,
-    val board: ChessBoard,
+    val board: GameBoard,
     val turnManager: TurnManager,
 ) {
     fun movePiece(

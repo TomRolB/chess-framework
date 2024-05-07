@@ -5,7 +5,7 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PostPlayValidator
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.rules.RuleChain
 
@@ -14,7 +14,7 @@ class PostPlayRules(
     val to: Position,
     val player: Player,
     val validator: PostPlayValidator,
-    val next: RuleChain<Pair<Play, ChessBoard>, PlayResult>,
+    val next: RuleChain<Pair<Play, GameBoard>, PlayResult>,
 ) : RuleChain<Play, PlayResult> {
     override fun verify(arg: Play): PlayResult {
         val board = arg.execute()

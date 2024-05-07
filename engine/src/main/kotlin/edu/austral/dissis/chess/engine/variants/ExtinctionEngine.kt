@@ -9,7 +9,7 @@ import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.WinCondition
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.BISHOP
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KING
@@ -55,7 +55,7 @@ private fun getPieceIdMap(): Map<PieceType, String> {
 
 class NoPostPlayValidator : PostPlayValidator {
     override fun isStateInvalid(
-        board: ChessBoard,
+        board: GameBoard,
         player: Player,
     ): Boolean {
         return false
@@ -64,7 +64,7 @@ class NoPostPlayValidator : PostPlayValidator {
 
 class ExtinctionWinCondition : WinCondition {
     override fun getGameResult(
-        board: ChessBoard,
+        board: GameBoard,
         play: Play,
         player: Player,
     ): PlayResult {
@@ -79,7 +79,7 @@ class ExtinctionWinCondition : WinCondition {
     }
 
     private fun playerWentExtinct(
-        board: ChessBoard,
+        board: GameBoard,
         player: Player,
     ) = board.getAllPositionsOfPlayer(player, true).none()
 }

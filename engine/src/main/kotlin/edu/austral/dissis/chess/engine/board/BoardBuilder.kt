@@ -74,6 +74,6 @@ class BoardBuilder {
             "No black king was passed"
         }
 
-        return HashChessBoard.build(validator, piecesWithPositions, whiteKingPosition, blackKingPosition)
+        return HashChessBoard.build(validator, piecesWithPositions)
     }
 }

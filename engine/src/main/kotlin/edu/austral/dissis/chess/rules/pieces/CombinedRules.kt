@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.rules.pieces
 
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
@@ -10,7 +10,7 @@ class CombinedRules(vararg rules: PieceRule) : PieceRule {
     val rules: Iterable<PieceRule> = rules.toList()
 
     override fun getValidPlays(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ): Iterable<Play> {
         return rules.flatMap { it.getValidPlays(board, position) }
@@ -20,7 +20,7 @@ class CombinedRules(vararg rules: PieceRule) : PieceRule {
     }
 
     override fun getPlayResult(
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
     ): PlayResult {

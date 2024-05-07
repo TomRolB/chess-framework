@@ -4,7 +4,7 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
@@ -29,7 +29,7 @@ class IncrementalMovement : PieceRule {
     }
 
     override fun getValidPlays(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ): Iterable<Play> {
         val to = Position(position.row + rowDelta, position.col + colDelta)
@@ -41,7 +41,7 @@ class IncrementalMovement : PieceRule {
     }
 
     override fun getPlayResult(
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
     ): PlayResult {

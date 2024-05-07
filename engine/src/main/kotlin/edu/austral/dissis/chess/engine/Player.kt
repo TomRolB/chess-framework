@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine
 
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 import edu.austral.dissis.chess.rules.pieces.king.WillKingBeChecked
 
@@ -17,7 +17,7 @@ enum class PlayerState {
 }
 
 fun getPlayerState(
-    board: ChessBoard,
+    board: GameBoard,
     player: Player,
 ): PlayerState {
     val isChecked: Int = if (IsKingChecked(board, player).verify()) 1 else 0

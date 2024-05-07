@@ -3,7 +3,7 @@ package edu.austral.dissis.chess.rules.pieces
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.PieceRule
@@ -13,7 +13,7 @@ import kotlin.math.sign
 // TODO: Would jumping work?
 class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
     override fun getValidPlays(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ): Iterable<Play> {
         return getLineOfPositions(board, position)
@@ -23,7 +23,7 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
     }
 
     override fun getPlayResult(
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
     ): PlayResult {
@@ -56,7 +56,7 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
 
     fun isPathBlocked(
         moveData: MovementData,
-        board: ChessBoard,
+        board: GameBoard,
     ): Boolean {
         val rowIncrement = moveData.rowDelta.sign
         val colIncrement = moveData.colDelta.sign
@@ -87,7 +87,7 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
     ) = !(row == moveData.toRow && col == moveData.toCol)
 
     private fun getLineOfPositions(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ): List<Position> {
         var (row, col) = position

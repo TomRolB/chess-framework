@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.rules.castling
 
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.pieces.Piece
@@ -12,7 +12,7 @@ import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
 class CastlingSubRules(
     private val king: Piece,
-    val board: ChessBoard,
+    val board: GameBoard,
     val from: Position,
     val to: Position,
 ) : RuleChain<Pair<Position, Position>, Boolean> {

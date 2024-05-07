@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.engine.pieces
 
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 
 // TODO: maybe it's possible to completely decouple rules from Piece.
@@ -36,14 +36,14 @@ class Piece {
     }
 
     fun getValidPlays(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ): Iterable<Play> {
         return rules.getValidPlays(board, position)
     }
 
     fun getPlayResult(
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
     ): PlayResult {
@@ -78,12 +78,12 @@ data class PlayResult(val play: Play?, val message: String)
 
 interface PieceRule {
     fun getValidPlays(
-        board: ChessBoard,
+        board: GameBoard,
         position: Position,
     ): Iterable<Play>
 
     fun getPlayResult(
-        board: ChessBoard,
+        board: GameBoard,
         from: Position,
         to: Position,
     ): PlayResult

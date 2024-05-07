@@ -7,17 +7,13 @@ import edu.austral.dissis.chess.engine.pieces.Piece
 class HashChessBoard private constructor(
     private val validator: PositionValidator,
     private val boardMap: Map<Position, Piece>,
-    private val whiteKingPosition: Position,
-    private val blackKingPosition: Position,
-) : ChessBoard {
+) : GameBoard {
     companion object {
         fun build(
             validator: PositionValidator,
             pieces: List<Pair<Position, Piece>>,
-            whiteKingPosition: Position,
-            blackKingPosition: Position,
         ): HashChessBoard {
-            return HashChessBoard(validator, pieces.toMap(), whiteKingPosition, blackKingPosition)
+            return HashChessBoard(validator, pieces.toMap())
         }
     }
 
@@ -35,28 +31,15 @@ class HashChessBoard private constructor(
     ): HashChessBoard {
         val newMap = boardMap + (position to piece)
 
-        var newWhiteKingPosition = whiteKingPosition
-        var newBlackKingPosition = blackKingPosition
-
-        if (piece.type == KING) {
-            when (piece.player) {
-                Player.WHITE -> newWhiteKingPosition = position
-                Player.BLACK -> newBlackKingPosition = position
-            }
-        }
-
-        return HashChessBoard(validator, newMap, newWhiteKingPosition, newBlackKingPosition)
+        return HashChessBoard(validator, newMap)
     }
 
     override fun delPieceAt(position: Position): HashChessBoard {
-//        require(position != whiteKingPosition && position != blackKingPosition) {
-//            "A king cannot be deleted without being set in other position first"
-//        }
 
         val newMap: HashMap<Position, Piece> = HashMap(boardMap)
         newMap.remove(position)
 
-        return HashChessBoard(validator, newMap, whiteKingPosition, blackKingPosition)
+        return HashChessBoard(validator, newMap)
     }
 
     override fun positionExists(position: Position): Boolean {
@@ -103,12 +86,5 @@ class HashChessBoard private constructor(
         player: Player,
     ): Int {
         return validator.getRowAsWhite(position, player)
-    }
-
-    override fun getKingPosition(player: Player): Position {
-        return when (player) {
-            Player.WHITE -> whiteKingPosition
-            Player.BLACK -> blackKingPosition
-        }
     }
 }

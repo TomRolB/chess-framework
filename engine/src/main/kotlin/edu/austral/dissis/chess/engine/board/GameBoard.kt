@@ -5,8 +5,6 @@ import edu.austral.dissis.chess.engine.pieces.Piece
 
 data class Position(val row: Int, val col: Int)
 
-interface ChessBoard : GameBoard, ChessBoardOps
-
 interface GameBoard {
     fun isOccupied(position: Position): Boolean
 
@@ -15,9 +13,9 @@ interface GameBoard {
     fun setPieceAt(
         position: Position,
         piece: Piece,
-    ): ChessBoard
+    ): GameBoard
 
-    fun delPieceAt(position: Position): ChessBoard
+    fun delPieceAt(position: Position): GameBoard
 
     fun positionExists(position: Position): Boolean
 
@@ -32,9 +30,7 @@ interface GameBoard {
     ): Boolean
 
     fun getAllPositions(): Iterable<Position>
-}
 
-interface ChessBoardOps {
     fun getAllPositionsOfPlayer(
         player: Player,
         includeKing: Boolean,
@@ -44,6 +40,4 @@ interface ChessBoardOps {
         position: Position,
         player: Player,
     ): Int
-
-    fun getKingPosition(player: Player): Position
 }

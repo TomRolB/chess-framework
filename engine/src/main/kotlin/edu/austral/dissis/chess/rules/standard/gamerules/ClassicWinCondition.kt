@@ -6,13 +6,13 @@ import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PlayerState
 import edu.austral.dissis.chess.engine.WinCondition
-import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.getPlayerState
 import edu.austral.dissis.chess.engine.not
 
 class ClassicWinCondition : WinCondition {
     override fun getGameResult(
-        board: ChessBoard,
+        board: GameBoard,
         play: Play,
         player: Player,
     ): PlayResult {
