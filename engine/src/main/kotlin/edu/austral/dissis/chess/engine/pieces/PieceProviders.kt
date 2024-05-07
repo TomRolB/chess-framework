@@ -4,12 +4,12 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.CapablancaPieceTypes.ARCHBISHOP
 import edu.austral.dissis.chess.engine.pieces.CapablancaPieceTypes.CHANCELLOR
-import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.PAWN
-import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.ROOK
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.BISHOP
-import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.QUEEN
-import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KNIGHT
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KING
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KNIGHT
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.PAWN
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.QUEEN
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.ROOK
 import edu.austral.dissis.chess.rules.NoSelfCheckInValidPlays
 import edu.austral.dissis.chess.rules.castling.Castling
 import edu.austral.dissis.chess.rules.pieces.CombinedRules
@@ -42,56 +42,56 @@ fun getRook(player: Player) =
         type = ROOK,
         player = player,
         rules =
-        getRookRules(player),
+            getRookRules(player),
     )
 
 private fun getRookRules(player: Player) =
     NoSelfCheckInValidPlays(
-    player = player,
-    subRule =
-    FinalPositionContainsPieceOfPlayer(
-        player,
-        shouldContain = false,
-        onFailMessage = FRIENDLY_FIRE_MESSAGE,
+        player = player,
         subRule =
-        Update(
-            updater = HasMovedUpdater(),
-            subRule =
-            CombinedRules(
-                PathMovementRules(0 to 1),
-                PathMovementRules(0 to -1),
-                PathMovementRules(1 to 0),
-                PathMovementRules(-1 to 0),
-            )
-        ),
-    ),
-)
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
+                onFailMessage = FRIENDLY_FIRE_MESSAGE,
+                subRule =
+                    Update(
+                        updater = HasMovedUpdater(),
+                        subRule =
+                            CombinedRules(
+                                PathMovementRules(0 to 1),
+                                PathMovementRules(0 to -1),
+                                PathMovementRules(1 to 0),
+                                PathMovementRules(-1 to 0),
+                            ),
+                    ),
+            ),
+    )
 
 fun getBishop(player: Player) =
     Piece(
         type = BISHOP,
         player = player,
         rules =
-        getBishopRules(player),
+            getBishopRules(player),
     )
 
 private fun getBishopRules(player: Player) =
     NoSelfCheckInValidPlays(
-    player = player,
-    subRule =
-    FinalPositionContainsPieceOfPlayer(
-        player,
-        shouldContain = false,
-        onFailMessage = FRIENDLY_FIRE_MESSAGE,
+        player = player,
         subRule =
-        CombinedRules(
-            PathMovementRules(1 to 1),
-            PathMovementRules(1 to -1),
-            PathMovementRules(-1 to 1),
-            PathMovementRules(-1 to -1),
-        )
-    ),
-)
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
+                onFailMessage = FRIENDLY_FIRE_MESSAGE,
+                subRule =
+                    CombinedRules(
+                        PathMovementRules(1 to 1),
+                        PathMovementRules(1 to -1),
+                        PathMovementRules(-1 to 1),
+                        PathMovementRules(-1 to -1),
+                    ),
+            ),
+    )
 
 fun getQueen(player: Player) =
     Piece(
@@ -100,8 +100,8 @@ fun getQueen(player: Player) =
         rules =
             CombinedRules(
                 getRookRules(player),
-                getBishopRules(player)
-            )
+                getBishopRules(player),
+            ),
     )
 
 fun getKnight(player: Player) =
@@ -109,29 +109,30 @@ fun getKnight(player: Player) =
         KNIGHT,
         player = player,
         rules =
-        getKnightRules(player),
+            getKnightRules(player),
     )
 
-private fun getKnightRules(player: Player) = NoSelfCheckInValidPlays(
-    player = player,
-    subRule =
-    FinalPositionContainsPieceOfPlayer(
-        player,
-        shouldContain = false,
-        onFailMessage = FRIENDLY_FIRE_MESSAGE,
+private fun getKnightRules(player: Player) =
+    NoSelfCheckInValidPlays(
+        player = player,
         subRule =
-        CombinedRules(
-            IncrementalMovement(2, 1),
-            IncrementalMovement(1, 2),
-            IncrementalMovement(-1, 2),
-            IncrementalMovement(-2, 1),
-            IncrementalMovement(-2, -1),
-            IncrementalMovement(-1, -2),
-            IncrementalMovement(1, -2),
-            IncrementalMovement(2, -1),
-        ),
-    ),
-)
+            FinalPositionContainsPieceOfPlayer(
+                player,
+                shouldContain = false,
+                onFailMessage = FRIENDLY_FIRE_MESSAGE,
+                subRule =
+                    CombinedRules(
+                        IncrementalMovement(2, 1),
+                        IncrementalMovement(1, 2),
+                        IncrementalMovement(-1, 2),
+                        IncrementalMovement(-2, 1),
+                        IncrementalMovement(-2, -1),
+                        IncrementalMovement(-1, -2),
+                        IncrementalMovement(1, -2),
+                        IncrementalMovement(2, -1),
+                    ),
+            ),
+    )
 
 private const val PAWN_DIAGONAL_MESSAGE = "Can only move diagonally to take an enemy piece"
 
@@ -160,7 +161,7 @@ fun getPawn(player: Player) =
                                                 subRule =
                                                     CombinedRules(
                                                         NoPieceAtFinalPosition(
-                                                            subRule = IncrementalMovement(1, 0, player)
+                                                            subRule = IncrementalMovement(1, 0, player),
                                                         ),
                                                         FinalPositionContainsPieceOfPlayer(
                                                             !player,
@@ -223,8 +224,8 @@ fun getChancellor(player: Player) =
         rules =
             CombinedRules(
                 getRookRules(player),
-                getKnightRules(player)
-            )
+                getKnightRules(player),
+            ),
     )
 
 fun getArchbishop(player: Player) =
@@ -232,8 +233,8 @@ fun getArchbishop(player: Player) =
         ARCHBISHOP,
         player,
         rules =
-        CombinedRules(
-            getBishopRules(player),
-            getKnightRules(player)
-        )
+            CombinedRules(
+                getBishopRules(player),
+                getKnightRules(player),
+            ),
     )

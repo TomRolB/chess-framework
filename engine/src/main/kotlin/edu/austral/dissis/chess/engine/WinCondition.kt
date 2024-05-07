@@ -6,6 +6,6 @@ interface WinCondition {
     fun getGameResult(
         board: ChessBoard,
         play: Play,
-        player: Player
+        player: Player,
     ): PlayResult
 }

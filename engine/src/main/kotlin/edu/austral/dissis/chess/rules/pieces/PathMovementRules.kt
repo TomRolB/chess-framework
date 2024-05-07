@@ -36,8 +36,10 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
     }
 
     fun isViolated(moveData: MovementData): Boolean {
-        return !(areVectorsParallel(moveData, increments)
-                && doVectorsShareOrientation(moveData, increments))
+        return !(
+            areVectorsParallel(moveData, increments) &&
+                doVectorsShareOrientation(moveData, increments)
+        )
     }
 
     private fun areVectorsParallel(
@@ -45,7 +47,10 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
         it: Pair<Int, Int>,
     ) = moveData.colDelta * it.first == moveData.rowDelta * it.second
 
-    private fun doVectorsShareOrientation(moveData: MovementData, increment: Pair<Int, Int>): Boolean {
+    private fun doVectorsShareOrientation(
+        moveData: MovementData,
+        increment: Pair<Int, Int>,
+    ): Boolean {
         return moveData.rowDelta.sign == increment.first.sign
     }
 

@@ -12,7 +12,7 @@ class ClassicPrePlayValidator : PrePlayValidator {
         board: ChessBoard,
         from: Position,
         to: Position,
-        player: Player
+        player: Player,
     ): PlayResult? {
         return when {
             !board.containsPieceOfPlayer(from, player) ->
@@ -23,12 +23,15 @@ class ClassicPrePlayValidator : PrePlayValidator {
         }
     }
 
-    private fun getViolationResult(board: ChessBoard, message: String): PlayResult {
+    private fun getViolationResult(
+        board: ChessBoard,
+        message: String,
+    ): PlayResult {
         return PlayResult(
             board,
             null,
             EngineResult.GENERAL_MOVE_VIOLATION,
-            message
+            message,
         )
     }
 }

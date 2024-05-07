@@ -5,13 +5,13 @@ import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.GameData
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.turns.TurnManager
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.HashChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KING
 import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.turns.TurnManager
 import edu.austral.dissis.chess.rules.RuleChain
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPosition

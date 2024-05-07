@@ -21,7 +21,7 @@ class BoardBuilder {
         validator: PositionValidator,
         pieces: List<Pair<Position, Piece>>,
         whiteKingPosition: Position?,
-        blackKingPosition: Position?
+        blackKingPosition: Position?,
     ) {
         this.validator = validator
         this.piecesWithPositions = pieces
@@ -29,44 +29,48 @@ class BoardBuilder {
         this.blackKingPosition = blackKingPosition
     }
 
-    fun fillRow(row: Int, pieces: List<Piece>): BoardBuilder {
+    fun fillRow(
+        row: Int,
+        pieces: List<Piece>,
+    ): BoardBuilder {
         var blackKingPosition: Position? = this.blackKingPosition
         var whiteKingPosition: Position? = this.whiteKingPosition
 
-        val rowPiecesWithPositions = pieces.mapIndexed {
-            idx, piece ->
-            val col = idx + 1
+        val rowPiecesWithPositions =
+            pieces.mapIndexed {
+                    idx, piece ->
+                val col = idx + 1
 
-            require (validator.positionExists(Position(row, col))) {
-                "Cannot fill row: trying to set piece at ($row, $col), which is off-limits"
-            }
-
-            val position = Position(row, col)
-
-            if (piece.type == KING) {
-                when (piece.player) {
-                    Player.BLACK -> blackKingPosition = position
-                    Player.WHITE -> whiteKingPosition = position
+                require(validator.positionExists(Position(row, col))) {
+                    "Cannot fill row: trying to set piece at ($row, $col), which is off-limits"
                 }
-            }
 
-            position to piece
-        }
+                val position = Position(row, col)
+
+                if (piece.type == KING) {
+                    when (piece.player) {
+                        Player.BLACK -> blackKingPosition = position
+                        Player.WHITE -> whiteKingPosition = position
+                    }
+                }
+
+                position to piece
+            }
 
         return BoardBuilder(
             validator,
             piecesWithPositions + rowPiecesWithPositions,
             whiteKingPosition,
-            blackKingPosition
+            blackKingPosition,
         )
     }
 
     fun build(): HashChessBoard {
-        check (whiteKingPosition != null) {
+        check(whiteKingPosition != null) {
             "No white king was passed"
         }
 
-        check (blackKingPosition != null) {
+        check(blackKingPosition != null) {
             "No black king was passed"
         }
 

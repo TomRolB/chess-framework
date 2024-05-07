@@ -2,16 +2,16 @@ package edu.austral.dissis.chess.engine.pieces
 
 interface PieceType
 
-enum class ClassicPieceType: PieceType {
+enum class ClassicPieceType : PieceType {
     PAWN,
     ROOK,
     BISHOP,
     QUEEN,
     KNIGHT,
-    KING
+    KING,
 }
 
-enum class CapablancaPieceTypes: PieceType {
+enum class CapablancaPieceTypes : PieceType {
     ARCHBISHOP,
-    CHANCELLOR
+    CHANCELLOR,
 }

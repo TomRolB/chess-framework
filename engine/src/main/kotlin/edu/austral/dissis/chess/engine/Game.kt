@@ -49,4 +49,3 @@ enum class EngineResult {
     TIE_BY_BLACK,
     VALID_MOVE,
 }
-

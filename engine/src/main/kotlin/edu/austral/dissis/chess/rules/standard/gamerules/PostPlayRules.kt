@@ -1,8 +1,8 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.ChessBoard
@@ -16,7 +16,6 @@ class PostPlayRules(
     val validator: PostPlayValidator,
     val next: RuleChain<Pair<Play, ChessBoard>, PlayResult>,
 ) : RuleChain<Play, PlayResult> {
-
     override fun verify(arg: Play): PlayResult {
         val board = arg.execute()
 

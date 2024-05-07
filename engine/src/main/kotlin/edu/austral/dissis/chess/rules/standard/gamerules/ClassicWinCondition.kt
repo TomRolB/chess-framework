@@ -1,8 +1,8 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PlayerState
 import edu.austral.dissis.chess.engine.WinCondition
@@ -14,7 +14,7 @@ class ClassicWinCondition : WinCondition {
     override fun getGameResult(
         board: ChessBoard,
         play: Play,
-        player: Player
+        player: Player,
     ): PlayResult {
         val enemyState = getPlayerState(board, !player)
 

@@ -1,6 +1,5 @@
 package edu.austral.dissis.chess.rules.standard.gamerules
 
-import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PrePlayValidator
@@ -22,28 +21,8 @@ class PrePlayRules(
         val resultOnViolation = validator.getResultOnViolation(board, from, to, player)
 
         return resultOnViolation ?: let {
-                val piece = board.getPieceAt(from)!!
-                next.verify(piece)
+            val piece = board.getPieceAt(from)!!
+            next.verify(piece)
         }
-
-//        return when {
-//            !board.containsPieceOfPlayer(from, player) ->
-//                getViolationResult("This tile does not contain a piece of yours")
-//            (from == to) ->
-//                getViolationResult("Cannot stay in the same place")
-//            else -> {
-//                val piece = board.getPieceAt(from)!!
-//                next.verify(piece)
-//            }
-//        }
-    }
-
-    private fun getViolationResult(message: String): PlayResult {
-        return PlayResult(
-            board,
-            null,
-            EngineResult.GENERAL_MOVE_VIOLATION,
-            message
-        )
     }
 }

@@ -29,25 +29,27 @@ import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getClassicEngine(): StandardGameEngine {
     val validator = RectangleBoardValidator(8, 8)
-    val board = getInitialBoard(validator)
+    val board = getClassicInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
 
-    val gameRules = StandardGameRules(
-        ClassicPrePlayValidator(),
-        ClassicPostPlayValidator(),
-        ClassicWinCondition()
-    )
+    val gameRules =
+        StandardGameRules(
+            ClassicPrePlayValidator(),
+            ClassicPostPlayValidator(),
+            ClassicWinCondition(),
+        )
 
     val game = Game(gameRules, board, OneToOneTurnManager())
 
     return StandardGameEngine(game, validator, pieceAdapter)
 }
 
-private fun getInitialBoard(validator: PositionValidator) =
+fun getClassicInitialBoard(validator: PositionValidator) =
     BoardBuilder(validator)
         .fillRow(
-            1, listOf(
+            1,
+            listOf(
                 getRook(WHITE),
                 getKnight(WHITE),
                 getBishop(WHITE),
@@ -56,12 +58,13 @@ private fun getInitialBoard(validator: PositionValidator) =
                 getBishop(WHITE),
                 getKnight(WHITE),
                 getRook(WHITE),
-            )
+            ),
         )
         .fillRow(2, List(8) { getPawn(WHITE) })
         .fillRow(7, List(8) { getPawn(BLACK) })
         .fillRow(
-            8, listOf(
+            8,
+            listOf(
                 getRook(BLACK),
                 getKnight(BLACK),
                 getBishop(BLACK),
@@ -70,7 +73,7 @@ private fun getInitialBoard(validator: PositionValidator) =
                 getBishop(BLACK),
                 getKnight(BLACK),
                 getRook(BLACK),
-            )
+            ),
         )
         .build()
 

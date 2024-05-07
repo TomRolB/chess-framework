@@ -4,5 +4,5 @@ interface PieceState
 
 enum class ClassicPieceState : PieceState {
     MOVED,
-    MOVED_TWO_PLACES
+    MOVED_TWO_PLACES,
 }

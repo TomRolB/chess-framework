@@ -10,7 +10,7 @@ import edu.austral.dissis.chess.rules.RuleChain
 class StandardGameRules(
     val prePlayValidator: PrePlayValidator,
     val postPlayValidator: PostPlayValidator,
-    val winCondition: WinCondition
+    val winCondition: WinCondition,
 ) : RuleChain<GameData, PlayResult> {
     override fun verify(arg: GameData): PlayResult {
         val board = arg.board
@@ -40,7 +40,7 @@ class StandardGameRules(
                                 next =
                                     GameOverRules(
                                         playerOnTurn,
-                                        winCondition
+                                        winCondition,
                                     ),
                             ),
                     ),

@@ -1,7 +1,5 @@
 package edu.austral.dissis.chess.ui
 
-import edu.austral.dissis.chess.engine.variants.getCapablancaEngine
-import edu.austral.dissis.chess.engine.variants.getClassicEngine
 import edu.austral.dissis.chess.engine.variants.getExtinctionEngine
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.DefaultImageResolver
@@ -34,6 +32,5 @@ class ChessGameApplication : Application() {
     companion object {
         // TODO: All below is weird. Should define a better way of creating boards with pieces
         const val GAME_TITLE = "Chess"
-
     }
 }

@@ -37,11 +37,12 @@ fun getCapablancaEngine(): StandardGameEngine {
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
 
-    val gameRules = StandardGameRules(
-        ClassicPrePlayValidator(),
-        ClassicPostPlayValidator(),
-        ClassicWinCondition()
-    )
+    val gameRules =
+        StandardGameRules(
+            ClassicPrePlayValidator(),
+            ClassicPostPlayValidator(),
+            ClassicWinCondition(),
+        )
 
     val game = Game(gameRules, board, OneToOneTurnManager())
 
@@ -51,7 +52,8 @@ fun getCapablancaEngine(): StandardGameEngine {
 private fun getInitialBoard(validator: PositionValidator) =
     BoardBuilder(validator)
         .fillRow(
-            1, listOf(
+            1,
+            listOf(
                 getRook(WHITE),
                 getKnight(WHITE),
                 getArchbishop(WHITE),
@@ -62,12 +64,13 @@ private fun getInitialBoard(validator: PositionValidator) =
                 getChancellor(WHITE),
                 getKnight(WHITE),
                 getRook(WHITE),
-            )
+            ),
         )
         .fillRow(2, List(10) { getPawn(WHITE) })
         .fillRow(9, List(10) { getPawn(BLACK) })
         .fillRow(
-            10, listOf(
+            10,
+            listOf(
                 getRook(BLACK),
                 getKnight(BLACK),
                 getArchbishop(BLACK),
@@ -78,7 +81,7 @@ private fun getInitialBoard(validator: PositionValidator) =
                 getChancellor(BLACK),
                 getKnight(BLACK),
                 getRook(BLACK),
-            )
+            ),
         )
         .build()
 

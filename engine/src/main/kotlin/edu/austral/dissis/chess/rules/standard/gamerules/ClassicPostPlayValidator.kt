@@ -6,7 +6,10 @@ import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
 class ClassicPostPlayValidator : PostPlayValidator {
-    override fun isStateInvalid(board: ChessBoard, player: Player): Boolean {
+    override fun isStateInvalid(
+        board: ChessBoard,
+        player: Player,
+    ): Boolean {
         return IsKingChecked(board, player).verify()
     }
 }

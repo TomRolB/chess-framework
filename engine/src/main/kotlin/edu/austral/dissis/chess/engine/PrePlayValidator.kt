@@ -8,6 +8,6 @@ interface PrePlayValidator {
         board: ChessBoard,
         from: Position,
         to: Position,
-        player: Player
+        player: Player,
     ): PlayResult?
 }

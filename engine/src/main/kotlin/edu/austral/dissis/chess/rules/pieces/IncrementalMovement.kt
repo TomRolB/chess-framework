@@ -59,10 +59,11 @@ class IncrementalMovement : PieceRule {
             !isRowDeltaValid || !isColDeltaValid -> PlayResult(null, "Piece cannot move that way")
             !board.positionExists(from) -> PlayResult(null, "Initial position does not exist")
             !board.positionExists(to) -> PlayResult(null, "Final position does not exist")
-            else -> PlayResult(
-                play = Move(from, to, board).asPlay(),
-                message = "Valid play"
-            )
+            else ->
+                PlayResult(
+                    play = Move(from, to, board).asPlay(),
+                    message = "Valid play",
+                )
         }
     }
 }

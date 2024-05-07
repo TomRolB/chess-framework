@@ -1,6 +1,5 @@
 package edu.austral.dissis.chess.engine.exam
 
-import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.custom.CustomGameTester
 import edu.austral.dissis.chess.engine.pieces.Piece
@@ -10,6 +9,7 @@ import edu.austral.dissis.chess.engine.pieces.getKnight
 import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
 import edu.austral.dissis.chess.engine.pieces.getRook
+import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.rules.standard.gamerules.ClassicPostPlayValidator
 import edu.austral.dissis.chess.rules.standard.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.rules.standard.gamerules.ClassicWinCondition
@@ -28,11 +28,12 @@ class Exam {
         return GameTester(
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
-                gameRules = StandardGameRules(
-                    ClassicPrePlayValidator(),
-                    ClassicPostPlayValidator(),
-                    ClassicWinCondition()
-                ),
+                gameRules =
+                    StandardGameRules(
+                        ClassicPrePlayValidator(),
+                        ClassicPostPlayValidator(),
+                        ClassicWinCondition(),
+                    ),
                 turnManager = OneToOneTurnManager(),
             ),
         )
@@ -47,11 +48,12 @@ class Exam {
         return CustomGameTester(
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
-                gameRules = StandardGameRules(
-                    ClassicPrePlayValidator(),
-                    ClassicPostPlayValidator(),
-                    ClassicWinCondition()
-                ),
+                gameRules =
+                    StandardGameRules(
+                        ClassicPrePlayValidator(),
+                        ClassicPostPlayValidator(),
+                        ClassicWinCondition(),
+                    ),
                 turnManager = OneToOneTurnManager(),
             ),
         )

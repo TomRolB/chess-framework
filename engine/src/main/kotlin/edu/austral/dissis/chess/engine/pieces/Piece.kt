@@ -35,7 +35,10 @@ class Piece {
         return "$player $type"
     }
 
-    fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+    fun getValidPlays(
+        board: ChessBoard,
+        position: Position,
+    ): Iterable<Play> {
         return rules.getValidPlays(board, position)
     }
 
