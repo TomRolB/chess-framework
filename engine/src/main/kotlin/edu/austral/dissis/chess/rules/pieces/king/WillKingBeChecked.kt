@@ -22,7 +22,7 @@ class WillKingBeChecked(
         piece: Piece,
         position: Position,
     ): Boolean {
-        return piece.rules.getValidPlays(board, position).all {
+        return piece.getValidPlays(board, position).all {
             val futureBoard = it.execute()
             IsKingChecked(futureBoard, piece.player).verify()
         }

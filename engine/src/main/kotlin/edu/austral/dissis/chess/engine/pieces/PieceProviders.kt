@@ -28,8 +28,6 @@ import edu.austral.dissis.chess.rules.pieces.Update
 //  Consider whether this can be unified somewhere, or if it's better to keep it this way
 //  (for instance, we may want a piece to not be affected by checks at all)
 
-// TODO: could use let{} to avoid nesting
-
 // TODO: How to save nested rules to a class? Simply wrapping it in a piece rule?
 //  Is it really necessary?
 
@@ -144,7 +142,6 @@ fun getKnight(player: Player) =
 private const val PAWN_DIAGONAL_MESSAGE = "Can only move diagonally to take an enemy piece"
 
 fun getPawn(player: Player) =
-// TODO: Promotion
     // TODO: Chaining updates?
     Piece(
         PAWN,

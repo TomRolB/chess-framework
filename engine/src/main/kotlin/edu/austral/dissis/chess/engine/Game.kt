@@ -2,6 +2,7 @@ package edu.austral.dissis.chess.engine
 
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.turns.TurnManager
 import edu.austral.dissis.chess.rules.RuleChain
 
 data class GameData(
@@ -51,28 +52,3 @@ enum class EngineResult {
     VALID_MOVE,
 }
 
-interface TurnManager {
-    fun getTurn(): Player
-
-    fun nextTurn(): TurnManager
-}
-
-class OneToOneTurnManager : TurnManager {
-    private val currentTurn: Player
-
-    constructor () {
-        this.currentTurn = Player.WHITE
-    }
-
-    private constructor(player: Player) {
-        this.currentTurn = player
-    }
-
-    override fun getTurn(): Player {
-        return currentTurn
-    }
-
-    override fun nextTurn(): TurnManager {
-        return OneToOneTurnManager(!currentTurn)
-    }
-}

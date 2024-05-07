@@ -15,7 +15,7 @@ class IsKingChecked(val board: ChessBoard, val player: Player) : Rule<Boolean> {
         return board.getAllPositionsOfPlayer(!player, true).any {
             val enemyPosition: Position = it
             val enemyPiece: Piece = board.getPieceAt(enemyPosition)!!
-            val kingCapture: Play? = enemyPiece.rules.getPlayResult(board, enemyPosition, kingPosition).play
+            val kingCapture: Play? = enemyPiece.getPlayResult(board, enemyPosition, kingPosition).play
 
             kingCapture != null
         }

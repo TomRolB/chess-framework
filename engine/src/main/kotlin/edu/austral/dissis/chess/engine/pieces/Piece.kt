@@ -12,13 +12,9 @@ import edu.austral.dissis.chess.engine.board.Position
 //  necessary, since we are good with polymorphism.
 
 class Piece {
-    // TODO: may have to find some way of replacing string by a class implementing an interface
-    //  (will probably use an enum that implements an interface PieceType)
     val type: PieceType
     val player: Player
     val rules: PieceRule
-
-    // TODO: may have to find some way of replacing strings by classes implementing an interface
     val states: Set<PieceState>
 
     constructor(type: PieceType, player: Player, rules: PieceRule) {
@@ -35,14 +31,22 @@ class Piece {
         this.states = states
     }
 
-    // TODO: may make this class a Proxy of PieceType (which may
-    //  actually be renamed to PieceRules), so that we don't have
-    //  to access the field 'type' each time.
     override fun toString(): String {
         return "$player $type"
     }
 
-    // TODO: May have to change hashCode
+    fun getValidPlays(board: ChessBoard, position: Position): Iterable<Play> {
+        return rules.getValidPlays(board, position)
+    }
+
+    fun getPlayResult(
+        board: ChessBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
+        return rules.getPlayResult(board, from, to)
+    }
+
     override fun hashCode(): Int {
         return (player to type).hashCode()
     }
@@ -75,7 +79,6 @@ interface PieceRule {
         position: Position,
     ): Iterable<Play>
 
-    // TODO: should be renamed to getPlayResult
     fun getPlayResult(
         board: ChessBoard,
         from: Position,

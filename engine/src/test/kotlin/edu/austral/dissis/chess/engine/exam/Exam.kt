@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine.exam
 
-import edu.austral.dissis.chess.engine.OneToOneTurnManager
+import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.custom.CustomGameTester
 import edu.austral.dissis.chess.engine.pieces.Piece

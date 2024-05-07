@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.ui
 
 import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.OneToOneTurnManager
+import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.BoardBuilder
 import edu.austral.dissis.chess.engine.board.PositionValidator
@@ -19,6 +19,7 @@ import edu.austral.dissis.chess.engine.pieces.getKnight
 import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
 import edu.austral.dissis.chess.engine.pieces.getRook
+import edu.austral.dissis.chess.engine.turns.IncrementalTurnManager
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.DefaultImageResolver
 import edu.austral.dissis.chess.gui.GameView
