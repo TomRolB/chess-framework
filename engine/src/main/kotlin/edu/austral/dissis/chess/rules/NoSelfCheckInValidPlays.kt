@@ -23,12 +23,12 @@ class NoSelfCheckInValidPlays(val player: Player, val subRule: PieceRule) : Piec
             }
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult {
-        return subRule.getPlayIfValid(board, from, to)
+        return subRule.getPlayResult(board, from, to)
     }
 
     private fun playLeavesKingChecked(play: Play): Boolean {

@@ -9,7 +9,6 @@ import edu.austral.dissis.chess.test.TestPosition
 
 class ActionAdapter(
     private val pieceAdapter: PieceAdapter,
-    private val postPlayProcedures: (TestBoard) -> TestBoard,
 ) {
     fun applyPlay(
         testBoard: TestBoard,
@@ -18,8 +17,7 @@ class ActionAdapter(
         return if (play == null) {
             testBoard
         } else {
-            val boardAfterPlay = adapt(play, testBoard).execute()
-            postPlayProcedures(boardAfterPlay)
+            adapt(play, testBoard).execute()
         }
     }
 

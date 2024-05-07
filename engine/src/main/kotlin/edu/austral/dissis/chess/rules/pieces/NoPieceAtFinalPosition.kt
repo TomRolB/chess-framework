@@ -20,12 +20,12 @@ class NoPieceAtFinalPosition(val subRule: PieceRule) : PieceRule {
             }
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult {
-        val playResult = subRule.getPlayIfValid(board, from, to)
+        val playResult = subRule.getPlayResult(board, from, to)
 
         // TODO: Could this be more readable?
         return if (playResult.play != null && !board.isOccupied(to)) {

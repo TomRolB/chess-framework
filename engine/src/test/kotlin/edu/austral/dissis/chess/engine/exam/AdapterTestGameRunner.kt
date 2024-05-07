@@ -35,12 +35,11 @@ class AdapterTestGameRunner : TestGameRunner {
     // Lazy constructor to initialize game once withBoard() is called
     constructor(
         pieceAdapter: PieceAdapter,
-        postPlayProcedures: (TestBoard) -> TestBoard,
         gameRules: RuleChain<GameData, GameResult>,
         turnManager: TurnManager,
     ) {
         this.pieceAdapter = pieceAdapter
-        this.actionAdapter = ActionAdapter(pieceAdapter, postPlayProcedures)
+        this.actionAdapter = ActionAdapter(pieceAdapter)
         this.gameRules = gameRules
         this.turnManager = turnManager
     }

@@ -23,8 +23,8 @@ class EnPassant() : PieceRule {
         val upAndRight = Position(position.row + rowDelta, position.col + 1)
 
         return listOfNotNull(
-            getPlayIfValid(board, position, upAndLeft).play,
-            getPlayIfValid(board, position, upAndRight).play,
+            getPlayResult(board, position, upAndLeft).play,
+            getPlayResult(board, position, upAndRight).play,
         )
     }
 
@@ -33,7 +33,7 @@ class EnPassant() : PieceRule {
         position: Position,
     ) = if (board.containsPieceOfPlayer(position, Player.WHITE)) 1 else -1
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
@@ -89,6 +89,6 @@ class EnPassant() : PieceRule {
                 IncrementalMovement(1, 1, player),
                 IncrementalMovement(1, -1, player),
             )
-        return validMovements.getPlayIfValid(board, from, to).play != null
+        return validMovements.getPlayResult(board, from, to).play != null
     }
 }

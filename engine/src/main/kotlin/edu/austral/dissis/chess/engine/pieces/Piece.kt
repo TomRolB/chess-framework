@@ -1,12 +1,9 @@
 package edu.austral.dissis.chess.engine.pieces
 
-import edu.austral.dissis.chess.engine.Move
-import edu.austral.dissis.chess.engine.PathType
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
 // TODO: maybe it's possible to completely decouple rules from Piece.
 //  It would be done by getting the piece type on IsPlayValid and
@@ -79,28 +76,9 @@ interface PieceRule {
     ): Iterable<Play>
 
     // TODO: should be renamed to getPlayResult
-    fun getPlayIfValid(
+    fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult
 }
-
-interface MoveDependantPieceRule : PieceRule {
-    val hasEverMoved: Boolean
-}
-
-fun getValidPlaysFromMoveType(
-    pathType: PathType,
-    board: ChessBoard,
-    position: Position,
-    player: Player,
-) = pathType
-    .getPossiblePositions(board, position)
-    .map {
-        Play(listOf(Move(position, it, board)))
-    }
-    .filter {
-        val futureBoard = it.execute()
-        !IsKingChecked(futureBoard, player).verify()
-    }

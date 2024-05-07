@@ -19,13 +19,13 @@ class CombinedRules(vararg rules: PieceRule) : PieceRule {
         // return first.getValidPlays(board, position) + second.getValidPlays(board, position)
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult {
         for (rule in rules) {
-            val playResult = rule.getPlayIfValid(board, from, to)
+            val playResult = rule.getPlayResult(board, from, to)
             if (playResult.play != null) return playResult
         }
 

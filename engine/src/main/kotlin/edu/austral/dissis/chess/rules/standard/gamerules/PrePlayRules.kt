@@ -18,11 +18,8 @@ class PrePlayRules(
 ) : Rule<GameResult> {
     override fun verify(): GameResult {
         return when {
-//            !board.positionExists(from) -> "Starting position does not exist"
-//            !board.positionExists(to) -> "Final position does not exist"
             !board.containsPieceOfPlayer(from, player) -> "This tile does not contain a piece of yours"
             (from == to) -> "Cannot stay in the same place"
-//            board.containsPieceOfPlayer(to, player) -> "Cannot move over piece of yours"
             else -> null
         }
             ?.let { GameResult(board, null, EngineResult.GENERAL_MOVE_VIOLATION, it) }

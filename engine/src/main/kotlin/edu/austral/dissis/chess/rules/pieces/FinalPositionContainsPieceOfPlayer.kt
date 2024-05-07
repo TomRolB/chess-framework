@@ -26,12 +26,12 @@ class FinalPositionContainsPieceOfPlayer(
             }
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult {
-        val playResult = subRule.getPlayIfValid(board, from, to)
+        val playResult = subRule.getPlayResult(board, from, to)
 
         // TODO: Could this be more readable?
         return if (

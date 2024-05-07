@@ -10,6 +10,7 @@ import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import kotlin.math.sign
 
+// TODO: Would jumping work?
 class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
     override fun getValidPlays(
         board: ChessBoard,
@@ -21,7 +22,7 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
             }
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,

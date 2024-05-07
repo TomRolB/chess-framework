@@ -11,7 +11,6 @@ import edu.austral.dissis.chess.engine.pieces.getPawn
 import edu.austral.dissis.chess.engine.pieces.getQueen
 import edu.austral.dissis.chess.engine.pieces.getRook
 import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
-import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPiece
 import edu.austral.dissis.chess.test.game.GameTester
 import org.junit.jupiter.api.DynamicTest
@@ -26,7 +25,6 @@ class Exam {
         return GameTester(
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getPieceTypes()),
-                postPlayProcedures = promotePawns(),
                 gameRules = StandardGameRules(),
                 turnManager = OneToOneTurnManager(),
             ),
@@ -44,43 +42,14 @@ class Exam {
                 pieceAdapter = PieceAdapter(getPieceTypes()),
                 gameRules = StandardGameRules(),
                 turnManager = OneToOneTurnManager(),
-                postPlayProcedures = promotePawns(),
             ),
         )
             .test()
 //            .debug("bishop_can_move_to_corner.md")
     }
 
-    private fun promotePawns(): (TestBoard) -> TestBoard {
-        return { testBoard: TestBoard ->
-            TestBoard(
-                testBoard.size,
-                testBoard.pieces.map {
-                    val (pos, piece) = it
-                    if (
-                        pos.row == testBoard.size.rows &&
-                        piece.pieceTypeSymbol == 'P' &&
-                        piece.playerColorSymbol == 'W'
-                    ) {
-                        pos to TestPiece('Q', 'W')
-                    } else if (
-                        pos.row == 0 &&
-                        piece.pieceTypeSymbol == 'P' &&
-                        piece.playerColorSymbol == 'B'
-                    ) {
-                        pos to TestPiece('Q', 'B')
-                    } else {
-                        pos to piece
-                    }
-                }.toMap(),
-            )
-        }
-    }
-
-    // TODO: This is horrible. Should create a Factory?
     private fun getPieceTypes(): Map<() -> Piece, TestPiece> {
-        return listOf(Player.WHITE, Player.BLACK)
-            .zip(listOf('W', 'B'))
+        return listOf(Player.WHITE to 'W', Player.BLACK to 'B')
             .flatMap {
                 listOf(
                     { getPawn(it.first) } to TestPiece('P', it.second),

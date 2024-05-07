@@ -14,7 +14,7 @@ class Promote(val subRule: PieceRule) : PieceRule {
         TODO("Not yet implemented")
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,

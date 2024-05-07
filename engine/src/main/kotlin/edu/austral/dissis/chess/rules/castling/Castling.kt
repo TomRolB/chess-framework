@@ -19,12 +19,12 @@ class Castling : PieceRule {
         position: Position,
     ): Iterable<Play> {
         return listOfNotNull(
-            getPlayIfValid(board, position, Position(position.row, C_COLUMN)).play,
-            getPlayIfValid(board, position, Position(position.row, G_COLUMN)).play,
+            getPlayResult(board, position, Position(position.row, C_COLUMN)).play,
+            getPlayResult(board, position, Position(position.row, G_COLUMN)).play,
         )
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,

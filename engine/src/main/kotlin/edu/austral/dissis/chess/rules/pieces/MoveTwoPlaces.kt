@@ -23,7 +23,7 @@ class MoveTwoPlaces(
         position: Position,
     ): Iterable<Play> {
         val destination = Position(position.row + subRule.rowDelta, position.col + subRule.colDelta)
-        val play = getPlayIfValid(board, position, destination).play
+        val play = getPlayResult(board, position, destination).play
 
         return if (play == null) {
             emptyList()
@@ -32,14 +32,14 @@ class MoveTwoPlaces(
         }
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult {
         val moveData = MovementData(from, to, board, player)
         val hasEverMoved = board.getPieceAt(from)!!.hasState("moved")
-        val result = subRule.getPlayIfValid(board, from, to)
+        val result = subRule.getPlayResult(board, from, to)
 
         // TODO: turn into normal boolean conditions?
         val conditions =

@@ -16,12 +16,12 @@ class Update(val updater: PlayUpdater, val subRule: PieceRule) : PieceRule {
             .map { updater.update(it, board) }
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
     ): PlayResult {
-        val result = subRule.getPlayIfValid(board, from, to)
+        val result = subRule.getPlayResult(board, from, to)
 
         return if (result.play == null) {
             result

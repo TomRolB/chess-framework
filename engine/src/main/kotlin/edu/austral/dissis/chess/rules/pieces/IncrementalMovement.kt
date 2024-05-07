@@ -34,13 +34,13 @@ class IncrementalMovement : PieceRule {
     ): Iterable<Play> {
         val to = Position(position.row + rowDelta, position.col + colDelta)
 
-        return getPlayIfValid(board, position, to)
+        return getPlayResult(board, position, to)
             .play
             ?.let { listOf(it) }
             ?: emptyList()
     }
 
-    override fun getPlayIfValid(
+    override fun getPlayResult(
         board: ChessBoard,
         from: Position,
         to: Position,
@@ -54,16 +54,15 @@ class IncrementalMovement : PieceRule {
 
         val isRowDeltaValid = moveData.rowDelta == rowDelta
         val isColDeltaValid = moveData.colDelta == colDelta
-        val isPlayValid = (
-            isRowDeltaValid &&
-                isColDeltaValid &&
-                board.positionExists(from) &&
-                board.positionExists(to)
-        )
 
-        return PlayResult(
-            play = Move(from, to, board).asPlay().takeIf { isPlayValid },
-            message = if (isPlayValid) "Valid play" else "Piece cannot move this way",
-        )
+        return when {
+            !isRowDeltaValid || !isColDeltaValid -> PlayResult(null, "Piece cannot move that way")
+            !board.positionExists(from) -> PlayResult(null, "Initial position does not exist")
+            !board.positionExists(to) -> PlayResult(null, "Final position does not exist")
+            else -> PlayResult(
+                play = Move(from, to, board).asPlay(),
+                message = "Valid play"
+            )
+        }
     }
 }

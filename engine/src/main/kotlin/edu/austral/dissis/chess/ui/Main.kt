@@ -3,8 +3,9 @@ package edu.austral.dissis.chess.ui
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.OneToOneTurnManager
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.board.HashChessBoard
+import edu.austral.dissis.chess.engine.board.BoardBuilder
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.getBishop
@@ -47,7 +48,6 @@ class ChessGameApplication : Application() {
         private val ONE_TO_EIGHT = 1..8
         private val WHITE_PIECES = getFromPlayer(1, 2, Player.WHITE)
         private val BLACK_PIECES = getFromPlayer(8, 7, Player.BLACK)
-        private val VALIDATOR = RectangleBoardValidator(8, 8)
         private val WK_POSITION = Position(1, 5)
         private val BK_POSITION = Position(8, 5)
 
@@ -118,19 +118,52 @@ class ChessGameApplication : Application() {
         }
 
         private fun getEngine(): StandardGameEngine {
+            val validator = RectangleBoardValidator(8, 8)
             val board =
-                HashChessBoard.build(
-                    validator = VALIDATOR,
-                    pieces = getInitialPieces(),
-                    whiteKingPosition = WK_POSITION,
-                    blackKingPosition = BK_POSITION,
-                )
+//                HashChessBoard.build(
+//                    validator = VALIDATOR,
+//                    pieces = getInitialPieces(),
+//                    whiteKingPosition = WK_POSITION,
+//                    blackKingPosition = BK_POSITION,
+//                )
+                getInitialBoard(validator)
+
             val pieceAdapter = UiPieceAdapter(getPieceIdMap())
-            val postPlayProcedures = getPostPlayProcedures(VALIDATOR)
+            val postPlayProcedures = getPostPlayProcedures(validator)
 
             val game = Game(StandardGameRules(), board, OneToOneTurnManager())
 
-            return StandardGameEngine(game, VALIDATOR, pieceAdapter, postPlayProcedures)
+            return StandardGameEngine(game, validator, pieceAdapter, postPlayProcedures)
         }
+
+        private fun getInitialBoard(validator: PositionValidator) =
+            BoardBuilder(validator)
+            .fillRow(
+                1, listOf(
+                    getRook(Player.WHITE),
+                    getKnight(Player.WHITE),
+                    getBishop(Player.WHITE),
+                    getQueen(Player.WHITE),
+                    getKing(Player.WHITE),
+                    getBishop(Player.WHITE),
+                    getKnight(Player.WHITE),
+                    getRook(Player.WHITE),
+                )
+            )
+            .fillRow(2, List(8) { getPawn(Player.WHITE) })
+            .fillRow(7, List(8) { getPawn(Player.BLACK) })
+            .fillRow(
+                8, listOf(
+                    getRook(Player.BLACK),
+                    getKnight(Player.BLACK),
+                    getBishop(Player.BLACK),
+                    getQueen(Player.BLACK),
+                    getKing(Player.BLACK),
+                    getBishop(Player.BLACK),
+                    getKnight(Player.BLACK),
+                    getRook(Player.BLACK),
+                )
+            )
+            .build()
     }
 }
