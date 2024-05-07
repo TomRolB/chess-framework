@@ -21,7 +21,7 @@ class PostPlayRules(
         val board = arg.execute()
 
         // King should not be checked
-        return if (validator.isStateValid(board, player)) {
+        return if (validator.isStateInvalid(board, player)) {
             GameResult(board, null, EngineResult.POST_PLAY_VIOLATION, "That movement would leave your king checked")
         } else {
             next.verify(arg to board)

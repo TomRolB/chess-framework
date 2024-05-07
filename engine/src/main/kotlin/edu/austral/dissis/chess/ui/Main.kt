@@ -2,6 +2,7 @@ package edu.austral.dissis.chess.ui
 
 import edu.austral.dissis.chess.engine.variants.getCapablancaEngine
 import edu.austral.dissis.chess.engine.variants.getClassicEngine
+import edu.austral.dissis.chess.engine.variants.getExtinctionEngine
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.DefaultImageResolver
 import edu.austral.dissis.chess.gui.GameView
@@ -15,8 +16,10 @@ fun main() {
 }
 
 class ChessGameApplication : Application() {
-//    private val gameEngine = getClassicEngine()
-    private val gameEngine = getCapablancaEngine()
+    private val gameEngine =
+//        getClassicEngine()
+//        getCapablancaEngine()
+        getExtinctionEngine()
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
     override fun start(primaryStage: Stage) {
