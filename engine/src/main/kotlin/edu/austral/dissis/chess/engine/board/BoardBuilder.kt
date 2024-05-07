@@ -2,17 +2,16 @@ package edu.austral.dissis.chess.engine.board
 
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Piece
-import java.lang.IllegalStateException
 
 class BoardBuilder {
     private val validator: PositionValidator
-    private val pieces: List<Pair<Position, Piece>>
+    private val piecesWithPositions: List<Pair<Position, Piece>>
     private val whiteKingPosition: Position?
     private val blackKingPosition: Position?
 
     constructor(validator: PositionValidator) {
         this.validator = validator
-        this.pieces = emptyList()
+        this.piecesWithPositions = emptyList()
         this.whiteKingPosition = null
         this.blackKingPosition = null
     }
@@ -24,26 +23,20 @@ class BoardBuilder {
         blackKingPosition: Position?
     ) {
         this.validator = validator
-        this.pieces = pieces
+        this.piecesWithPositions = pieces
         this.whiteKingPosition = whiteKingPosition
         this.blackKingPosition = blackKingPosition
     }
 
     fun fillRow(row: Int, pieces: List<Piece>): BoardBuilder {
-        for (col in 1..pieces.size) {
-            if (!validator.positionExists(Position(row, col))) {
-                throw IllegalArgumentException(
-                    "Cannot fill row: trying to set piece at ($row, $col), which is off-limits"
-                )
-            }
-        }
+        var blackKingPosition: Position? = this.blackKingPosition
+        var whiteKingPosition: Position? = this.whiteKingPosition
 
-        var blackKingPosition: Position? = null
-        var whiteKingPosition: Position? = null
+        val rowPiecesWithPositions = pieces.mapIndexed {
+            idx, piece ->
+            val col = idx + 1
 
-        val piecesWithPos = pieces.mapIndexed {
-            col, piece ->
-            require (!validator.positionExists(Position(row, col))) {
+            require (validator.positionExists(Position(row, col))) {
                 "Cannot fill row: trying to set piece at ($row, $col), which is off-limits"
             }
 
@@ -59,7 +52,12 @@ class BoardBuilder {
             position to piece
         }
 
-        return BoardBuilder(validator, piecesWithPos, whiteKingPosition, blackKingPosition)
+        return BoardBuilder(
+            validator,
+            piecesWithPositions + rowPiecesWithPositions,
+            whiteKingPosition,
+            blackKingPosition
+        )
     }
 
     fun build(): HashChessBoard {
@@ -71,6 +69,6 @@ class BoardBuilder {
             "No black king was passed"
         }
 
-        return HashChessBoard.build(validator, pieces, whiteKingPosition, blackKingPosition)
+        return HashChessBoard.build(validator, piecesWithPositions, whiteKingPosition, blackKingPosition)
     }
 }
