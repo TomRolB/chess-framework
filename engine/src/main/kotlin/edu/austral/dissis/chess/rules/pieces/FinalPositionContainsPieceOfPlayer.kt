@@ -35,7 +35,7 @@ class FinalPositionContainsPieceOfPlayer(
 
         // TODO: Could this be more readable?
         return if (
-            playResult.play != null &&
+            playResult.play == null ||
             board.containsPieceOfPlayer(to, player) == shouldContain
         ) {
             playResult

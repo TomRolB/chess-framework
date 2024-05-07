@@ -14,21 +14,21 @@ import edu.austral.dissis.chess.engine.board.Position
 class Piece {
     // TODO: may have to find some way of replacing string by a class implementing an interface
     //  (will probably use an enum that implements an interface PieceType)
-    val type: String
+    val type: PieceType
     val player: Player
     val rules: PieceRule
 
     // TODO: may have to find some way of replacing strings by classes implementing an interface
-    val states: Set<String>
+    val states: Set<PieceState>
 
-    constructor(type: String, player: Player, rules: PieceRule) {
+    constructor(type: PieceType, player: Player, rules: PieceRule) {
         this.type = type
         this.player = player
         this.rules = rules
         this.states = emptySet()
     }
 
-    private constructor(type: String, player: Player, rules: PieceRule, states: Set<String>) {
+    private constructor(type: PieceType, player: Player, rules: PieceRule, states: Set<PieceState>) {
         this.type = type
         this.player = player
         this.rules = rules
@@ -52,15 +52,15 @@ class Piece {
             this.hashCode() == other.hashCode()
     }
 
-    fun withState(state: String): Piece {
+    fun withState(state: PieceState): Piece {
         return Piece(type, player, rules, states.plus(state))
     }
 
-    fun withoutState(state: String): Piece {
+    fun withoutState(state: PieceState): Piece {
         return Piece(type, player, rules, states.minus(state))
     }
 
-    fun hasState(state: String): Boolean {
+    fun hasState(state: PieceState): Boolean {
         return state in states
     }
 }

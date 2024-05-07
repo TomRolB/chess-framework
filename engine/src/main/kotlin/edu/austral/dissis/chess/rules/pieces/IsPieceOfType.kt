@@ -1,10 +1,11 @@
 package edu.austral.dissis.chess.rules.pieces
 
 import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.rules.RuleChain
 
 class IsPieceOfType(
-    private val pieceType: String,
+    private val pieceType: PieceType,
     val next: RuleChain<Piece, Boolean>,
 ) : RuleChain<Piece, Boolean> {
     override fun verify(arg: Piece): Boolean {

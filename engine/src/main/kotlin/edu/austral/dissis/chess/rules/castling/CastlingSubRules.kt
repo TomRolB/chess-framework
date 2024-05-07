@@ -2,6 +2,7 @@ package edu.austral.dissis.chess.rules.castling
 
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.rules.All
 import edu.austral.dissis.chess.rules.Not
@@ -19,7 +20,7 @@ class CastlingSubRules(
         val (rookFrom, _) = arg
         val rules =
             All(
-                SimpleRule(!king.hasState("moved")),
+                SimpleRule(!king.hasState(MOVED)),
                 IsRookAvailable(board, rookFrom, king.player),
                 IsKingsPathSafe(king, from, to, board),
                 IsbColumnFree(board, rookFrom),

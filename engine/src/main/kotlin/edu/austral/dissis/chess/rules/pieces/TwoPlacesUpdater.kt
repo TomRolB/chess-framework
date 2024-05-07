@@ -3,6 +3,7 @@ package edu.austral.dissis.chess.rules.pieces
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceState.MOVED_TWO_PLACES
 import kotlin.math.absoluteValue
 
 class TwoPlacesUpdater : PlayUpdater {
@@ -31,10 +32,10 @@ class TwoPlacesUpdater : PlayUpdater {
         board: ChessBoard,
     ): Move {
         return if (movedTwoPlaces(move)) {
-            val pieceNextTurn = move.pieceNextTurn.withState("moved two places")
+            val pieceNextTurn = move.pieceNextTurn.withState(MOVED_TWO_PLACES)
             move.withPiece(pieceNextTurn)
         } else {
-            val pieceNextTurn = move.pieceNextTurn.withoutState("moved two places")
+            val pieceNextTurn = move.pieceNextTurn.withoutState(MOVED_TWO_PLACES)
             move.withPiece(pieceNextTurn)
         }
     }

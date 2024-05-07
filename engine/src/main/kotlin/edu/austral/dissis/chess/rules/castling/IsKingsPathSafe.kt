@@ -4,6 +4,7 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.rules.Rule
 import edu.austral.dissis.chess.rules.pieces.king.IsKingChecked
 
@@ -28,7 +29,7 @@ class IsKingsPathSafe(
             }
 
         return positions
-            .map { Move(from, it, board, pieceNextTurn = king.withState("moved")).execute() }
+            .map { Move(from, it, board, pieceNextTurn = king.withState(MOVED)).execute() }
             .all { futureBoard -> !IsKingChecked(futureBoard, king.player).verify() }
     }
 }

@@ -1,6 +1,7 @@
 package edu.austral.dissis.chess.engine.board
 
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KING
 import edu.austral.dissis.chess.engine.pieces.Piece
 
 class BoardBuilder {
@@ -42,7 +43,7 @@ class BoardBuilder {
 
             val position = Position(row, col)
 
-            if (piece.type == "king") {
+            if (piece.type == KING) {
                 when (piece.player) {
                     Player.BLACK -> blackKingPosition = position
                     Player.WHITE -> whiteKingPosition = position

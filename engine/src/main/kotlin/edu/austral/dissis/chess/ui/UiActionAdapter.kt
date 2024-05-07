@@ -8,7 +8,6 @@ import edu.austral.dissis.chess.gui.Position
 
 class UiActionAdapter(
     private val pieceAdapter: UiPieceAdapter,
-    private val postPlayProcedures: (UiBoard) -> UiBoard,
 ) {
     fun applyPlay(
         board: UiBoard,
@@ -17,8 +16,7 @@ class UiActionAdapter(
         return if (play == null) {
             board
         } else {
-            val boardAfterPlay = adapt(play, board).execute()
-            postPlayProcedures(boardAfterPlay)
+            adapt(play, board).execute()
         }
     }
 

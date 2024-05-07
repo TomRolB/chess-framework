@@ -7,12 +7,13 @@ import edu.austral.dissis.chess.engine.Take
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.not
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.PAWN
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.rules.ContainsPieceOfPlayer
 import edu.austral.dissis.chess.rules.pieces.pawn.EnemyMovedTwoPlaces
 
-class EnPassant() : PieceRule {
+class EnPassant : PieceRule {
     override fun getValidPlays(
         board: ChessBoard,
         position: Position,
@@ -71,7 +72,7 @@ class EnPassant() : PieceRule {
                 !player,
                 next =
                     IsPieceOfType(
-                        pieceType = "pawn",
+                        pieceType = PAWN,
                         next = EnemyMovedTwoPlaces(),
                     ),
             )

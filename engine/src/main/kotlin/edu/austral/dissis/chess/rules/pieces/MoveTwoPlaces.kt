@@ -5,6 +5,7 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.rules.All
@@ -16,7 +17,7 @@ import edu.austral.dissis.chess.rules.pieces.pawn.PawnPathIsBlocked
 class MoveTwoPlaces(
     private val player: Player,
 ) : PieceRule {
-    val subRule = IncrementalMovement(2, 0, player)
+    private val subRule = IncrementalMovement(2, 0, player)
 
     override fun getValidPlays(
         board: ChessBoard,
@@ -38,7 +39,7 @@ class MoveTwoPlaces(
         to: Position,
     ): PlayResult {
         val moveData = MovementData(from, to, board, player)
-        val hasEverMoved = board.getPieceAt(from)!!.hasState("moved")
+        val hasEverMoved = board.getPieceAt(from)!!.hasState(MOVED)
         val result = subRule.getPlayResult(board, from, to)
 
         // TODO: turn into normal boolean conditions?

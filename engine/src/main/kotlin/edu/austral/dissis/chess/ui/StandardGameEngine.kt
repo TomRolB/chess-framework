@@ -21,10 +21,9 @@ class StandardGameEngine(
     private val game: Game,
     private val validator: RectangleBoardValidator,
     private val pieceAdapter: UiPieceAdapter,
-    postPlayProcedures: (UiBoard) -> UiBoard,
 ) : GameEngine {
     var board: UiBoard = mapOf()
-    private val actionAdapter = UiActionAdapter(pieceAdapter, postPlayProcedures)
+    private val actionAdapter = UiActionAdapter(pieceAdapter)
 
     override fun applyMove(move: Move): MoveResult {
         val (from, to) = move

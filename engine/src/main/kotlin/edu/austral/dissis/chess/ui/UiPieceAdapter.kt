@@ -2,11 +2,12 @@ package edu.austral.dissis.chess.ui
 
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.gui.ChessPiece
 import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 
-class UiPieceAdapter(private val pieceIdMap: Map<String, String>) {
+class UiPieceAdapter(private val pieceIdMap: Map<PieceType, String>) {
     fun adapt(
         piece: Piece,
         id: String,

@@ -4,6 +4,7 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.ChessBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.getRook
@@ -42,12 +43,12 @@ class Castling : PieceRule {
 
         return if (rules.verify()) {
             val (rookFrom, rookTo) = listener
-            val movedRook = getRook(king.player).withState("moved")
+            val movedRook = getRook(king.player).withState(MOVED)
 
             PlayResult(
                 Play(
                     listOf(
-                        Move(from, to, board, pieceNextTurn = king.withState("moved")),
+                        Move(from, to, board, pieceNextTurn = king.withState(MOVED)),
                         Move(rookFrom!!, rookTo!!, board, pieceNextTurn = movedRook),
                     ),
                 ),

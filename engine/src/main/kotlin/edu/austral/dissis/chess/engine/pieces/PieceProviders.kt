@@ -2,6 +2,12 @@ package edu.austral.dissis.chess.engine.pieces
 
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.not
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.PAWN
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.ROOK
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.BISHOP
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.QUEEN
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KNIGHT
+import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KING
 import edu.austral.dissis.chess.rules.NoSelfCheckInValidPlays
 import edu.austral.dissis.chess.rules.castling.Castling
 import edu.austral.dissis.chess.rules.pieces.CombinedRules
@@ -33,7 +39,7 @@ private const val FRIENDLY_FIRE_MESSAGE = "Cannot move over ally piece"
 
 fun getRook(player: Player) =
     Piece(
-        type = "rook",
+        type = ROOK,
         player = player,
         rules =
             NoSelfCheckInValidPlays(
@@ -60,7 +66,7 @@ fun getRook(player: Player) =
 
 fun getBishop(player: Player) =
     Piece(
-        type = "bishop",
+        type = BISHOP,
         player = player,
         rules =
             NoSelfCheckInValidPlays(
@@ -83,7 +89,7 @@ fun getBishop(player: Player) =
 
 fun getQueen(player: Player) =
     Piece(
-        type = "queen",
+        type = QUEEN,
         player = player,
         rules =
             NoSelfCheckInValidPlays(
@@ -110,7 +116,7 @@ fun getQueen(player: Player) =
 
 fun getKnight(player: Player) =
     Piece(
-        "knight",
+        KNIGHT,
         player = player,
         rules =
             NoSelfCheckInValidPlays(
@@ -141,7 +147,7 @@ fun getPawn(player: Player) =
 // TODO: Promotion
     // TODO: Chaining updates?
     Piece(
-        "pawn",
+        PAWN,
         player,
         rules =
             NoSelfCheckInValidPlays(
@@ -189,7 +195,7 @@ fun getPawn(player: Player) =
 
 fun getKing(player: Player) =
     Piece(
-        "king",
+        KING,
         player,
         rules =
             NoSelfCheckInValidPlays(

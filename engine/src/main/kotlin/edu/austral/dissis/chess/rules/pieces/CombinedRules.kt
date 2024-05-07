@@ -24,18 +24,17 @@ class CombinedRules(vararg rules: PieceRule) : PieceRule {
         from: Position,
         to: Position,
     ): PlayResult {
+        var playResult = PlayResult(null, "Piece cannot move this way")
+
         for (rule in rules) {
-            val playResult = rule.getPlayResult(board, from, to)
+            playResult = rule.getPlayResult(board, from, to)
             if (playResult.play != null) return playResult
         }
 
-        // TODO: consider returning more descriptive messages
-        return PlayResult(null, "Piece cannot move this way")
+        // TODO: consider actually returning a combination of failure messages
 
-        //        val firstResult = first.getPlayIfValid(board, from, to)
-//
-//        return if (firstResult.play != null) firstResult
-//        // TODO: consider actually returning a combination of failure messages
-//        else second.getPlayIfValid(board, from, to)
+        // TODO: Cannot select last message
+
+        return playResult
     }
 }
