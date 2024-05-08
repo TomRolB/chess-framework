@@ -1,6 +1,13 @@
 package edu.austral.dissis.chess.ui
 
-import edu.austral.dissis.chess.engine.EngineResult
+import edu.austral.dissis.chess.engine.EngineResult.BLACK_WINS
+import edu.austral.dissis.chess.engine.EngineResult.GENERAL_MOVE_VIOLATION
+import edu.austral.dissis.chess.engine.EngineResult.PIECE_VIOLATION
+import edu.austral.dissis.chess.engine.EngineResult.POST_PLAY_VIOLATION
+import edu.austral.dissis.chess.engine.EngineResult.TIE_BY_BLACK
+import edu.austral.dissis.chess.engine.EngineResult.TIE_BY_WHITE
+import edu.austral.dissis.chess.engine.EngineResult.VALID_MOVE
+import edu.austral.dissis.chess.engine.EngineResult.WHITE_WINS
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.gui.BoardSize
@@ -14,6 +21,8 @@ import edu.austral.dissis.chess.gui.MoveResult
 import edu.austral.dissis.chess.gui.NewGameState
 import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
+import edu.austral.dissis.chess.gui.UndoState
+import java.util.*
 
 typealias UiBoard = Map<Position, ChessPiece>
 
@@ -22,8 +31,13 @@ class StandardGameEngine(
     private val validator: RectangleBoardValidator,
     private val pieceAdapter: UiPieceAdapter,
 ) : GameEngine {
-    var uiBoard: UiBoard = mapOf()
+
+    private var uiBoard: UiBoard = mapOf()
     private val actionAdapter = UiActionAdapter(pieceAdapter)
+
+    private val undoStack = Stack<Pair<Game, NewGameState>>()
+    private lateinit var currentState: NewGameState
+    private val redoStack = Stack<Pair<Game, NewGameState>>()
 
     override fun applyMove(move: Move): MoveResult {
         val (from, to) = move
@@ -35,17 +49,21 @@ class StandardGameEngine(
         uiBoard = actionAdapter.applyPlay(uiBoard, play)
 
         return when (engineResult) {
-            EngineResult.GENERAL_MOVE_VIOLATION, EngineResult.PIECE_VIOLATION, EngineResult.POST_PLAY_VIOLATION -> {
+            GENERAL_MOVE_VIOLATION, PIECE_VIOLATION, POST_PLAY_VIOLATION -> {
                 InvalidMove(message)
             }
-            EngineResult.WHITE_WINS, EngineResult.TIE_BY_WHITE -> GameOver(PlayerColor.WHITE)
-            EngineResult.BLACK_WINS, EngineResult.TIE_BY_BLACK -> GameOver(PlayerColor.BLACK)
-            EngineResult.VALID_MOVE -> {
+            WHITE_WINS, TIE_BY_WHITE -> GameOver(PlayerColor.WHITE)
+            BLACK_WINS, TIE_BY_BLACK -> GameOver(PlayerColor.BLACK)
+            VALID_MOVE -> {
+                undoStack.push(game to currentState)
+                redoStack.clear()
+
                 this.game = newGame
 
                 NewGameState(
                     pieces = uiBoard.values.toList(),
                     currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
+                    undoState = UndoState(canUndo = true, canRedo = false)
                 )
             }
         }
@@ -63,10 +81,58 @@ class StandardGameEngine(
                     chessPiece.position to chessPiece
                 }
 
+        currentState = NewGameState(
+            pieces = uiBoard.values.toList(),
+            currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
+            undoState = UndoState(canUndo = false, canRedo = false)
+        )
+
         return InitialState(
             boardSize = BoardSize(validator.numberRows, validator.numberCols),
             pieces = uiBoard.values.toList(),
             currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
         )
+    }
+
+    //TODO: see if code below can be simplified
+
+    override fun redo(): NewGameState {
+        val undoState = UndoState(
+            canRedo = !redoStack.isEmpty(),
+            canUndo = true,
+        )
+
+        undoStack.push(game to currentState)
+        val (redoGame, redoState) = redoStack.pop()
+        game = redoGame
+        uiBoard = redoState.pieces.associateBy { it.position }
+
+        currentState = NewGameState(
+            pieces = redoState.pieces,
+            currentPlayer = redoState.currentPlayer,
+            undoState
+        )
+
+        return currentState
+    }
+
+    override fun undo(): NewGameState {
+        val undoState = UndoState(
+            canRedo = true,
+            canUndo = !undoStack.isEmpty(),
+        )
+
+        redoStack.push(game to currentState)
+        val (undoGame, stackState) = undoStack.pop()
+        game = undoGame
+        uiBoard = stackState.pieces.associateBy { it.position }
+
+        currentState = NewGameState(
+            pieces = stackState.pieces,
+            currentPlayer = stackState.currentPlayer,
+            undoState
+        )
+
+        return currentState
     }
 }
