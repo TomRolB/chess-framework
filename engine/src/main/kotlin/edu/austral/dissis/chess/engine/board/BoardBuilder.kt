@@ -1,10 +1,8 @@
 package edu.austral.dissis.chess.engine.board
 
-import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KING
+import edu.austral.dissis.chess.chess.board.HashChessBoard
 import edu.austral.dissis.chess.engine.pieces.Piece
 
-//TODO: decouple from the kings' positions
 class BoardBuilder {
     private val validator: PositionValidator
     private val piecesWithPositions: List<Pair<Position, Piece>>

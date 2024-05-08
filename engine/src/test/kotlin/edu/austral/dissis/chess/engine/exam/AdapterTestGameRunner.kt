@@ -1,15 +1,15 @@
 package edu.austral.dissis.chess.engine.exam
 
+import edu.austral.dissis.chess.chess.board.HashChessBoard
+import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KING
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.GameData
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
-import edu.austral.dissis.chess.engine.board.HashChessBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
-import edu.austral.dissis.chess.engine.pieces.ClassicPieceType.KING
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.turns.TurnManager
 import edu.austral.dissis.chess.rules.RuleChain

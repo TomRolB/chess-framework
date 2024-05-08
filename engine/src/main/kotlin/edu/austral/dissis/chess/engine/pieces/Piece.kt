@@ -1,5 +1,6 @@
 package edu.austral.dissis.chess.engine.pieces
 
+import edu.austral.dissis.chess.chess.pieces.PieceState
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard

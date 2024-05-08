@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.ui
 
-import edu.austral.dissis.chess.engine.variants.getClassicEngine
-import edu.austral.dissis.chess.engine.variants.getExtinctionEngine
+import edu.austral.dissis.chess.chess.variants.getClassicEngine
+import edu.austral.dissis.chess.chess.variants.getExtinctionEngine
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.DefaultImageResolver
 import edu.austral.dissis.chess.gui.GameView
