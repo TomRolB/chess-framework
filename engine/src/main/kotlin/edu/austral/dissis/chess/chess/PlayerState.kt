@@ -2,8 +2,8 @@ package edu.austral.dissis.chess.chess
 
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.chess.engine.rules.king.WillKingBeChecked
 import edu.austral.dissis.chess.chess.rules.king.IsKingChecked
-import edu.austral.dissis.chess.chess.rules.king.WillKingBeChecked
 
 enum class PlayerState {
     NORMAL,

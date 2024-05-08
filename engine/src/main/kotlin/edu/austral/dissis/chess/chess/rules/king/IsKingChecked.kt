@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.rules.Rule
+import edu.austral.dissis.chess.engine.rules.Rule
 
 class IsKingChecked(val board: GameBoard, val player: Player) : Rule<Boolean> {
     override fun verify(): Boolean {

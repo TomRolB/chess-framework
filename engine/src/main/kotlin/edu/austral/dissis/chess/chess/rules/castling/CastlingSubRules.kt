@@ -1,14 +1,13 @@
 package edu.austral.dissis.chess.chess.rules.castling
 
+import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
+import edu.austral.dissis.chess.chess.rules.king.IsKingChecked
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.rules.All
-import edu.austral.dissis.chess.rules.Not
-import edu.austral.dissis.chess.rules.RuleChain
-import edu.austral.dissis.chess.rules.SimpleRule
-import edu.austral.dissis.chess.chess.rules.king.IsKingChecked
+import edu.austral.dissis.chess.engine.rules.Not
+import edu.austral.dissis.chess.engine.rules.RuleChain
+import edu.austral.dissis.chess.engine.rules.SimpleRule
 
 class CastlingSubRules(
     private val king: Piece,
@@ -19,7 +18,7 @@ class CastlingSubRules(
     override fun verify(arg: Pair<Position, Position>): Boolean {
         val (rookFrom, _) = arg
         val rules =
-            All(
+            edu.austral.dissis.chess.engine.rules.All(
                 SimpleRule(!king.hasState(MOVED)),
                 IsRookAvailable(board, rookFrom, king.player),
                 IsKingsPathSafe(king, from, to, board),

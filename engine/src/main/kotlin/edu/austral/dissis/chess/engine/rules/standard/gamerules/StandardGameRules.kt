@@ -1,11 +1,11 @@
-package edu.austral.dissis.chess.rules.standard.gamerules
+package edu.austral.dissis.chess.engine.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.GameData
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.PrePlayValidator
 import edu.austral.dissis.chess.engine.WinCondition
-import edu.austral.dissis.chess.rules.RuleChain
+import edu.austral.dissis.chess.engine.rules.RuleChain
 
 class StandardGameRules(
     val prePlayValidator: PrePlayValidator,

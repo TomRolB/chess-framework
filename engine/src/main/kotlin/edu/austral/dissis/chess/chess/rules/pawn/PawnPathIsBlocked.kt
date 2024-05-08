@@ -3,7 +3,7 @@ package edu.austral.dissis.chess.chess.rules.pawn
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.rules.Rule
+import edu.austral.dissis.chess.engine.rules.Rule
 
 class PawnPathIsBlocked(
     private val board: GameBoard,

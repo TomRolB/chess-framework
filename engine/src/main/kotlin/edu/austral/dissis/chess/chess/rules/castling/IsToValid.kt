@@ -1,8 +1,8 @@
 package edu.austral.dissis.chess.chess.rules.castling
 
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.rules.Rule
-import edu.austral.dissis.chess.rules.RuleChain
+import edu.austral.dissis.chess.engine.rules.Rule
+import edu.austral.dissis.chess.engine.rules.RuleChain
 
 private const val A_COLUMN = 1
 private const val C_COLUMN = 3

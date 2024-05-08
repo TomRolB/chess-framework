@@ -1,18 +1,17 @@
 package edu.austral.dissis.chess.chess.rules
 
+import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
+import edu.austral.dissis.chess.chess.rules.pawn.PawnPathIsBlocked
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
-import edu.austral.dissis.chess.rules.All
-import edu.austral.dissis.chess.rules.Not
-import edu.austral.dissis.chess.rules.SimpleRule
-import edu.austral.dissis.chess.chess.rules.pawn.PawnPathIsBlocked
-import edu.austral.dissis.chess.rules.pieces.IncrementalMovement
+import edu.austral.dissis.chess.engine.rules.Not
+import edu.austral.dissis.chess.engine.rules.SimpleRule
+import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 
 // TODO: could be replaced if MoveType can be passed a limit in a future
 class MoveTwoPlaces(
@@ -45,7 +44,7 @@ class MoveTwoPlaces(
 
         // TODO: turn into normal boolean conditions?
         val conditions =
-            All(
+            edu.austral.dissis.chess.engine.rules.All(
                 SimpleRule(!hasEverMoved),
                 Not(PawnPathIsBlocked(board, moveData)),
             )

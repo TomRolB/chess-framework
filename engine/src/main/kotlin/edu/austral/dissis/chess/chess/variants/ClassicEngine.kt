@@ -22,8 +22,8 @@ import edu.austral.dissis.chess.engine.board.BoardBuilder
 import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
+import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
-import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 

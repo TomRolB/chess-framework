@@ -1,13 +1,19 @@
-package edu.austral.dissis.chess.rules.pieces
+package edu.austral.dissis.chess.engine.rules.pieces
 
 import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.extractMove
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class NoPieceAtFinalPosition(val subRule: PieceRule) : PieceRule {
+class FinalPositionContainsPieceOfPlayer(
+    val player: Player,
+    val shouldContain: Boolean,
+    val onFailMessage: String,
+    val subRule: PieceRule,
+) : PieceRule {
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
@@ -16,7 +22,7 @@ class NoPieceAtFinalPosition(val subRule: PieceRule) : PieceRule {
             .getValidPlays(board, position)
             .filter {
                 val finalPosition = it.extractMove().to
-                !board.isOccupied(finalPosition)
+                board.containsPieceOfPlayer(finalPosition, player) == shouldContain
             }
     }
 
@@ -28,10 +34,13 @@ class NoPieceAtFinalPosition(val subRule: PieceRule) : PieceRule {
         val playResult = subRule.getPlayResult(board, from, to)
 
         // TODO: Could this be more readable?
-        return if (playResult.play != null && !board.isOccupied(to)) {
+        return if (
+            playResult.play == null ||
+            board.containsPieceOfPlayer(to, player) == shouldContain
+        ) {
             playResult
         } else {
-            PlayResult(null, "There is a piece blocking that position")
+            PlayResult(null, onFailMessage)
         }
     }
 }

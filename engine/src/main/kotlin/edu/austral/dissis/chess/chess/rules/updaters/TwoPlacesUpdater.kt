@@ -4,7 +4,7 @@ import edu.austral.dissis.chess.chess.pieces.ClassicPieceState
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
-import edu.austral.dissis.chess.rules.pieces.PlayUpdater
+import edu.austral.dissis.chess.engine.rules.pieces.PlayUpdater
 import kotlin.math.absoluteValue
 
 class TwoPlacesUpdater : PlayUpdater {

@@ -1,6 +1,7 @@
-package edu.austral.dissis.chess.chess.rules.pawn
+package edu.austral.dissis.chess.chess.engine.rules.pawn
 
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.PAWN
+import edu.austral.dissis.chess.chess.rules.pawn.EnemyMovedTwoPlaces
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
@@ -10,10 +11,10 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
-import edu.austral.dissis.chess.rules.ContainsPieceOfPlayer
-import edu.austral.dissis.chess.rules.pieces.CombinedRules
-import edu.austral.dissis.chess.rules.pieces.IncrementalMovement
-import edu.austral.dissis.chess.rules.pieces.IsPieceOfType
+import edu.austral.dissis.chess.engine.rules.ContainsPieceOfPlayer
+import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
+import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
+import edu.austral.dissis.chess.engine.rules.pieces.IsPieceOfType
 
 class EnPassant : PieceRule {
     override fun getValidPlays(

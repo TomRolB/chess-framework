@@ -2,8 +2,8 @@ package edu.austral.dissis.chess.engine
 
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.rules.RuleChain
 import edu.austral.dissis.chess.engine.turns.TurnManager
-import edu.austral.dissis.chess.rules.RuleChain
 
 data class GameData(
     val board: GameBoard,

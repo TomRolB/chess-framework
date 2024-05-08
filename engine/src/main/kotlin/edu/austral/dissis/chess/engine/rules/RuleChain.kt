@@ -1,4 +1,4 @@
-package edu.austral.dissis.chess.rules
+package edu.austral.dissis.chess.engine.rules
 
 /**
 * RuleChain is used for cases where we need to pass information

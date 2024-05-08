@@ -1,4 +1,4 @@
-package edu.austral.dissis.chess.rules.standard.gamerules
+package edu.austral.dissis.chess.engine.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
@@ -6,8 +6,8 @@ import edu.austral.dissis.chess.engine.PrePlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.rules.Rule
-import edu.austral.dissis.chess.rules.RuleChain
+import edu.austral.dissis.chess.engine.rules.Rule
+import edu.austral.dissis.chess.engine.rules.RuleChain
 
 class PrePlayRules(
     val board: GameBoard,

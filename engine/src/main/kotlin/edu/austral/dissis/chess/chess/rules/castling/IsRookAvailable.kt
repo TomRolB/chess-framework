@@ -1,12 +1,12 @@
 package edu.austral.dissis.chess.chess.rules.castling
 
+import edu.austral.dissis.chess.chess.rules.PieceHasNeverMoved
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.rules.ContainsPieceOfPlayer
-import edu.austral.dissis.chess.chess.rules.PieceHasNeverMoved
-import edu.austral.dissis.chess.rules.Rule
-import edu.austral.dissis.chess.rules.Succeed
+import edu.austral.dissis.chess.engine.rules.ContainsPieceOfPlayer
+import edu.austral.dissis.chess.engine.rules.Rule
+import edu.austral.dissis.chess.engine.rules.Succeed
 
 class IsRookAvailable(
     private val board: GameBoard,

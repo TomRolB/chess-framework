@@ -1,10 +1,10 @@
-package edu.austral.dissis.chess.chess.rules
+package edu.austral.dissis.chess.chess.rules.updaters
 
+import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
-import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
-import edu.austral.dissis.chess.rules.pieces.PlayUpdater
+import edu.austral.dissis.chess.engine.rules.pieces.PlayUpdater
 
 class HasMovedUpdater : PlayUpdater {
     override fun update(

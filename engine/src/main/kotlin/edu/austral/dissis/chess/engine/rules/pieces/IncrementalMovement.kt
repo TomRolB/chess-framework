@@ -1,4 +1,4 @@
-package edu.austral.dissis.chess.rules.pieces
+package edu.austral.dissis.chess.engine.rules.pieces
 
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MovementData

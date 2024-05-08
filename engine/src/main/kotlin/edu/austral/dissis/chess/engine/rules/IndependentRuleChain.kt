@@ -1,4 +1,4 @@
-package edu.austral.dissis.chess.rules
+package edu.austral.dissis.chess.engine.rules
 
 class IndependentRuleChain<T> : Rule<T?> {
     val rules: Array<out IndependentRule<T>>

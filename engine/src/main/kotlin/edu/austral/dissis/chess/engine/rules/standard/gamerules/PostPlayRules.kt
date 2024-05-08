@@ -1,4 +1,4 @@
-package edu.austral.dissis.chess.rules.standard.gamerules
+package edu.austral.dissis.chess.engine.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Play
@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.rules.RuleChain
+import edu.austral.dissis.chess.engine.rules.RuleChain
 
 class PostPlayRules(
     val from: Position,

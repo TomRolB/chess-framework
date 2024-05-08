@@ -1,5 +1,6 @@
 package edu.austral.dissis.chess.chess.pieces
 
+import edu.austral.dissis.chess.chess.engine.rules.pawn.EnPassant
 import edu.austral.dissis.chess.chess.pieces.CapablancaPieceTypes.ARCHBISHOP
 import edu.austral.dissis.chess.chess.pieces.CapablancaPieceTypes.CHANCELLOR
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.PAWN
@@ -8,22 +9,21 @@ import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.BISHOP
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.QUEEN
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KNIGHT
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KING
-import edu.austral.dissis.chess.chess.rules.HasMovedUpdater
+import edu.austral.dissis.chess.chess.rules.updaters.HasMovedUpdater
 import edu.austral.dissis.chess.chess.rules.MoveTwoPlaces
 import edu.austral.dissis.chess.chess.rules.NoSelfCheckInValidPlays
 import edu.austral.dissis.chess.chess.rules.castling.Castling
-import edu.austral.dissis.chess.chess.rules.pawn.EnPassant
 import edu.austral.dissis.chess.chess.rules.updaters.PromotionUpdater
 import edu.austral.dissis.chess.chess.rules.updaters.TwoPlacesUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.rules.pieces.CombinedRules
-import edu.austral.dissis.chess.rules.pieces.FinalPositionContainsPieceOfPlayer
-import edu.austral.dissis.chess.rules.pieces.IncrementalMovement
-import edu.austral.dissis.chess.rules.pieces.NoPieceAtFinalPosition
-import edu.austral.dissis.chess.rules.pieces.PathMovementRules
-import edu.austral.dissis.chess.rules.pieces.Update
+import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
+import edu.austral.dissis.chess.engine.rules.pieces.FinalPositionContainsPieceOfPlayer
+import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
+import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
+import edu.austral.dissis.chess.engine.rules.pieces.PathMovementRules
+import edu.austral.dissis.chess.engine.rules.pieces.Update
 
 // TODO: Think how to provide pieces more conveniently
 
@@ -151,40 +151,42 @@ fun getPawn(player: Player) =
                         shouldContain = false,
                         onFailMessage = FRIENDLY_FIRE_MESSAGE,
                         subRule =
-                            Update(
-                                updater = PromotionUpdater(),
-                                subRule =
-                                    Update(
-                                        updater = HasMovedUpdater(),
-                                        subRule =
-                                            Update(
-                                                updater = TwoPlacesUpdater(),
-                                                subRule =
-                                                    CombinedRules(
-                                                        NoPieceAtFinalPosition(
-                                                            subRule = IncrementalMovement(1, 0, player),
-                                                        ),
-                                                        FinalPositionContainsPieceOfPlayer(
-                                                            !player,
-                                                            shouldContain = true,
-                                                            onFailMessage = PAWN_DIAGONAL_MESSAGE,
-                                                            subRule = IncrementalMovement(1, 1, player),
-                                                        ),
-                                                        FinalPositionContainsPieceOfPlayer(
-                                                            !player,
-                                                            shouldContain = true,
-                                                            onFailMessage = PAWN_DIAGONAL_MESSAGE,
-                                                            subRule = IncrementalMovement(1, -1, player),
-                                                        ),
-                                                        EnPassant(),
-                                                        MoveTwoPlaces(player),
-                                                    ),
-                                            ),
-                                    ),
-                            ),
+                        getPawnCoreRules(player),
                     ),
             ),
     )
+
+private fun getPawnCoreRules(player: Player) = Update(
+    updater = PromotionUpdater(),
+    subRule =
+    Update(
+        updater = HasMovedUpdater(),
+        subRule =
+        Update(
+            updater = TwoPlacesUpdater(),
+            subRule =
+            CombinedRules(
+                NoPieceAtFinalPosition(
+                    subRule = IncrementalMovement(1, 0, player),
+                ),
+                FinalPositionContainsPieceOfPlayer(
+                    !player,
+                    shouldContain = true,
+                    onFailMessage = PAWN_DIAGONAL_MESSAGE,
+                    subRule = IncrementalMovement(1, 1, player),
+                ),
+                FinalPositionContainsPieceOfPlayer(
+                    !player,
+                    shouldContain = true,
+                    onFailMessage = PAWN_DIAGONAL_MESSAGE,
+                    subRule = IncrementalMovement(1, -1, player),
+                ),
+                EnPassant(),
+                MoveTwoPlaces(player),
+            ),
+        ),
+    ),
+)
 
 fun getKing(player: Player) =
     Piece(

@@ -27,7 +27,7 @@ import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPostPlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
-import edu.austral.dissis.chess.rules.standard.gamerules.StandardGameRules
+import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
