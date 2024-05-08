@@ -32,7 +32,7 @@ class StandardGameEngine(
     private val pieceAdapter: UiPieceAdapter,
 ) : GameEngine {
 
-    private var uiBoard: UiBoard = mapOf()
+    private var uiBoard: UiBoard = emptyMap()
     private val actionAdapter = UiActionAdapter(pieceAdapter)
 
     private val undoStack = Stack<Pair<Game, NewGameState>>()
@@ -60,11 +60,13 @@ class StandardGameEngine(
 
                 this.game = newGame
 
-                NewGameState(
+                currentState = NewGameState(
                     pieces = uiBoard.values.toList(),
                     currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
                     undoState = UndoState(canUndo = true, canRedo = false)
                 )
+
+                currentState
             }
         }
     }
@@ -97,15 +99,15 @@ class StandardGameEngine(
     //TODO: see if code below can be simplified
 
     override fun redo(): NewGameState {
-        val undoState = UndoState(
-            canRedo = !redoStack.isEmpty(),
-            canUndo = true,
-        )
-
         undoStack.push(game to currentState)
         val (redoGame, redoState) = redoStack.pop()
         game = redoGame
         uiBoard = redoState.pieces.associateBy { it.position }
+
+        val undoState = UndoState(
+            canRedo = !redoStack.isEmpty(),
+            canUndo = true,
+        )
 
         currentState = NewGameState(
             pieces = redoState.pieces,
@@ -117,15 +119,15 @@ class StandardGameEngine(
     }
 
     override fun undo(): NewGameState {
-        val undoState = UndoState(
-            canRedo = true,
-            canUndo = !undoStack.isEmpty(),
-        )
-
         redoStack.push(game to currentState)
         val (undoGame, stackState) = undoStack.pop()
         game = undoGame
         uiBoard = stackState.pieces.associateBy { it.position }
+
+        val undoState = UndoState(
+            canRedo = true,
+            canUndo = !undoStack.isEmpty(),
+        )
 
         currentState = NewGameState(
             pieces = stackState.pieces,
