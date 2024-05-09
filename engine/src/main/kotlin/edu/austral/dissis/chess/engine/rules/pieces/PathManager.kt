@@ -10,7 +10,7 @@ interface PathManager {
         board: GameBoard,
         from: Position,
         to: Position,
-        player: Player
+        player: Player,
     ): Pair<PathManager, Play?>
 
     val isBlocked: Boolean

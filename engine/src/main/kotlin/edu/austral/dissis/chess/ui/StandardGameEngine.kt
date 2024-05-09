@@ -22,7 +22,7 @@ import edu.austral.dissis.chess.gui.NewGameState
 import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 import edu.austral.dissis.chess.gui.UndoState
-import java.util.*
+import java.util.Stack
 
 typealias UiBoard = Map<Position, ChessPiece>
 
@@ -31,7 +31,6 @@ class StandardGameEngine(
     private val validator: RectangleBoardValidator,
     private val pieceAdapter: UiPieceAdapter,
 ) : GameEngine {
-
     private var uiBoard: UiBoard = emptyMap()
     private val actionAdapter = UiActionAdapter(pieceAdapter)
 
@@ -60,11 +59,12 @@ class StandardGameEngine(
 
                 this.game = newGame
 
-                currentState = NewGameState(
-                    pieces = uiBoard.values.toList(),
-                    currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
-                    undoState = UndoState(canUndo = true, canRedo = false)
-                )
+                currentState =
+                    NewGameState(
+                        pieces = uiBoard.values.toList(),
+                        currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
+                        undoState = UndoState(canUndo = true, canRedo = false),
+                    )
 
                 currentState
             }
@@ -83,11 +83,12 @@ class StandardGameEngine(
                     chessPiece.position to chessPiece
                 }
 
-        currentState = NewGameState(
-            pieces = uiBoard.values.toList(),
-            currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
-            undoState = UndoState(canUndo = false, canRedo = false)
-        )
+        currentState =
+            NewGameState(
+                pieces = uiBoard.values.toList(),
+                currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
+                undoState = UndoState(canUndo = false, canRedo = false),
+            )
 
         return InitialState(
             boardSize = BoardSize(validator.numberRows, validator.numberCols),
@@ -96,7 +97,7 @@ class StandardGameEngine(
         )
     }
 
-    //TODO: see if code below can be simplified
+    // TODO: see if code below can be simplified
 
     override fun redo(): NewGameState {
         undoStack.push(game to currentState)
@@ -104,16 +105,18 @@ class StandardGameEngine(
         game = redoGame
         uiBoard = redoState.pieces.associateBy { it.position }
 
-        val undoState = UndoState(
-            canRedo = !redoStack.isEmpty(),
-            canUndo = true,
-        )
+        val undoState =
+            UndoState(
+                canRedo = !redoStack.isEmpty(),
+                canUndo = true,
+            )
 
-        currentState = NewGameState(
-            pieces = redoState.pieces,
-            currentPlayer = redoState.currentPlayer,
-            undoState
-        )
+        currentState =
+            NewGameState(
+                pieces = redoState.pieces,
+                currentPlayer = redoState.currentPlayer,
+                undoState,
+            )
 
         return currentState
     }
@@ -124,16 +127,18 @@ class StandardGameEngine(
         game = undoGame
         uiBoard = stackState.pieces.associateBy { it.position }
 
-        val undoState = UndoState(
-            canRedo = true,
-            canUndo = !undoStack.isEmpty(),
-        )
+        val undoState =
+            UndoState(
+                canRedo = true,
+                canUndo = !undoStack.isEmpty(),
+            )
 
-        currentState = NewGameState(
-            pieces = stackState.pieces,
-            currentPlayer = stackState.currentPlayer,
-            undoState
-        )
+        currentState =
+            NewGameState(
+                pieces = stackState.pieces,
+                currentPlayer = stackState.currentPlayer,
+                undoState,
+            )
 
         return currentState
     }

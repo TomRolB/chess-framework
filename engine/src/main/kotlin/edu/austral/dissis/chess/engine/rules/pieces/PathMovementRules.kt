@@ -8,9 +8,9 @@ import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import kotlin.math.sign
 
+// TODO: fix messages
 class PathMovementRules(private val increments: Pair<Int, Int>, private val manager: PathManager) : PieceRule {
-
-    //TODO: this method is basically a nonsensical wrapper of another
+    // TODO: this method is basically a nonsensical wrapper of another
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
@@ -27,11 +27,13 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
 
         return if (isViolated(moveData)) {
             PlayResult(null, "Piece cannot move this way")
-        }
-        else {
+        } else {
             val play = getPlayIfValid(moveData, board)
-            if (play == null) PlayResult(null, "Cannot move there: the path is blocked")
-            else PlayResult(play, "Valid move")
+            if (play == null) {
+                PlayResult(null, "Cannot move there: the path is blocked")
+            } else {
+                PlayResult(play, "Valid move")
+            }
         }
     }
 
@@ -111,7 +113,7 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
         while (!currentManager.isBlocked) {
             val possibleTo = Position(row, col)
 
-            val (newManager, play) =  manager.processPosition(board, position, possibleTo, player)
+            val (newManager, play) = manager.processPosition(board, position, possibleTo, player)
 
             currentManager = newManager
 
@@ -123,6 +125,4 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
 
         return result
     }
-
 }
-

@@ -38,7 +38,6 @@ class HashChessBoard private constructor(
     }
 
     override fun delPieceAt(position: Position): HashChessBoard {
-
         val newMap: HashMap<Position, Piece> = HashMap(boardMap)
         newMap.remove(position)
 

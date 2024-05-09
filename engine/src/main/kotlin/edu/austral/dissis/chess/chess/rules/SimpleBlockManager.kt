@@ -20,15 +20,22 @@ class SimpleBlockManager : PathManager {
         this.limit = limit
     }
 
-    override fun processPosition(board: GameBoard, from: Position, to: Position, player: Player): Pair<PathManager, Play?> {
-        val manager = SimpleBlockManager(
-            limit = limit - 1,
-            isBlocked = !board.positionExists(to) || board.isOccupied(to) || limit == 0
-        )
+    override fun processPosition(
+        board: GameBoard,
+        from: Position,
+        to: Position,
+        player: Player,
+    ): Pair<PathManager, Play?> {
+        val manager =
+            SimpleBlockManager(
+                limit = limit - 1,
+                isBlocked = !board.positionExists(to) || board.isOccupied(to) || limit == 0,
+            )
 
-        val play = Move(from, to, board)
-            .asPlay()
-            .takeIf { !board.containsPieceOfPlayer(to, player) }
+        val play =
+            Move(from, to, board)
+                .asPlay()
+                .takeIf { !board.containsPieceOfPlayer(to, player) }
 
         return manager to play
     }

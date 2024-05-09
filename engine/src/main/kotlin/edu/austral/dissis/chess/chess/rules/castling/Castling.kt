@@ -1,13 +1,13 @@
 package edu.austral.dissis.chess.chess.rules.castling
 
+import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
+import edu.austral.dissis.chess.chess.pieces.getRook
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
-import edu.austral.dissis.chess.chess.pieces.getRook
 
 private const val C_COLUMN = 3
 

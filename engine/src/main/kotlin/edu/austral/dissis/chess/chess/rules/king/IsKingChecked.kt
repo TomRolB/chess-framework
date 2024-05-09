@@ -22,7 +22,10 @@ class IsKingChecked(val board: GameBoard, val player: Player) : Rule<Boolean> {
         }
     }
 
-    private fun getKingPosition(board: GameBoard, player: Player): Position {
+    private fun getKingPosition(
+        board: GameBoard,
+        player: Player,
+    ): Position {
         return board
             .getAllPositions()
             .first {

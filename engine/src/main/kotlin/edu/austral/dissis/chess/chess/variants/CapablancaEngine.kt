@@ -1,20 +1,13 @@
 package edu.austral.dissis.chess.chess.variants
 
-import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.Player.BLACK
-import edu.austral.dissis.chess.engine.Player.WHITE
-import edu.austral.dissis.chess.engine.board.BoardBuilder
-import edu.austral.dissis.chess.engine.board.PositionValidator
-import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.chess.pieces.CapablancaPieceTypes.ARCHBISHOP
 import edu.austral.dissis.chess.chess.pieces.CapablancaPieceTypes.CHANCELLOR
-import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.PAWN
-import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.ROOK
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.BISHOP
-import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.QUEEN
-import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KNIGHT
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KING
-import edu.austral.dissis.chess.engine.pieces.PieceType
+import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KNIGHT
+import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.PAWN
+import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.QUEEN
+import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.ROOK
 import edu.austral.dissis.chess.chess.pieces.getArchbishop
 import edu.austral.dissis.chess.chess.pieces.getBishop
 import edu.austral.dissis.chess.chess.pieces.getChancellor
@@ -23,11 +16,18 @@ import edu.austral.dissis.chess.chess.pieces.getKnight
 import edu.austral.dissis.chess.chess.pieces.getPawn
 import edu.austral.dissis.chess.chess.pieces.getQueen
 import edu.austral.dissis.chess.chess.pieces.getRook
-import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPostPlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
+import edu.austral.dissis.chess.engine.Game
+import edu.austral.dissis.chess.engine.Player.BLACK
+import edu.austral.dissis.chess.engine.Player.WHITE
+import edu.austral.dissis.chess.engine.board.BoardBuilder
+import edu.austral.dissis.chess.engine.board.PositionValidator
+import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
+import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 

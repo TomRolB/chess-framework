@@ -1,12 +1,12 @@
 package edu.austral.dissis.chess.chess.rules
 
+import edu.austral.dissis.chess.chess.rules.king.IsKingChecked
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
-import edu.austral.dissis.chess.chess.rules.king.IsKingChecked
 
 class NoSelfCheckInValidPlays(val player: Player, val subRule: PieceRule) : PieceRule {
     override fun getValidPlays(

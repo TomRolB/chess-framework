@@ -25,7 +25,7 @@ class BoardBuilder {
         pieces: List<Piece?>,
     ): BoardBuilder {
         val rowPiecesWithPositions =
-            pieces.mapIndexedNotNull() {
+            pieces.mapIndexedNotNull {
                     idx, piece ->
                 val col = idx + 1
 

@@ -22,7 +22,7 @@ import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
-//TODO: should see which code is shared across engines and create a basic
+// TODO: should see which code is shared across engines and create a basic
 // getEngine() with all specific arguments
 fun getCheckersEngine(): StandardGameEngine {
     val validator = RectangleBoardValidator(8, 8)
@@ -34,12 +34,19 @@ fun getCheckersEngine(): StandardGameEngine {
         StandardGameRules(
             ClassicPrePlayValidator(),
             object : PostPlayValidator {
-                override fun isStateInvalid(board: GameBoard, player: Player): Boolean {
+                override fun isStateInvalid(
+                    board: GameBoard,
+                    player: Player,
+                ): Boolean {
                     return false
                 }
             },
             object : WinCondition {
-                override fun getGameResult(board: GameBoard, play: Play, player: Player): PlayResult {
+                override fun getGameResult(
+                    board: GameBoard,
+                    play: Play,
+                    player: Player,
+                ): PlayResult {
                     return PlayResult(board, play, EngineResult.VALID_MOVE, "Valid move")
                 }
             },
@@ -114,7 +121,7 @@ fun getClassicInitialBoard(validator: PositionValidator) =
                 getMan(BLACK),
                 null,
                 getMan(BLACK),
-                null
+                null,
             ),
         )
         .fillRow(
@@ -135,6 +142,6 @@ fun getClassicInitialBoard(validator: PositionValidator) =
 private fun getPieceIdMap(): Map<PieceType, String> {
     return listOf(
         MAN to "pawn",
-        KING to "king"
+        KING to "king",
     ).toMap()
 }
