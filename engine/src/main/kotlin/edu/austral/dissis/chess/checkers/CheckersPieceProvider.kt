@@ -3,6 +3,7 @@ package edu.austral.dissis.chess.checkers
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.JumpManager
+import edu.austral.dissis.chess.checkers.rules.PendingMoveUpdater
 import edu.austral.dissis.chess.chess.rules.updaters.PromotionUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Piece
@@ -13,19 +14,17 @@ import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.PathMovementRules
 import edu.austral.dissis.chess.engine.rules.pieces.Update
 
-// TODO: idea: create a rule which is passed a LIMIT. This rules makes
-// the piece move to a certain place only if taking some piece in the
-// process, but it cannot surpass LIMIT.
-// The question is whether this can be implemented in PathMovementRules,
-// to have a more generic move.
-
 fun getMan(player: Player) =
     Piece(
         type = MAN,
         player = player,
         rules =
+        Update(
+            PromotionUpdater(getKing(player)),
+            subRule =
             Update(
-                PromotionUpdater(getKing(player)),
+                PendingMoveUpdater(),
+                subRule =
                 CombinedRules(
                     // TODO: Should mirror inside PathMovementRules
                     PathMovementRules(
@@ -52,8 +51,9 @@ fun getMan(player: Player) =
                         subRule =
                         IncrementalMovement(1, -1, player)
                     ),
-                ),
+                )
             ),
+        ),
     )
 
 fun getKing(player: Player) =
@@ -61,6 +61,9 @@ fun getKing(player: Player) =
         type = KING,
         player = player,
         rules =
+        Update(
+            PendingMoveUpdater(),
+            subRule =
             CombinedRules(
                 PathMovementRules(
                     increments = 1 to 1,
@@ -78,7 +81,8 @@ fun getKing(player: Player) =
                     increments = -1 to -1,
                     JumpManager(Int.MAX_VALUE, 0, 1)
                 ),
-            ),
+            )
+        ),
     )
 
 enum class CheckersPieceType : PieceType {

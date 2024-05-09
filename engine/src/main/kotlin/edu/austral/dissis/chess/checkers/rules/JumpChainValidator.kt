@@ -9,13 +9,18 @@ import edu.austral.dissis.chess.engine.pieces.PlayResult
 
 class JumpChainValidator: PostPlayValidator {
     override fun getPostPlayResult(play: Play, board: GameBoard, player: Player): PlayResult {
-        return if (board
-            .getAllPositionsOfPlayer(player)
-            .any {
-                board.getPieceAt(it)!!.hasState(HAS_PENDING_MOVE)
-            }) {
+        return if (piecesHavePendingMoves(board, player)) {
             PlayResult(null, "One of your pieces has a pending move")
         }
         else PlayResult(play, "Valid move")
     }
+
+    private fun piecesHavePendingMoves(
+        board: GameBoard,
+        player: Player,
+    ) = board
+        .getAllPositionsOfPlayer(player)
+        .any {
+            board.getPieceAt(it)!!.hasState(HAS_PENDING_MOVE)
+        }
 }
