@@ -158,7 +158,7 @@ fun getPawn(player: Player) =
     )
 
 private fun getPawnCoreRules(player: Player) = Update(
-    updater = PromotionUpdater(),
+    updater = PromotionUpdater(getQueen(player)),
     subRule =
     Update(
         updater = HasMovedUpdater(),

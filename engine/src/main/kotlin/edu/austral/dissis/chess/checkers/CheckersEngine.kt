@@ -1,16 +1,15 @@
 package edu.austral.dissis.chess.checkers
 
+import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
-import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPostPlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
-import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.PlayResult
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.Player.BLACK
+import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.WinCondition
 import edu.austral.dissis.chess.engine.board.BoardBuilder
@@ -136,5 +135,6 @@ fun getClassicInitialBoard(validator: PositionValidator) =
 private fun getPieceIdMap(): Map<PieceType, String> {
     return listOf(
         MAN to "pawn",
+        KING to "king"
     ).toMap()
 }

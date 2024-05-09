@@ -71,6 +71,14 @@ class Piece {
     fun hasState(state: PieceState): Boolean {
         return state in states
     }
+
+    fun withRules(rules: PieceRule): Piece {
+        return Piece(type, player, rules, states)
+    }
+
+    fun withPlayer(player: Player): Piece {
+        return Piece(type, player, rules, states)
+    }
 }
 
 // TODO: Consider converting this to the kind of result we saw in class,
