@@ -9,5 +9,5 @@ interface PrePlayValidator {
         from: Position,
         to: Position,
         player: Player,
-    ): PlayResult?
+    ): RuleResult?
 }

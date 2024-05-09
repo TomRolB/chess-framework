@@ -4,7 +4,7 @@ import edu.austral.dissis.chess.chess.board.HashChessBoard
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.GameData
-import edu.austral.dissis.chess.engine.PlayResult
+import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
@@ -25,7 +25,7 @@ class AdapterTestGameRunner : TestGameRunner {
     private val actionAdapter: ActionAdapter
     private val pieceAdapter: PieceAdapter
 
-    private val gameRules: RuleChain<GameData, PlayResult>
+    private val gameRules: RuleChain<GameData, RuleResult>
     private val turnManager: TurnManager
 
     private lateinit var game: Game
@@ -34,7 +34,7 @@ class AdapterTestGameRunner : TestGameRunner {
     // Lazy constructor to initialize game once withBoard() is called
     constructor(
         pieceAdapter: PieceAdapter,
-        gameRules: RuleChain<GameData, PlayResult>,
+        gameRules: RuleChain<GameData, RuleResult>,
         turnManager: TurnManager,
     ) {
         this.pieceAdapter = pieceAdapter

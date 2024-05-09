@@ -33,7 +33,6 @@ interface GameBoard {
 
     fun getAllPositionsOfPlayer(
         player: Player,
-        includeKing: Boolean,
     ): Iterable<Position>
 
     fun getRowAsWhite(

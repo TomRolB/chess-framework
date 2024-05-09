@@ -12,7 +12,7 @@ class WillKingBeChecked(
     val player: Player,
 ) : Rule<Boolean> {
     override fun verify(): Boolean {
-        return board.getAllPositionsOfPlayer(player, true).all {
+        return board.getAllPositionsOfPlayer(player).all {
             val piece = board.getPieceAt(it)!!
             allMovementsEndInCheck(board, piece, it)
         }

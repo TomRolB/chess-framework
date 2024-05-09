@@ -7,6 +7,8 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.pieces.Piece
 
+// TODO: I think this proxy is no longer necessary, since IsChecked
+//  uses a brute force method now
 class HashChessBoard private constructor(
     private val validator: PositionValidator,
     private val boardMap: Map<Position, Piece>,
@@ -69,17 +71,12 @@ class HashChessBoard private constructor(
 
     override fun getAllPositionsOfPlayer(
         player: Player,
-        includeKing: Boolean,
     ): Iterable<Position> {
         return boardMap.keys.filter {
             val position: Position = it
             val piece = boardMap[position]!!
 
-            if (includeKing) {
-                piece.player == player
-            } else {
-                piece.player == player && (piece.type == KING)
-            }
+            piece.player == player
         }
     }
 

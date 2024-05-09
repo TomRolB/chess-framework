@@ -10,7 +10,7 @@ import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.PlayResult
+import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
@@ -54,11 +54,12 @@ private fun getPieceIdMap(): Map<PieceType, String> {
 }
 
 class NoPostPlayValidator : PostPlayValidator {
-    override fun isStateInvalid(
+    override fun getPostPlayResult(
+        play: Play,
         board: GameBoard,
         player: Player,
-    ): Boolean {
-        return false
+    ): edu.austral.dissis.chess.engine.pieces.PlayResult {
+        return edu.austral.dissis.chess.engine.pieces.PlayResult(play, "Valid play")
     }
 }
 
@@ -67,19 +68,19 @@ class ExtinctionWinCondition : WinCondition {
         board: GameBoard,
         play: Play,
         player: Player,
-    ): PlayResult {
+    ): RuleResult {
         return when {
             playerWentExtinct(board, WHITE) ->
-                PlayResult(board, null, EngineResult.BLACK_WINS, "Black wins!")
+                RuleResult(board, null, EngineResult.BLACK_WINS, "Black wins!")
             playerWentExtinct(board, BLACK) ->
-                PlayResult(board, null, EngineResult.WHITE_WINS, "White wins!")
+                RuleResult(board, null, EngineResult.WHITE_WINS, "White wins!")
             else ->
-                PlayResult(board, play, EngineResult.VALID_MOVE, "Valid move")
+                RuleResult(board, play, EngineResult.VALID_MOVE, "Valid move")
         }
     }
 
     private fun playerWentExtinct(
         board: GameBoard,
         player: Player,
-    ) = board.getAllPositionsOfPlayer(player, true).none()
+    ) = board.getAllPositionsOfPlayer(player).none()
 }

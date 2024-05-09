@@ -83,6 +83,7 @@ class Piece {
 
 // TODO: Consider converting this to the kind of result we saw in class,
 // since sometimes we have null plays or unnecessary messages.
+// TODO: there's already a PlayResult defined at Game
 data class PlayResult(val play: Play?, val message: String)
 
 interface PieceRule {

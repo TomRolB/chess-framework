@@ -7,5 +7,5 @@ interface WinCondition {
         board: GameBoard,
         play: Play,
         player: Player,
-    ): PlayResult
+    ): RuleResult
 }
