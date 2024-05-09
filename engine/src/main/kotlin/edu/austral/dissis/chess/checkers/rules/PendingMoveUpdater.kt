@@ -33,14 +33,17 @@ class PendingMoveUpdater: PlayUpdater {
         return if (anyAttack(it, boardAfterPlay)) {
             val pieceNextTurn = it.pieceNextTurn.withState(HAS_PENDING_MOVE)
             it.withPiece(pieceNextTurn)
-        } else it
+        } else {
+            val pieceNextTurn = it.pieceNextTurn.withoutState(HAS_PENDING_MOVE)
+            it.withPiece(pieceNextTurn)
+        }
     }
 
     private fun anyAttack(
-        it: Move,
+        move: Move,
         boardAfterPlay: GameBoard,
-    ) = it.pieceNextTurn
-        .getValidPlays(boardAfterPlay, it.to)
+    ) = move.pieceNextTurn
+        .getValidPlays(boardAfterPlay, move.to)
         .flatMap { it.actions }
         .any {
             it is Take

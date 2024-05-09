@@ -2,6 +2,7 @@ package edu.austral.dissis.chess.checkers
 
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
+import edu.austral.dissis.chess.checkers.rules.JumpChainValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
@@ -33,15 +34,7 @@ fun getCheckersEngine(): StandardGameEngine {
     val gameRules =
         StandardGameRules(
             ClassicPrePlayValidator(),
-            object : PostPlayValidator {
-                override fun getPostPlayResult(
-                    play: Play,
-                    board: GameBoard,
-                    player: Player,
-                ): edu.austral.dissis.chess.engine.pieces.PlayResult {
-                    return edu.austral.dissis.chess.engine.pieces.PlayResult(play, "Valid play")
-                }
-            },
+            JumpChainValidator(),
             object : WinCondition {
                 override fun getGameResult(
                     board: GameBoard,

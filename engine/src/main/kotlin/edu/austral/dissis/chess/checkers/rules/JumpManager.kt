@@ -47,25 +47,27 @@ class JumpManager : PathManager {
     ): Pair<PathManager, Play?> {
         val hasEnemyPiece = board.containsPieceOfPlayer(to, !player)
 
-        val manager =
-            JumpManager(
-                pathLimit = pathLimit - 1,
-                minJumps = if (hasEnemyPiece) jumpsNeeded - 1 else jumpsNeeded,
-                maxJumps = if (hasEnemyPiece) jumpsLeft - 1 else jumpsLeft,
-                takes = if (hasEnemyPiece) takes.plus(Take(to, board)) else takes,
-                isBlocked =
-                    !board.positionExists(to) ||
-                        board.containsPieceOfPlayer(to, player) ||
-                        pathLimit == 0 ||
-                        (jumpsLeft == 0 && hasEnemyPiece),
-            )
-
         val play =
             if (board.isOccupied(to) || jumpsNeeded > 0) {
                 null
             } else {
                 Play(takes + Move(from, to, board))
             }
+
+        val manager =
+            JumpManager(
+                pathLimit = pathLimit - 1,
+                minJumps = if (hasEnemyPiece) jumpsNeeded - 1 else jumpsNeeded,
+                maxJumps = if (hasEnemyPiece) jumpsLeft - 1 else jumpsLeft,
+                takes = if (hasEnemyPiece) takes.plus(Take(to, board)) else takes,
+                // TODO: the bug comes from the fact we are updating isBlocked afterwards.
+                //  thus, when reaching a non-existing position, the code executes anyway.
+                isBlocked =
+                    !board.positionExists(to) ||
+                        board.containsPieceOfPlayer(to, player) ||
+                        pathLimit == 0 ||
+                        (jumpsLeft == 0 && hasEnemyPiece),
+            )
 
         return manager to play
     }

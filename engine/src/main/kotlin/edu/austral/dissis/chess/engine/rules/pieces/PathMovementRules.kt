@@ -110,13 +110,14 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
 
         var currentManager = manager
 
-        while (!currentManager.isBlocked) {
+        while (true) {
             val possibleTo = Position(row, col)
 
-            val (newManager, play) = manager.processPosition(board, position, possibleTo, player)
+            val (newManager, play) = currentManager.processPosition(board, position, possibleTo, player)
 
             currentManager = newManager
 
+            if (currentManager.isBlocked) break
             if (play != null) result.add(play)
 
             row += rowIncrement

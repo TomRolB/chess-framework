@@ -7,6 +7,7 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.rules.RuleChain
 
 class PostPlayRules(
@@ -20,12 +21,15 @@ class PostPlayRules(
         val board = arg.execute()
 
         val result = validator.getPostPlayResult(arg, board, player)
-        return if (result.play == null) getViolationResult(board)
+        return if (result.play == null) getViolationResult(board, result)
         else {
             next.verify(arg to board)
         }
     }
 
-    private fun getViolationResult(board: GameBoard) =
-        RuleResult(board, null, EngineResult.POST_PLAY_VIOLATION, "That movement would leave your king checked")
+    private fun getViolationResult(
+        board: GameBoard,
+        result: PlayResult,
+    ) = RuleResult(board, null, EngineResult.POST_PLAY_VIOLATION, result.message)
+
 }
