@@ -23,8 +23,10 @@ fun getMan(player: Player) =
         rules =
             CombinedRules(
                 //TODO: Should mirror inside PathMovementRules
-                PathMovementRules(1 to if (player == Player.WHITE) 1 else -1, JumpManager(2, 1, 1)),
-                PathMovementRules(-1 to if (player == Player.WHITE) 1 else -1, JumpManager(2, 1, 1)),
+                PathMovementRules(1 to 1, JumpManager(2, 1, 1)),
+                PathMovementRules(1 to -1, JumpManager(2, 1, 1)),
+                PathMovementRules(-1 to 1, JumpManager(2, 1, 1)),
+                PathMovementRules(-1 to -1, JumpManager(2, 1, 1)),
                 NoPieceAtFinalPosition(IncrementalMovement(1, 1, player)),
                 NoPieceAtFinalPosition(IncrementalMovement(1, -1, player)),
             )

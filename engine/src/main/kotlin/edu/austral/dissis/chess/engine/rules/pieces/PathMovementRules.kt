@@ -8,14 +8,14 @@ import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import kotlin.math.sign
 
-// TODO: Would jumping work?
-class PathMovementRules(private val increments: Pair<Int, Int>, val manager: PathManager) : PieceRule {
+class PathMovementRules(private val increments: Pair<Int, Int>, private val manager: PathManager) : PieceRule {
 
+    //TODO: this method is basically a nonsensical wrapper of another
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return getLineOfPositions(board, position)
+        return getAllPlaysInPath(board, position)
     }
 
     override fun getPlayResult(
@@ -29,7 +29,7 @@ class PathMovementRules(private val increments: Pair<Int, Int>, val manager: Pat
             PlayResult(null, "Piece cannot move this way")
         }
         else {
-            val play = isPathBlocked(moveData, board)
+            val play = getPlayIfValid(moveData, board)
             if (play == null) PlayResult(null, "Cannot move there: the path is blocked")
             else PlayResult(play, "Valid move")
         }
@@ -54,7 +54,7 @@ class PathMovementRules(private val increments: Pair<Int, Int>, val manager: Pat
         return moveData.rowDelta.sign == increment.first.sign
     }
 
-    private fun isPathBlocked(
+    private fun getPlayIfValid(
         moveData: MovementData,
         board: GameBoard,
     ): Play? {
@@ -92,15 +92,14 @@ class PathMovementRules(private val increments: Pair<Int, Int>, val manager: Pat
         col: Int,
     ) = !(row == moveData.toRow && col == moveData.toCol)
 
-    private fun getLineOfPositions(
+    private fun getAllPlaysInPath(
         board: GameBoard,
         position: Position,
     ): List<Play> {
         var (row, col) = position
         val player = board.getPieceAt(position)!!.player
 
-        val rowIncrement = increments.first
-        val colIncrement = increments.second
+        val (rowIncrement, colIncrement) = increments
 
         row += rowIncrement
         col += colIncrement
