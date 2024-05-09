@@ -7,6 +7,7 @@ import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
+import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.PathMovementRules
 
 //TODO: idea: create a rule which is passed a LIMIT. This rules makes
@@ -24,8 +25,8 @@ fun getMan(player: Player) =
                 //TODO: Should mirror inside PathMovementRules
                 PathMovementRules(1 to if (player == Player.WHITE) 1 else -1, JumpManager(2, 1, 1)),
                 PathMovementRules(-1 to if (player == Player.WHITE) 1 else -1, JumpManager(2, 1, 1)),
-                IncrementalMovement(1, 1, player),
-                IncrementalMovement(1, -1, player),
+                NoPieceAtFinalPosition(IncrementalMovement(1, 1, player)),
+                NoPieceAtFinalPosition(IncrementalMovement(1, -1, player)),
             )
     )
 

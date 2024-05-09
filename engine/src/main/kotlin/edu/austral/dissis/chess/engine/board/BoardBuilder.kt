@@ -22,10 +22,10 @@ class BoardBuilder {
 
     fun fillRow(
         row: Int,
-        pieces: List<Piece>,
+        pieces: List<Piece?>,
     ): BoardBuilder {
         val rowPiecesWithPositions =
-            pieces.mapIndexed {
+            pieces.mapIndexedNotNull() {
                     idx, piece ->
                 val col = idx + 1
 
@@ -33,7 +33,7 @@ class BoardBuilder {
                     "Cannot fill row: trying to set piece at ($row, $col), which is off-limits"
                 }
 
-                Position(row, col) to piece
+                if (piece == null) null else Position(row, col) to piece
             }
 
         return BoardBuilder(
