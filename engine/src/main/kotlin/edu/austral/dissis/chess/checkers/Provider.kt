@@ -28,12 +28,30 @@ fun getMan(player: Player) =
                 PromotionUpdater(getKing(player)),
                 CombinedRules(
                     // TODO: Should mirror inside PathMovementRules
-                    PathMovementRules(1 to 1, JumpManager(2, 1, 1)),
-                    PathMovementRules(1 to -1, JumpManager(2, 1, 1)),
-                    PathMovementRules(-1 to 1, JumpManager(2, 1, 1)),
-                    PathMovementRules(-1 to -1, JumpManager(2, 1, 1)),
-                    NoPieceAtFinalPosition(IncrementalMovement(1, 1, player)),
-                    NoPieceAtFinalPosition(IncrementalMovement(1, -1, player)),
+                    PathMovementRules(
+                        increments = 1 to 1,
+                        JumpManager(2, 1, 1)
+                    ),
+                    PathMovementRules(
+                        increments = 1 to -1,
+                        JumpManager(2, 1, 1)
+                    ),
+                    PathMovementRules(
+                        increments = -1 to 1,
+                        JumpManager(2, 1, 1)
+                    ),
+                    PathMovementRules(
+                        increments = -1 to -1,
+                        JumpManager(2, 1, 1)
+                    ),
+                    NoPieceAtFinalPosition(
+                        subRule =
+                        IncrementalMovement(1, 1, player)
+                    ),
+                    NoPieceAtFinalPosition(
+                        subRule =
+                        IncrementalMovement(1, -1, player)
+                    ),
                 ),
             ),
     )
@@ -44,10 +62,22 @@ fun getKing(player: Player) =
         player = player,
         rules =
             CombinedRules(
-                PathMovementRules(1 to 1, JumpManager(Int.MAX_VALUE, 0, 1)),
-                PathMovementRules(1 to -1, JumpManager(Int.MAX_VALUE, 0, 1)),
-                PathMovementRules(-1 to 1, JumpManager(Int.MAX_VALUE, 0, 1)),
-                PathMovementRules(-1 to -1, JumpManager(Int.MAX_VALUE, 0, 1)),
+                PathMovementRules(
+                    increments = 1 to 1,
+                    JumpManager(Int.MAX_VALUE, 0, 1)
+                ),
+                PathMovementRules(
+                    increments = 1 to -1,
+                    JumpManager(Int.MAX_VALUE, 0, 1)
+                ),
+                PathMovementRules(
+                    increments = -1 to 1,
+                    JumpManager(Int.MAX_VALUE, 0, 1)
+                ),
+                PathMovementRules(
+                    increments = -1 to -1,
+                    JumpManager(Int.MAX_VALUE, 0, 1)
+                ),
             ),
     )
 
