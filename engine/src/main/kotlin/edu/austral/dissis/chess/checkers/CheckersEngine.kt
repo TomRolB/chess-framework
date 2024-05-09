@@ -3,6 +3,7 @@ package edu.austral.dissis.chess.checkers
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.JumpChainValidator
+import edu.austral.dissis.chess.checkers.rules.PendingMovesValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
@@ -18,6 +19,7 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
+import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
@@ -33,8 +35,12 @@ fun getCheckersEngine(): StandardGameEngine {
 
     val gameRules =
         StandardGameRules(
-            ClassicPrePlayValidator(),
-            JumpChainValidator(),
+            PendingMovesValidator(),
+            object : PostPlayValidator {
+                override fun getPostPlayResult(play: Play, board: GameBoard, player: Player): PlayResult {
+                    return PlayResult(play, "Valid move")
+                }
+            },
             object : WinCondition {
                 override fun getGameResult(
                     board: GameBoard,
