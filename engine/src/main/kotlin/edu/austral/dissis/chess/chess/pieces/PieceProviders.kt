@@ -23,6 +23,7 @@ import edu.austral.dissis.chess.engine.rules.pieces.FinalPositionContainsPieceOf
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.PathMovementRules
+import edu.austral.dissis.chess.chess.rules.SimpleBlockManager
 import edu.austral.dissis.chess.engine.rules.pieces.Update
 
 // TODO: Think how to provide pieces more conveniently
@@ -59,10 +60,10 @@ private fun getRookRules(player: Player) =
                         updater = HasMovedUpdater(),
                         subRule =
                             CombinedRules(
-                                PathMovementRules(0 to 1),
-                                PathMovementRules(0 to -1),
-                                PathMovementRules(1 to 0),
-                                PathMovementRules(-1 to 0),
+                                PathMovementRules(0 to 1, SimpleBlockManager(Int.MAX_VALUE)),
+                                PathMovementRules(0 to -1, SimpleBlockManager(Int.MAX_VALUE)),
+                                PathMovementRules(1 to 0, SimpleBlockManager(Int.MAX_VALUE)),
+                                PathMovementRules(-1 to 0, SimpleBlockManager(Int.MAX_VALUE)),
                             ),
                     ),
             ),
@@ -86,10 +87,10 @@ private fun getBishopRules(player: Player) =
                 onFailMessage = FRIENDLY_FIRE_MESSAGE,
                 subRule =
                     CombinedRules(
-                        PathMovementRules(1 to 1),
-                        PathMovementRules(1 to -1),
-                        PathMovementRules(-1 to 1),
-                        PathMovementRules(-1 to -1),
+                        PathMovementRules(1 to 1, SimpleBlockManager(Int.MAX_VALUE)),
+                        PathMovementRules(1 to -1, SimpleBlockManager(Int.MAX_VALUE)),
+                        PathMovementRules(-1 to 1, SimpleBlockManager(Int.MAX_VALUE)),
+                        PathMovementRules(-1 to -1, SimpleBlockManager(Int.MAX_VALUE)),
                     ),
             ),
     )

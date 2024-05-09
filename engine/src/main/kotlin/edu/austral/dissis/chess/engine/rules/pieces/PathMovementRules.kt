@@ -1,25 +1,21 @@
 package edu.austral.dissis.chess.engine.rules.pieces
 
-import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import kotlin.math.sign
 
 // TODO: Would jumping work?
-class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
+class PathMovementRules(private val increments: Pair<Int, Int>, val manager: PathManager) : PieceRule {
+
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
         return getLineOfPositions(board, position)
-            .map {
-                Move(position, it, board).asPlay()
-            }
     }
 
     override fun getPlayResult(
@@ -28,14 +24,18 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
         to: Position,
     ): PlayResult {
         val moveData = MovementData(from, to)
-        return when {
-            isViolated(moveData) -> PlayResult(null, "Piece cannot move this way")
-            isPathBlocked(moveData, board) -> PlayResult(null, "Cannot move there: the path is blocked")
-            else -> PlayResult(Move(from, to, board).asPlay(), "Valid move")
+
+        return if (isViolated(moveData)) {
+            PlayResult(null, "Piece cannot move this way")
+        }
+        else {
+            val play = isPathBlocked(moveData, board)
+            if (play == null) PlayResult(null, "Cannot move there: the path is blocked")
+            else PlayResult(play, "Valid move")
         }
     }
 
-    fun isViolated(moveData: MovementData): Boolean {
+    private fun isViolated(moveData: MovementData): Boolean {
         return !(
             areVectorsParallel(moveData, increments) &&
                 doVectorsShareOrientation(moveData, increments)
@@ -54,22 +54,28 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
         return moveData.rowDelta.sign == increment.first.sign
     }
 
-    fun isPathBlocked(
+    private fun isPathBlocked(
         moveData: MovementData,
         board: GameBoard,
-    ): Boolean {
+    ): Play? {
         val rowIncrement = moveData.rowDelta.sign
         val colIncrement = moveData.colDelta.sign
 
         var row = moveData.fromRow + rowIncrement
         var col = moveData.fromCol + colIncrement
 
-        var anyPieceBlocking = false
+        var currentManager = manager
+        var play: Play? = null
 
-        while (didNotReachDestination(row, moveData, col)) {
-            val position = Position(row, col)
-            if (board.isOccupied(position)) {
-                anyPieceBlocking = true
+        while (!currentManager.isBlocked) {
+            val to = Position(row, col)
+            val player = board.getPieceAt(moveData.from)!!.player
+
+            val (newManager, newPlay) = currentManager.processPosition(board, moveData.from, to, player)
+            currentManager = newManager
+
+            if (!didNotReachDestination(row, moveData, col)) {
+                play = newPlay
                 break
             }
 
@@ -77,7 +83,7 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
             col += colIncrement
         }
 
-        return anyPieceBlocking
+        return play
     }
 
     private fun didNotReachDestination(
@@ -89,7 +95,7 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
     private fun getLineOfPositions(
         board: GameBoard,
         position: Position,
-    ): List<Position> {
+    ): List<Play> {
         var (row, col) = position
         val player = board.getPieceAt(position)!!.player
 
@@ -99,32 +105,25 @@ class PathMovementRules(val increments: Pair<Int, Int>) : PieceRule {
         row += rowIncrement
         col += colIncrement
 
-        val result: MutableList<Position> = mutableListOf()
+        val result: MutableList<Play> = mutableListOf()
 
-        var blocked = false
-        while (!blocked) {
-            val reachablePos = Position(row, col)
+        var currentManager = manager
 
-            // We'll only add the position if it exists, does not hold
-            // a piece of the same player and does not imply a move
-            // that would leave our king checked
-            if (!board.positionExists(reachablePos) ||
-                board.containsPieceOfPlayer(reachablePos, player)
-            ) {
-                blocked = true
-            } else {
-                result.addLast(reachablePos)
+        while (!currentManager.isBlocked) {
+            val possibleTo = Position(row, col)
 
-                // We check if there is an enemy piece after adding, since
-                // it is possible to take that piece, but we must then
-                // break, as the rest of the path is blocked by it
-                if (board.containsPieceOfPlayer(reachablePos, !player)) blocked = true
+            val (newManager, play) =  manager.processPosition(board, position, possibleTo, player)
 
-                row += rowIncrement
-                col += colIncrement
-            }
+            currentManager = newManager
+
+            if (play != null) result.add(play)
+
+            row += rowIncrement
+            col += colIncrement
         }
 
         return result
     }
+
 }
+
