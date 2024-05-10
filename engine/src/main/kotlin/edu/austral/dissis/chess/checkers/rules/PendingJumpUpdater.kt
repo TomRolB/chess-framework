@@ -11,6 +11,7 @@ import edu.austral.dissis.chess.engine.rules.pieces.PlayUpdater
 
 // TODO: make readable. Could probably create helper classes for Move, Play, etc.
 
+// TODO: this is causing a null pointer at PathMovementRules, for some reason.
 class PendingJumpUpdater: PlayUpdater {
     override fun update(play: Play, board: GameBoard): Play {
 //        val (pieceNextTurn, to) =
@@ -28,7 +29,7 @@ class PendingJumpUpdater: PlayUpdater {
             .actions
             .map {
                 if (it is Move) {
-                    replaceByPieceIfValid(play, it, board)
+                    replaceByPieceIfValid(play, it)
                 } else {
                     it
                 }
@@ -41,21 +42,22 @@ class PendingJumpUpdater: PlayUpdater {
     private fun replaceByPieceIfValid(
         play: Play,
         move: Move,
-        board: GameBoard,
     ): Move {
         val (pieceNextTurn, to) = move.let { it.pieceNextTurn to it.to }
 
-        return if (performingMultipleJump(play, pieceNextTurn, board, to)) {
+        return if (isPerformingMultipleJump(play, pieceNextTurn, to)) {
             move.withPiece(pieceNextTurn.withState(HAS_PENDING_JUMP))
         } else {
             move.withPiece(pieceNextTurn.withoutState(HAS_PENDING_JUMP))
         }
     }
 
-    private fun performingMultipleJump(
+    private fun isPerformingMultipleJump(
         play: Play,
         pieceNextTurn: Piece,
-        board: GameBoard,
         to: Position,
-    ) = play.includesTakeAction() && HasAvailableJumps(pieceNextTurn, board, to).verify()
+    ): Boolean {
+        val futureBoard = play.execute()
+        return play.includesTakeAction() && HasAvailableJumps(pieceNextTurn, futureBoard, to).verify()
+    }
 }

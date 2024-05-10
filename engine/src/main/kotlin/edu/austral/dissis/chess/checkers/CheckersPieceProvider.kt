@@ -4,6 +4,8 @@ import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.JumpManager
 import edu.austral.dissis.chess.checkers.rules.JumpsWhenCompulsory
+import edu.austral.dissis.chess.checkers.rules.PendingJumpUpdater
+import edu.austral.dissis.chess.chess.pieces.getKing
 import edu.austral.dissis.chess.chess.rules.updaters.PromotionUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Piece
@@ -19,14 +21,18 @@ fun getMan(player: Player) =
         type = MAN,
         player = player,
         rules =
-        JumpsWhenCompulsory(
+        Update(
+            PromotionUpdater(getKing(player)),
             subRule =
-            Update(
-                PromotionUpdater(getKing(player)),
+            JumpsWhenCompulsory(
                 subRule =
+
 //                Update(
 //                    CanAttackUpdater(),
 //                    subRule =
+                Update(
+                    PendingJumpUpdater(),
+                    subRule =
                     CombinedRules(
                         // TODO: Should mirror inside PathMovementRules
                         PathMovementRules(
@@ -54,8 +60,9 @@ fun getMan(player: Player) =
                             IncrementalMovement(1, -1, player)
                         ),
                     )
-//                ),
-            ),
+                ),
+            )
+//            ),
         )
     )
 
@@ -64,8 +71,11 @@ fun getKing(player: Player) =
         type = KING,
         player = player,
         rules =
-        JumpsWhenCompulsory(
+        Update(
+            PendingJumpUpdater(),
             subRule =
+            JumpsWhenCompulsory(
+                subRule =
 //            Update(
 //                CanAttackUpdater(),
 //                subRule =
@@ -88,6 +98,7 @@ fun getKing(player: Player) =
                     ),
                 )
 //            ),
+            )
         )
     )
 

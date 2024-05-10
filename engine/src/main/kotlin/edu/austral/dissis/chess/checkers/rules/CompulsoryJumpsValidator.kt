@@ -18,10 +18,10 @@ class CompulsoryJumpsValidator : PrePlayValidator {
             // TODO: could compose these rules
             !board.containsPieceOfPlayer(from, player) ->
                 getViolationResult(board, "This tile does not contain a piece of yours")
-            violatingPendingJumps(board, from, player) ->
+            violatesPendingJumps(board, from, player) ->
                 getViolationResult(board, "There's another piece with a pending jump")
             violatesCompulsoryJumps(board, from, player) ->
-                getViolationResult(board, "One of your pieces has a pending move")
+                getViolationResult(board, "One of your pieces has a compulsory jump")
             (from == to) ->
                 getViolationResult(board, "Cannot stay in the same place")
             else -> null
@@ -40,11 +40,12 @@ class CompulsoryJumpsValidator : PrePlayValidator {
     }
 
     // TODO: should compose
-    fun violatingPendingJumps(board: GameBoard, from: Position, player: Player): Boolean {
+    private fun violatesPendingJumps(board: GameBoard, from: Position, player: Player): Boolean {
         return !HasPendingJumps(board, from).verify()
                 && otherPieceHasPendingJumps(board, player)
     }
 
+    // TODO: convert to rule?
     private fun otherPieceHasPendingJumps(board: GameBoard, player: Player): Boolean {
         return board
             .getAllPositionsOfPlayer(player)
