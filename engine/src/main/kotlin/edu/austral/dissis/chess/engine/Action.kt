@@ -86,7 +86,7 @@ fun Play.extractMove(): Move {
         )
 }
 
-fun Play.includesTake(): Boolean {
+fun Play.includesTakeAction(): Boolean {
     return this.actions
         .any { it is Take }
 }

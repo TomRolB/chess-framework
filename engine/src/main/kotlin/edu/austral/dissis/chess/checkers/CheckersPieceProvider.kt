@@ -3,8 +3,7 @@ package edu.austral.dissis.chess.checkers
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.JumpManager
-import edu.austral.dissis.chess.checkers.rules.MovesWhenCompulsory
-import edu.austral.dissis.chess.checkers.rules.CanAttackUpdater
+import edu.austral.dissis.chess.checkers.rules.JumpsWhenCompulsory
 import edu.austral.dissis.chess.chess.rules.updaters.PromotionUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Piece
@@ -20,8 +19,8 @@ fun getMan(player: Player) =
         type = MAN,
         player = player,
         rules =
-//        MovesWhenCompulsory(
-//            subRule =
+        JumpsWhenCompulsory(
+            subRule =
             Update(
                 PromotionUpdater(getKing(player)),
                 subRule =
@@ -57,7 +56,7 @@ fun getMan(player: Player) =
                     )
 //                ),
             ),
-//        )
+        )
     )
 
 fun getKing(player: Player) =
@@ -65,8 +64,8 @@ fun getKing(player: Player) =
         type = KING,
         player = player,
         rules =
-//        MovesWhenCompulsory(
-//            subRule =
+        JumpsWhenCompulsory(
+            subRule =
 //            Update(
 //                CanAttackUpdater(),
 //                subRule =
@@ -89,7 +88,7 @@ fun getKing(player: Player) =
                     ),
                 )
 //            ),
-//        )
+        )
     )
 
 enum class CheckersPieceType : PieceType {
