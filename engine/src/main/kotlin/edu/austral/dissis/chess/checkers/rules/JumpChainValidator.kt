@@ -1,12 +1,13 @@
 package edu.austral.dissis.chess.checkers.rules
 
-import edu.austral.dissis.chess.checkers.rules.CheckersPieceState.HAS_PENDING_MOVE
+import edu.austral.dissis.chess.checkers.rules.CheckersPieceState.CAN_TAKE_ENEMY
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
+//TODO: Modify play to update all pieces' state
 class JumpChainValidator: PostPlayValidator {
     override fun getPostPlayResult(play: Play, board: GameBoard, player: Player): PlayResult {
         return if (piecesHavePendingMoves(board, player)) {
@@ -21,6 +22,6 @@ class JumpChainValidator: PostPlayValidator {
     ) = board
         .getAllPositionsOfPlayer(player)
         .any {
-            board.getPieceAt(it)!!.hasState(HAS_PENDING_MOVE)
+            board.getPieceAt(it)!!.hasState(CAN_TAKE_ENEMY)
         }
 }

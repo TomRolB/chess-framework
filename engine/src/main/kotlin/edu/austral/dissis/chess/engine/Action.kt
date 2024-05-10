@@ -18,7 +18,9 @@ class Play(val actions: Iterable<Action>) : Action {
     }
 
     override fun setBoard(board: GameBoard): Action {
-        return Play(actions)
+        return Play(
+            actions.map { it.setBoard(board) }
+        )
     }
 }
 
@@ -82,4 +84,9 @@ fun Play.extractMove(): Move {
         ?: throw IllegalArgumentException(
             "There is no Move in this Play",
         )
+}
+
+fun Play.includesTake(): Boolean {
+    return this.actions
+        .any { it is Take }
 }

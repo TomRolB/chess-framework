@@ -1,14 +1,15 @@
 package edu.austral.dissis.chess.checkers.rules
 
-import edu.austral.dissis.chess.checkers.rules.CheckersPieceState.HAS_PENDING_MOVE
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PrePlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.includesTake
+import edu.austral.dissis.chess.engine.pieces.Piece
 
-class PendingMovesValidator : PrePlayValidator {
+class CompulsoryJumpsValidator : PrePlayValidator {
     override fun getResultOnViolation(
         board: GameBoard,
         from: Position,
@@ -16,9 +17,10 @@ class PendingMovesValidator : PrePlayValidator {
         player: Player,
     ): RuleResult? {
         return when {
+            // TODO: could compose these rules
             !board.containsPieceOfPlayer(from, player) ->
                 getViolationResult(board, "This tile does not contain a piece of yours")
-            otherPiecesHavePendingMoves(board, from, player) ->
+            violatesCompulsoryJumps(board, from, player) ->
                 getViolationResult(board, "One of your pieces has a pending move")
             (from == to) ->
                 getViolationResult(board, "Cannot stay in the same place")
@@ -26,21 +28,36 @@ class PendingMovesValidator : PrePlayValidator {
         }
     }
 
-    private fun otherPiecesHavePendingMoves(
+    private fun violatesCompulsoryJumps(
         board: GameBoard,
         from: Position,
         player: Player,
-    ) = !board.getPieceAt(from)!!.hasState(HAS_PENDING_MOVE) && piecesHavePendingMoves(board, player)
+    ): Boolean {
+        val currentPiece = board.getPieceAt(from)!!
+        return !hasAvailableJumps(currentPiece, board, from) && piecesHaveAvailableJumps(board, player, from)
+    }
 
-    private fun piecesHavePendingMoves(
+    // TODO: may convert to Rule
+    private fun piecesHaveAvailableJumps(
         board: GameBoard,
         player: Player,
+        position: Position
     ): Boolean {
         return board
             .getAllPositionsOfPlayer(player)
             .any {
-                board.getPieceAt(it)!!.hasState(HAS_PENDING_MOVE)
+                val piece = board.getPieceAt(it)!!
+                hasAvailableJumps(piece, board, it)
             }
+    }
+
+    private fun hasAvailableJumps(piece: Piece, board: GameBoard, position: Position): Boolean {
+        //TODO: if we don't have a CAN_TAKE_ENEMY in the end, then to check a piece has actually
+        // taken an enemy's we'll have to call this function again. Thus, it will probably be
+        // converted to a Rule.
+        return piece
+            .getValidPlays(board, position)
+            .any { it.includesTake() }
     }
 
     private fun getViolationResult(

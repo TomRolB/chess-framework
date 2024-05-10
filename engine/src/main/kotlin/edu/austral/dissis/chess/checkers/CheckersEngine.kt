@@ -2,9 +2,7 @@ package edu.austral.dissis.chess.checkers
 
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
-import edu.austral.dissis.chess.checkers.rules.JumpChainValidator
-import edu.austral.dissis.chess.checkers.rules.PendingMovesValidator
-import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
+import edu.austral.dissis.chess.checkers.rules.CompulsoryJumpsValidator
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Play
@@ -26,7 +24,7 @@ import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 // TODO: should see which code is shared across engines and create a basic
-// getEngine() with all specific arguments
+//  getEngine() with all specific arguments
 fun getCheckersEngine(): StandardGameEngine {
     val validator = RectangleBoardValidator(8, 8)
     val board = getClassicInitialBoard(validator)
@@ -35,7 +33,7 @@ fun getCheckersEngine(): StandardGameEngine {
 
     val gameRules =
         StandardGameRules(
-            PendingMovesValidator(),
+            CompulsoryJumpsValidator(),
             object : PostPlayValidator {
                 override fun getPostPlayResult(play: Play, board: GameBoard, player: Player): PlayResult {
                     return PlayResult(play, "Valid move")
