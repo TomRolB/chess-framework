@@ -91,7 +91,7 @@ class Exam {
             ),
         )
             .test()
-//            .debug("man_cannot_avoid_jump.md")
+//            .debug("king_jumps_from_distance.md")
     }
 
     private fun getChessTypes(): Map<() -> Piece, TestPiece> {

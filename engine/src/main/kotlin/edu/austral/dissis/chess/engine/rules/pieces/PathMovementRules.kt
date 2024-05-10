@@ -76,7 +76,7 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
             val (newManager, newPlay) = currentManager.processPosition(board, moveData.from, to, player)
             currentManager = newManager
 
-            if (!didNotReachDestination(row, moveData, col)) {
+            if (!reachedFinalPosition(row, moveData, col)) {
                 play = newPlay
                 break
             }
@@ -88,7 +88,7 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
         return play
     }
 
-    private fun didNotReachDestination(
+    private fun reachedFinalPosition(
         row: Int,
         moveData: MovementData,
         col: Int,

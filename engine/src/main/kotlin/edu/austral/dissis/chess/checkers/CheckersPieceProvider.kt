@@ -5,7 +5,6 @@ import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.JumpManager
 import edu.austral.dissis.chess.checkers.rules.JumpsWhenCompulsory
 import edu.austral.dissis.chess.checkers.rules.PendingJumpUpdater
-import edu.austral.dissis.chess.chess.pieces.getKing
 import edu.austral.dissis.chess.chess.rules.updaters.PromotionUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Piece

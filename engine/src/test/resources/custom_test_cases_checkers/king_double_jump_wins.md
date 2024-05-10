@@ -1,4 +1,4 @@
-# King performs double jump
+# King performs double jump and ends game
 
 # Size
 width = 8
@@ -24,7 +24,7 @@ height = 8
 
 
 # Result
-`ALL_MOVES_VALID`
+`BLACK_MATE`
 
 # Final board
 ```
