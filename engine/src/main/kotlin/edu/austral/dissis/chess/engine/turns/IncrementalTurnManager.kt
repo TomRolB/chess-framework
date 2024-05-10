@@ -1,6 +1,7 @@
 package edu.austral.dissis.chess.engine.turns
 
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.not
 
 class IncrementalTurnManager : TurnManager {
@@ -24,7 +25,7 @@ class IncrementalTurnManager : TurnManager {
         return currentPlayer
     }
 
-    override fun nextTurn(): TurnManager {
+    override fun nextTurn(result: RuleResult): TurnManager {
         val currCount = count + 1
         val nextPlayer = if (currCount != numberTurns) currentPlayer else !currentPlayer
         val nextNumberTurns = if (currCount != numberTurns) numberTurns else numberTurns + 1

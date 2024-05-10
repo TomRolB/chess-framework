@@ -42,7 +42,7 @@ fun getClassicEngine(): StandardGameEngine {
             ClassicWinCondition(),
         )
 
-    val game = Game(gameRules, board, OneToOneTurnManager())
+    val game = Game(gameRules, board, OneToOneTurnManager(WHITE))
 
     return StandardGameEngine(game, validator, pieceAdapter)
 }

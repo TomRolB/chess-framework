@@ -31,11 +31,11 @@ class Game(
     ): Pair<RuleResult, Game> {
         val gameData = GameData(board, turnManager, from, to)
 
-        val playResult = gameRules.verify(gameData)
+        val ruleResult = gameRules.verify(gameData)
 
-        val newGame = Game(gameRules, playResult.board, turnManager.nextTurn())
+        val newGame = Game(gameRules, ruleResult.board, turnManager.nextTurn(ruleResult))
 
-        return playResult to newGame
+        return ruleResult to newGame
     }
 }
 

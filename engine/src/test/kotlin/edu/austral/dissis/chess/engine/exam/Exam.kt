@@ -1,5 +1,6 @@
 package edu.austral.dissis.chess.engine.exam
 
+import edu.austral.dissis.chess.checkers.MultiTurnManager
 import edu.austral.dissis.chess.checkers.getMan
 import edu.austral.dissis.chess.checkers.rules.CompulsoryJumpsValidator
 import edu.austral.dissis.chess.chess.pieces.getBishop
@@ -14,6 +15,8 @@ import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.rules.winconditions.ExtinctionWinCondition
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.Player.WHITE
+import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.custom.CheckersGameTester
@@ -43,7 +46,7 @@ class Exam {
                         ClassicPostPlayValidator(),
                         ClassicWinCondition(),
                     ),
-                turnManager = OneToOneTurnManager(),
+                turnManager = OneToOneTurnManager(WHITE),
             ),
         )
             .test()
@@ -63,7 +66,7 @@ class Exam {
                         ClassicPostPlayValidator(),
                         ClassicWinCondition(),
                     ),
-                turnManager = OneToOneTurnManager(),
+                turnManager = OneToOneTurnManager(WHITE),
             ),
         )
             .test()
@@ -87,7 +90,7 @@ class Exam {
                     },
                     ExtinctionWinCondition(),
                 ),
-                turnManager = OneToOneTurnManager(),
+                turnManager = MultiTurnManager(WHITE),
             ),
         )
             .test()
@@ -95,7 +98,7 @@ class Exam {
     }
 
     private fun getChessTypes(): Map<() -> Piece, TestPiece> {
-        return listOf(Player.WHITE to 'W', Player.BLACK to 'B')
+        return listOf(WHITE to 'W', BLACK to 'B')
             .flatMap {
                 listOf(
                     { getPawn(it.first) } to TestPiece('P', it.second),
@@ -110,7 +113,7 @@ class Exam {
     }
 
     private fun getCheckersTypes(): Map<() -> Piece, TestPiece> {
-        return listOf(Player.WHITE to 'W', Player.BLACK to 'B')
+        return listOf(WHITE to 'W', BLACK to 'B')
             .flatMap {
                 listOf(
                     { getMan(it.first) } to TestPiece('P', it.second),

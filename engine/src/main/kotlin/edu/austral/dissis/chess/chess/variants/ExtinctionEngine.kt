@@ -10,6 +10,7 @@ import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
@@ -33,7 +34,7 @@ fun getExtinctionEngine(): StandardGameEngine {
             ExtinctionWinCondition(),
         )
 
-    val game = Game(gameRules, board, OneToOneTurnManager())
+    val game = Game(gameRules, board, OneToOneTurnManager(WHITE))
 
     return StandardGameEngine(game, validator, pieceAdapter)
 }

@@ -42,18 +42,8 @@ class CompulsoryJumpsValidator : PrePlayValidator {
     // TODO: should compose
     private fun violatesPendingJumps(board: GameBoard, from: Position, player: Player): Boolean {
         return !HasPendingJumps(board, from).verify()
-                && otherPieceHasPendingJumps(board, player)
+                && AnyAllyPieceHasPendingJumps(board, player).verify()
     }
-
-    // TODO: convert to rule?
-    private fun otherPieceHasPendingJumps(board: GameBoard, player: Player): Boolean {
-        return board
-            .getAllPositionsOfPlayer(player)
-            .any {
-                HasPendingJumps(board, it).verify()
-            }
-    }
-
 
     // TODO: may convert to Rule
     private fun piecesHaveAvailableJumps(

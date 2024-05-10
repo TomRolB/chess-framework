@@ -6,11 +6,11 @@ import edu.austral.dissis.chess.checkers.rules.CompulsoryJumpsValidator
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.PostPlayValidator
+import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.WinCondition
 import edu.austral.dissis.chess.engine.board.BoardBuilder
 import edu.austral.dissis.chess.engine.board.GameBoard
@@ -19,12 +19,13 @@ import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
-import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 // TODO: should see which code is shared across engines and create a basic
 //  getEngine() with all specific arguments
+
+// TODO: part of this code should be used at Exam, to avoid redundancy
 fun getCheckersEngine(): StandardGameEngine {
     val validator = RectangleBoardValidator(8, 8)
     val board = getClassicInitialBoard(validator)
@@ -50,7 +51,7 @@ fun getCheckersEngine(): StandardGameEngine {
             },
         )
 
-    val game = Game(gameRules, board, OneToOneTurnManager())
+    val game = Game(gameRules, board, MultiTurnManager(WHITE))
 
     return StandardGameEngine(game, validator, pieceAdapter)
 }
