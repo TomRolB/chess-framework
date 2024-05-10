@@ -94,7 +94,7 @@ class Exam {
             ),
         )
             .test()
-//            .debug("king_jumps_from_distance.md")
+//            .debug("king_double_jump_wins.md")
     }
 
     private fun getChessTypes(): Map<() -> Piece, TestPiece> {

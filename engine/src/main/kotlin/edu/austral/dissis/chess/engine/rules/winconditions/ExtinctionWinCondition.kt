@@ -15,9 +15,9 @@ class ExtinctionWinCondition : WinCondition {
     ): RuleResult {
         return when {
             playerWentExtinct(board, Player.WHITE) ->
-                RuleResult(board, null, EngineResult.BLACK_WINS, "Black wins!")
+                RuleResult(board, play, EngineResult.BLACK_WINS, "Black wins!")
             playerWentExtinct(board, Player.BLACK) ->
-                RuleResult(board, null, EngineResult.WHITE_WINS, "White wins!")
+                RuleResult(board, play, EngineResult.WHITE_WINS, "White wins!")
             else ->
                 RuleResult(board, play, EngineResult.VALID_MOVE, "Valid move")
         }
