@@ -20,7 +20,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.stream.Stream
 
-class CustomGameTester(private val runner: TestGameRunner) {
+class ChessGameTester(private val runner: TestGameRunner) {
     private val parser: GameBoardParser = GameBoardParser()
 
     fun test(): Stream<DynamicTest> {

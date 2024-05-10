@@ -1,5 +1,7 @@
 package edu.austral.dissis.chess.engine.exam
 
+import edu.austral.dissis.chess.checkers.getMan
+import edu.austral.dissis.chess.checkers.rules.CompulsoryJumpsValidator
 import edu.austral.dissis.chess.chess.pieces.getBishop
 import edu.austral.dissis.chess.chess.pieces.getKing
 import edu.austral.dissis.chess.chess.pieces.getKnight
@@ -9,9 +11,15 @@ import edu.austral.dissis.chess.chess.pieces.getRook
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPostPlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
+import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.rules.winconditions.ExtinctionWinCondition
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.custom.CustomGameTester
+import edu.austral.dissis.chess.engine.PostPlayValidator
+import edu.austral.dissis.chess.engine.board.GameBoard
+import edu.austral.dissis.chess.engine.custom.CheckersGameTester
+import edu.austral.dissis.chess.engine.custom.ChessGameTester
 import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.test.TestPiece
@@ -19,6 +27,7 @@ import edu.austral.dissis.chess.test.game.GameTester
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import java.util.stream.Stream
+import edu.austral.dissis.chess.checkers.getKing as getCheckersKing
 
 class Exam {
     @TestFactory
@@ -27,7 +36,7 @@ class Exam {
 
         return GameTester(
             AdapterTestGameRunner(
-                pieceAdapter = PieceAdapter(getPieceTypes()),
+                pieceAdapter = PieceAdapter(getChessTypes()),
                 gameRules =
                     StandardGameRules(
                         ClassicPrePlayValidator(),
@@ -42,12 +51,12 @@ class Exam {
     }
 
     @TestFactory
-    fun `custom tests`(): Stream<DynamicTest> {
+    fun `custom chess tests`(): Stream<DynamicTest> {
 //        return GameTester(DummyTestGameRunner()).test()
 
-        return CustomGameTester(
+        return ChessGameTester(
             AdapterTestGameRunner(
-                pieceAdapter = PieceAdapter(getPieceTypes()),
+                pieceAdapter = PieceAdapter(getChessTypes()),
                 gameRules =
                     StandardGameRules(
                         ClassicPrePlayValidator(),
@@ -61,7 +70,31 @@ class Exam {
 //            .debug("bishop_can_move_to_corner.md")
     }
 
-    private fun getPieceTypes(): Map<() -> Piece, TestPiece> {
+    @TestFactory
+    fun `custom checkers tests`(): Stream<DynamicTest> {
+//        return GameTester(DummyTestGameRunner()).test()
+
+        return CheckersGameTester(
+            AdapterTestGameRunner(
+                pieceAdapter = PieceAdapter(getCheckersTypes()),
+                gameRules =
+                StandardGameRules(
+                    CompulsoryJumpsValidator(),
+                    object : PostPlayValidator {
+                        override fun getPostPlayResult(play: Play, board: GameBoard, player: Player): PlayResult {
+                            return PlayResult(play, "Valid move")
+                        }
+                    },
+                    ExtinctionWinCondition(),
+                ),
+                turnManager = OneToOneTurnManager(),
+            ),
+        )
+            .test()
+//            .debug("bishop_can_move_to_corner.md")
+    }
+
+    private fun getChessTypes(): Map<() -> Piece, TestPiece> {
         return listOf(Player.WHITE to 'W', Player.BLACK to 'B')
             .flatMap {
                 listOf(
@@ -71,6 +104,17 @@ class Exam {
                     { getQueen(it.first) } to TestPiece('Q', it.second),
                     { getKnight(it.first) } to TestPiece('N', it.second),
                     { getKing(it.first) } to TestPiece('K', it.second),
+                )
+            }
+            .toMap()
+    }
+
+    private fun getCheckersTypes(): Map<() -> Piece, TestPiece> {
+        return listOf(Player.WHITE to 'W', Player.BLACK to 'B')
+            .flatMap {
+                listOf(
+                    { getMan(it.first) } to TestPiece('P', it.second),
+                    { getCheckersKing(it.first) } to TestPiece('K', it.second),
                 )
             }
             .toMap()
