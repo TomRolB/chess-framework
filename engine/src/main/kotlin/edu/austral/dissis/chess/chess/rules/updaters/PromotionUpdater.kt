@@ -20,7 +20,7 @@ class PromotionUpdater(val pieceNextTurn: Piece) : PlayUpdater {
             .actions
             .map {
                 if (it is Move) {
-                    replaceByQueenIfValid(it, board)
+                    replaceByPieceIfValid(it, board)
                 } else {
                     it
                 }
@@ -30,7 +30,7 @@ class PromotionUpdater(val pieceNextTurn: Piece) : PlayUpdater {
             }
     }
 
-    private fun replaceByQueenIfValid(
+    private fun replaceByPieceIfValid(
         move: Move,
         board: GameBoard,
     ): Move {

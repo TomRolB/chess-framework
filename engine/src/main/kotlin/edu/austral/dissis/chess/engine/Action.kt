@@ -77,7 +77,7 @@ class Take(val position: Position, val board: GameBoard) : Action {
     }
 }
 
-fun Play.extractMove(): Move {
+fun Play.extractMoveAction(): Move {
     return this.actions
         .find { it is Move }
         ?.let { it as Move }

@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.checkers.rules
 
-import edu.austral.dissis.chess.checkers.rules.CheckersPieceState.CAN_TAKE_ENEMY
+import edu.austral.dissis.chess.checkers.rules.CheckersPieceState.HAS_PENDING_JUMP
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PostPlayValidator
@@ -22,6 +22,6 @@ class JumpChainValidator: PostPlayValidator {
     ) = board
         .getAllPositionsOfPlayer(player)
         .any {
-            board.getPieceAt(it)!!.hasState(CAN_TAKE_ENEMY)
+            board.getPieceAt(it)!!.hasState(HAS_PENDING_JUMP)
         }
 }

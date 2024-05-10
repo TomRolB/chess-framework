@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.checkers.rules
 
-import edu.austral.dissis.chess.checkers.rules.CheckersPieceState.CAN_TAKE_ENEMY
+import edu.austral.dissis.chess.checkers.rules.CheckersPieceState.HAS_PENDING_JUMP
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Take
@@ -33,10 +33,10 @@ class CanAttackUpdater: PlayUpdater {
         boardAfterPlay: GameBoard,
     ): Move {
         return if (anyAttack(it, boardAfterPlay)) {
-            val pieceNextTurn = it.pieceNextTurn.withState(CAN_TAKE_ENEMY)
+            val pieceNextTurn = it.pieceNextTurn.withState(HAS_PENDING_JUMP)
             it.withPiece(pieceNextTurn)
         } else {
-            val pieceNextTurn = it.pieceNextTurn.withoutState(CAN_TAKE_ENEMY)
+            val pieceNextTurn = it.pieceNextTurn.withoutState(HAS_PENDING_JUMP)
             it.withPiece(pieceNextTurn)
         }
     }
