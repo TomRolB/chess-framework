@@ -25,9 +25,9 @@ fun getMan(player: Player) =
             Update(
                 PromotionUpdater(getKing(player)),
                 subRule =
-                Update(
-                    CanAttackUpdater(),
-                    subRule =
+//                Update(
+//                    CanAttackUpdater(),
+//                    subRule =
                     CombinedRules(
                         // TODO: Should mirror inside PathMovementRules
                         PathMovementRules(
@@ -55,7 +55,7 @@ fun getMan(player: Player) =
                             IncrementalMovement(1, -1, player)
                         ),
                     )
-                ),
+//                ),
             ),
 //        )
     )
@@ -67,9 +67,9 @@ fun getKing(player: Player) =
         rules =
 //        MovesWhenCompulsory(
 //            subRule =
-            Update(
-                CanAttackUpdater(),
-                subRule =
+//            Update(
+//                CanAttackUpdater(),
+//                subRule =
                 CombinedRules(
                     PathMovementRules(
                         increments = 1 to 1,
@@ -88,7 +88,7 @@ fun getKing(player: Player) =
                         JumpManager(Int.MAX_VALUE, 0, 1)
                     ),
                 )
-            ),
+//            ),
 //        )
     )
 
