@@ -46,21 +46,19 @@ fun getCheckersGameRules() =
         ExtinctionWinCondition(),
     )
 
-// TODO: may create a parser to avoid this long function,
-//  and to make all board creations much more clear
 fun getClassicInitialBoard() =
     BoardParser
-        .withPieces(mapOf('M' to getMan(WHITE)))
+        .withPieces(mapOf("WM" to getMan(WHITE), "BM" to getMan(BLACK)))
         .parse(
             """
-                |  |WM|  |WM|  |WM|  |WM|  |WM|
-                |WM|  |WM|  |WM|  |WM|  |WM|  |
-                |  |WM|  |WM|  |WM|  |WM|  |WM|
-                |  |  |  |  |  |  |  |  |  |  |
-                |  |  |  |  |  |BM|  |  |  |  |
-                |BM|  |BM|  |  |  |BM|  |BM|  |
-                |  |BM|  |BM|  |BM|  |BM|  |BM|
-                |BM|  |BM|  |BM|  |BM|  |BM|  |
+                |  |WM|  |WM|  |WM|  |WM|
+                |WM|  |WM|  |WM|  |WM|  |
+                |  |WM|  |WM|  |WM|  |WM|
+                |  |  |  |  |  |  |  |  |
+                |  |  |  |  |  |  |  |  |
+                |BM|  |BM|  |BM|  |BM|  |
+                |  |BM|  |BM|  |BM|  |BM|
+                |BM|  |BM|  |BM|  |BM|  |
             """.trimIndent()
         )
 
