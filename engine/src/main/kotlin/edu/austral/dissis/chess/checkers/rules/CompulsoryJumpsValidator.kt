@@ -1,9 +1,9 @@
 package edu.austral.dissis.chess.checkers.rules
 
 import edu.austral.dissis.chess.engine.EngineResult
-import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PrePlayValidator
+import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 
@@ -28,28 +28,31 @@ class CompulsoryJumpsValidator : PrePlayValidator {
         }
     }
 
-    //TODO: should compose
+    // TODO: should compose
     private fun violatesCompulsoryJumps(
         board: GameBoard,
         from: Position,
         player: Player,
     ): Boolean {
         val currentPiece = board.getPieceAt(from)!!
-        return !HasAvailableJumps(currentPiece, board, from).verify()
-                && piecesHaveAvailableJumps(board, player, from)
+        return !HasAvailableJumps(currentPiece, board, from).verify() &&
+            piecesHaveAvailableJumps(board, player)
     }
 
     // TODO: should compose
-    private fun violatesPendingJumps(board: GameBoard, from: Position, player: Player): Boolean {
-        return !HasPendingJumps(board, from).verify()
-                && AnyAllyPieceHasPendingJumps(board, player).verify()
+    private fun violatesPendingJumps(
+        board: GameBoard,
+        from: Position,
+        player: Player,
+    ): Boolean {
+        return !HasPendingJumps(board, from).verify() &&
+            AnyAllyPieceHasPendingJumps(board, player).verify()
     }
 
     // TODO: may convert to Rule
     private fun piecesHaveAvailableJumps(
         board: GameBoard,
         player: Player,
-        position: Position
     ): Boolean {
         return board
             .getAllPositionsOfPlayer(player)

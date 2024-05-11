@@ -15,54 +15,51 @@ import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.PathMovementRules
 import edu.austral.dissis.chess.engine.rules.pieces.Update
 
+//TODO: variant where men can only take forwards (may combine with the three below)
+//TODO: variant with no compulsory jumps
+//TODO: variant with no flying kings
 fun getMan(player: Player) =
     Piece(
         type = MAN,
         player = player,
         rules =
-        Update(
-            PromotionUpdater(getKing(player)),
-            subRule =
-            JumpsWhenCompulsory(
+            Update(
+                PromotionUpdater(getKing(player)),
                 subRule =
-
-//                Update(
-//                    CanAttackUpdater(),
-//                    subRule =
-                Update(
-                    PendingJumpUpdater(),
-                    subRule =
-                    CombinedRules(
-                        // TODO: Should mirror inside PathMovementRules
-                        PathMovementRules(
-                            increments = 1 to 1,
-                            JumpManager(2, 1, 1)
-                        ),
-                        PathMovementRules(
-                            increments = 1 to -1,
-                            JumpManager(2, 1, 1)
-                        ),
-                        PathMovementRules(
-                            increments = -1 to 1,
-                            JumpManager(2, 1, 1)
-                        ),
-                        PathMovementRules(
-                            increments = -1 to -1,
-                            JumpManager(2, 1, 1)
-                        ),
-                        NoPieceAtFinalPosition(
-                            subRule =
-                            IncrementalMovement(1, 1, player)
-                        ),
-                        NoPieceAtFinalPosition(
-                            subRule =
-                            IncrementalMovement(1, -1, player)
-                        ),
-                    )
-                ),
-            )
-//            ),
-        )
+                    JumpsWhenCompulsory(
+                        subRule =
+                            Update(
+                                PendingJumpUpdater(),
+                                subRule =
+                                    CombinedRules(
+                                        PathMovementRules(
+                                            increments = 1 to 1,
+                                            JumpManager(2, 1, 1),
+                                        ),
+                                        PathMovementRules(
+                                            increments = 1 to -1,
+                                            JumpManager(2, 1, 1),
+                                        ),
+                                        PathMovementRules(
+                                            increments = -1 to 1,
+                                            JumpManager(2, 1, 1),
+                                        ),
+                                        PathMovementRules(
+                                            increments = -1 to -1,
+                                            JumpManager(2, 1, 1),
+                                        ),
+                                        NoPieceAtFinalPosition(
+                                            subRule =
+                                                IncrementalMovement(1, 1, player),
+                                        ),
+                                        NoPieceAtFinalPosition(
+                                            subRule =
+                                                IncrementalMovement(1, -1, player),
+                                        ),
+                                    ),
+                            ),
+                    ),
+            ),
     )
 
 fun getKing(player: Player) =
@@ -70,35 +67,31 @@ fun getKing(player: Player) =
         type = KING,
         player = player,
         rules =
-        Update(
-            PendingJumpUpdater(),
-            subRule =
-            JumpsWhenCompulsory(
+            Update(
+                PendingJumpUpdater(),
                 subRule =
-//            Update(
-//                CanAttackUpdater(),
-//                subRule =
-                CombinedRules(
-                    PathMovementRules(
-                        increments = 1 to 1,
-                        JumpManager(Int.MAX_VALUE, 0, 1)
+                    JumpsWhenCompulsory(
+                        subRule =
+                            CombinedRules(
+                                PathMovementRules(
+                                    increments = 1 to 1,
+                                    JumpManager(Int.MAX_VALUE, 0, 1),
+                                ),
+                                PathMovementRules(
+                                    increments = 1 to -1,
+                                    JumpManager(Int.MAX_VALUE, 0, 1),
+                                ),
+                                PathMovementRules(
+                                    increments = -1 to 1,
+                                    JumpManager(Int.MAX_VALUE, 0, 1),
+                                ),
+                                PathMovementRules(
+                                    increments = -1 to -1,
+                                    JumpManager(Int.MAX_VALUE, 0, 1),
+                                ),
+                            ),
                     ),
-                    PathMovementRules(
-                        increments = 1 to -1,
-                        JumpManager(Int.MAX_VALUE, 0, 1)
-                    ),
-                    PathMovementRules(
-                        increments = -1 to 1,
-                        JumpManager(Int.MAX_VALUE, 0, 1)
-                    ),
-                    PathMovementRules(
-                        increments = -1 to -1,
-                        JumpManager(Int.MAX_VALUE, 0, 1)
-                    ),
-                )
-//            ),
-            )
-        )
+            ),
     )
 
 enum class CheckersPieceType : PieceType {

@@ -22,7 +22,7 @@ import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getExtinctionEngine(): StandardGameEngine {
-    val validator = RectangleBoardValidator(8, 8)
+    val validator = RectangleBoardValidator(numberRows =  8, numberCols = 8)
     val board = getClassicInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -59,4 +59,3 @@ class NoPostPlayValidator : PostPlayValidator {
         return edu.austral.dissis.chess.engine.pieces.PlayResult(play, "Valid play")
     }
 }
-

@@ -18,7 +18,7 @@ class TwoPlacesUpdater : PlayUpdater {
             .actions
             .map {
                 if (it is Move) {
-                    removeOrAddState(it, board)
+                    removeOrAddState(it)
                 } else {
                     it
                 }
@@ -30,7 +30,6 @@ class TwoPlacesUpdater : PlayUpdater {
 
     private fun removeOrAddState(
         move: Move,
-        board: GameBoard,
     ): Move {
         return if (movedTwoPlaces(move)) {
             val pieceNextTurn = move.pieceNextTurn.withState(ClassicPieceState.MOVED_TWO_PLACES)

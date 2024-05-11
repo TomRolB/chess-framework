@@ -3,15 +3,12 @@ package edu.austral.dissis.chess.checkers
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.CompulsoryJumpsValidator
-import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.PostPlayValidator
-import edu.austral.dissis.chess.engine.RuleResult
-import edu.austral.dissis.chess.engine.WinCondition
 import edu.austral.dissis.chess.engine.board.BoardBuilder
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.PositionValidator
@@ -19,6 +16,7 @@ import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
+import edu.austral.dissis.chess.engine.rules.winconditions.ExtinctionWinCondition
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
@@ -27,7 +25,7 @@ import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 // TODO: part of this code should be used at Exam, to avoid redundancy
 fun getCheckersEngine(): StandardGameEngine {
-    val validator = RectangleBoardValidator(8, 8)
+    val validator = RectangleBoardValidator(numberRows = 8, numberCols = 8)
     val board = getClassicInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -36,19 +34,15 @@ fun getCheckersEngine(): StandardGameEngine {
         StandardGameRules(
             CompulsoryJumpsValidator(),
             object : PostPlayValidator {
-                override fun getPostPlayResult(play: Play, board: GameBoard, player: Player): PlayResult {
+                override fun getPostPlayResult(
+                    play: Play,
+                    board: GameBoard,
+                    player: Player,
+                ): PlayResult {
                     return PlayResult(play, "Valid move")
                 }
             },
-            object : WinCondition {
-                override fun getGameResult(
-                    board: GameBoard,
-                    play: Play,
-                    player: Player,
-                ): RuleResult {
-                    return RuleResult(board, play, EngineResult.VALID_MOVE, "Valid move")
-                }
-            },
+            ExtinctionWinCondition(),
         )
 
     val game = Game(gameRules, board, MultiTurnManager(WHITE))
@@ -56,6 +50,8 @@ fun getCheckersEngine(): StandardGameEngine {
     return StandardGameEngine(game, validator, pieceAdapter)
 }
 
+// TODO: may create a parser to avoid this long function,
+//  and to make all board creations much more clear
 fun getClassicInitialBoard(validator: PositionValidator) =
     BoardBuilder(validator)
         .fillRow(
@@ -85,7 +81,7 @@ fun getClassicInitialBoard(validator: PositionValidator) =
             ),
         )
         .fillRow(
-            3,
+            row = 3,
             listOf(
                 getMan(WHITE),
                 null,
@@ -98,7 +94,7 @@ fun getClassicInitialBoard(validator: PositionValidator) =
             ),
         )
         .fillRow(
-            6,
+            row = 6,
             listOf(
                 null,
                 getMan(BLACK),
@@ -111,7 +107,7 @@ fun getClassicInitialBoard(validator: PositionValidator) =
             ),
         )
         .fillRow(
-            7,
+            row = 7,
             listOf(
                 getMan(BLACK),
                 null,
@@ -124,7 +120,7 @@ fun getClassicInitialBoard(validator: PositionValidator) =
             ),
         )
         .fillRow(
-            8,
+            row = 8,
             listOf(
                 null,
                 getMan(BLACK),

@@ -1,7 +1,6 @@
-package edu.austral.dissis.chess.chess.engine.rules.pawn
+package edu.austral.dissis.chess.chess.rules.pawn
 
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.PAWN
-import edu.austral.dissis.chess.chess.rules.pawn.EnemyMovedTwoPlaces
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player

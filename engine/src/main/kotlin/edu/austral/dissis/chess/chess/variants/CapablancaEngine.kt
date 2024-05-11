@@ -32,7 +32,7 @@ import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getCapablancaEngine(): StandardGameEngine {
-    val validator = RectangleBoardValidator(10, 10)
+    val validator = RectangleBoardValidator(numberRows = 10, numberCols = 10)
     val board = getInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -66,10 +66,10 @@ private fun getInitialBoard(validator: PositionValidator) =
                 getRook(WHITE),
             ),
         )
-        .fillRow(2, List(10) { getPawn(WHITE) })
-        .fillRow(9, List(10) { getPawn(BLACK) })
+        .fillRow(row = 2, List(size = 10) { getPawn(WHITE) })
+        .fillRow(row = 9, List(size = 10) { getPawn(BLACK) })
         .fillRow(
-            10,
+            row = 10,
             listOf(
                 getRook(BLACK),
                 getKnight(BLACK),

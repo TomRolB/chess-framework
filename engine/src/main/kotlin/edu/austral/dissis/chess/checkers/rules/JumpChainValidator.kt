@@ -7,13 +7,18 @@ import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-//TODO: Modify play to update all pieces' state
-class JumpChainValidator: PostPlayValidator {
-    override fun getPostPlayResult(play: Play, board: GameBoard, player: Player): PlayResult {
+// TODO: Modify play to update all pieces' state
+class JumpChainValidator : PostPlayValidator {
+    override fun getPostPlayResult(
+        play: Play,
+        board: GameBoard,
+        player: Player,
+    ): PlayResult {
         return if (piecesHavePendingMoves(board, player)) {
             PlayResult(null, "One of your pieces has a pending move")
+        } else {
+            PlayResult(play, "Valid move")
         }
-        else PlayResult(play, "Valid move")
     }
 
     private fun piecesHavePendingMoves(

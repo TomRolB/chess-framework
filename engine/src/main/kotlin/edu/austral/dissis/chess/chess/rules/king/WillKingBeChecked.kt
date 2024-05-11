@@ -1,6 +1,4 @@
-package edu.austral.dissis.chess.chess.engine.rules.king
-
-import edu.austral.dissis.chess.chess.rules.king.IsKingChecked
+package edu.austral.dissis.chess.chess.rules.king
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position

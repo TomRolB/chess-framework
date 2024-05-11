@@ -7,8 +7,11 @@ import edu.austral.dissis.chess.engine.includesTakeAction
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class JumpsWhenCompulsory(val subRule: PieceRule): PieceRule {
-    override fun getValidPlays(board: GameBoard, position: Position): Iterable<Play> {
+class JumpsWhenCompulsory(val subRule: PieceRule) : PieceRule {
+    override fun getValidPlays(
+        board: GameBoard,
+        position: Position,
+    ): Iterable<Play> {
         val validPlays = subRule.getValidPlays(board, position)
 
         val hasAvailableJumps = validPlays.any { it.includesTakeAction() }
@@ -19,14 +22,18 @@ class JumpsWhenCompulsory(val subRule: PieceRule): PieceRule {
             }
     }
 
-    override fun getPlayResult(board: GameBoard, from: Position, to: Position): PlayResult {
+    override fun getPlayResult(
+        board: GameBoard,
+        from: Position,
+        to: Position,
+    ): PlayResult {
         val pieceBeforePlay = board.getPieceAt(from)!!
         val result = subRule.getPlayResult(board, from, to)
 
         return when {
             result.play == null -> result
-            HasAvailableJumps(pieceBeforePlay, board, from).verify()
-                    && !pieceActuallyTookAnEnemy(result.play) -> {
+            HasAvailableJumps(pieceBeforePlay, board, from).verify() &&
+                !pieceActuallyTookAnEnemy(result.play) -> {
                 PlayResult(null, "This piece has a compulsory jump")
             }
             else -> result

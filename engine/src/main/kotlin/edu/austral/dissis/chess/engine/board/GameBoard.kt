@@ -31,9 +31,7 @@ interface GameBoard {
 
     fun getAllPositions(): Iterable<Position>
 
-    fun getAllPositionsOfPlayer(
-        player: Player,
-    ): Iterable<Position>
+    fun getAllPositionsOfPlayer(player: Player): Iterable<Position>
 
     fun getRowAsWhite(
         position: Position,

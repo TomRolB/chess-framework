@@ -9,6 +9,7 @@ import edu.austral.dissis.chess.engine.pieces.PlayResult
 import kotlin.math.sign
 
 // TODO: fix messages
+// TODO: Should mirror inside PathMovementRules
 class PathMovementRules(private val increments: Pair<Int, Int>, private val manager: PathManager) : PieceRule {
     // TODO: this method is basically a nonsensical wrapper of another
     override fun getValidPlays(

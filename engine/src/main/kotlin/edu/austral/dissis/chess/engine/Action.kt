@@ -19,7 +19,7 @@ class Play(val actions: Iterable<Action>) : Action {
 
     override fun setBoard(board: GameBoard): Action {
         return Play(
-            actions.map { it.setBoard(board) }
+            actions.map { it.setBoard(board) },
         )
     }
 }

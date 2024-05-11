@@ -1,6 +1,5 @@
 package edu.austral.dissis.chess.chess.pieces
 
-import edu.austral.dissis.chess.chess.engine.rules.pawn.EnPassant
 import edu.austral.dissis.chess.chess.pieces.CapablancaPieceTypes.ARCHBISHOP
 import edu.austral.dissis.chess.chess.pieces.CapablancaPieceTypes.CHANCELLOR
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.BISHOP
@@ -13,6 +12,7 @@ import edu.austral.dissis.chess.chess.rules.MoveTwoPlaces
 import edu.austral.dissis.chess.chess.rules.NoSelfCheckInValidPlays
 import edu.austral.dissis.chess.chess.rules.SimpleBlockManager
 import edu.austral.dissis.chess.chess.rules.castling.Castling
+import edu.austral.dissis.chess.chess.rules.pawn.EnPassant
 import edu.austral.dissis.chess.chess.rules.updaters.HasMovedUpdater
 import edu.austral.dissis.chess.chess.rules.updaters.PromotionUpdater
 import edu.austral.dissis.chess.chess.rules.updaters.TwoPlacesUpdater
@@ -124,14 +124,14 @@ private fun getKnightRules(player: Player) =
                 onFailMessage = FRIENDLY_FIRE_MESSAGE,
                 subRule =
                     CombinedRules(
-                        IncrementalMovement(2, 1),
-                        IncrementalMovement(1, 2),
-                        IncrementalMovement(-1, 2),
-                        IncrementalMovement(-2, 1),
-                        IncrementalMovement(-2, -1),
-                        IncrementalMovement(-1, -2),
-                        IncrementalMovement(1, -2),
-                        IncrementalMovement(2, -1),
+                        IncrementalMovement(rowDelta = 2,  colDelta =1),
+                        IncrementalMovement(rowDelta = 1,  colDelta =2),
+                        IncrementalMovement(rowDelta = -1, colDelta = 2),
+                        IncrementalMovement(rowDelta = -2, colDelta = 1),
+                        IncrementalMovement(rowDelta = -2, colDelta = -1),
+                        IncrementalMovement(rowDelta = -1, colDelta = -2),
+                        IncrementalMovement(rowDelta = 1,  colDelta =-2),
+                        IncrementalMovement(rowDelta = 2,  colDelta =-1),
                     ),
             ),
     )

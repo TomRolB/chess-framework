@@ -1,7 +1,6 @@
 package edu.austral.dissis.chess.chess.rules.gamerules
 
 import edu.austral.dissis.chess.chess.rules.king.IsKingChecked
-import edu.austral.dissis.chess.engine.EngineResult.POST_PLAY_VIOLATION
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PostPlayValidator
@@ -16,7 +15,8 @@ class ClassicPostPlayValidator : PostPlayValidator {
     ): PlayResult {
         return if (IsKingChecked(board, player).verify()) {
             PlayResult(null, "That movement would leave your king checked")
+        } else {
+            PlayResult(play, "Valid play")
         }
-        else PlayResult(play, "Valid play")
     }
 }

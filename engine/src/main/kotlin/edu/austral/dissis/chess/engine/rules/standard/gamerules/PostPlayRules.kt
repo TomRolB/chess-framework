@@ -2,9 +2,9 @@ package edu.austral.dissis.chess.engine.rules.standard.gamerules
 
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PostPlayValidator
+import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PlayResult
@@ -21,8 +21,9 @@ class PostPlayRules(
         val board = arg.execute()
 
         val result = validator.getPostPlayResult(arg, board, player)
-        return if (result.play == null) getViolationResult(board, result)
-        else {
+        return if (result.play == null) {
+            getViolationResult(board, result)
+        } else {
             next.verify(arg to board)
         }
     }
@@ -31,5 +32,4 @@ class PostPlayRules(
         board: GameBoard,
         result: PlayResult,
     ) = RuleResult(board, null, EngineResult.POST_PLAY_VIOLATION, result.message)
-
 }

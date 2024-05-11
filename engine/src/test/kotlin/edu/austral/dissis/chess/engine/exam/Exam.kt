@@ -13,10 +13,9 @@ import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPostPlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
 import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.rules.winconditions.ExtinctionWinCondition
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.Player.BLACK
+import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.custom.CheckersGameTester
@@ -24,6 +23,7 @@ import edu.austral.dissis.chess.engine.custom.ChessGameTester
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
+import edu.austral.dissis.chess.engine.rules.winconditions.ExtinctionWinCondition
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.test.TestPiece
 import edu.austral.dissis.chess.test.game.GameTester
@@ -81,15 +81,19 @@ class Exam {
             AdapterTestGameRunner(
                 pieceAdapter = PieceAdapter(getCheckersTypes()),
                 gameRules =
-                StandardGameRules(
-                    CompulsoryJumpsValidator(),
-                    object : PostPlayValidator {
-                        override fun getPostPlayResult(play: Play, board: GameBoard, player: Player): PlayResult {
-                            return PlayResult(play, "Valid move")
-                        }
-                    },
-                    ExtinctionWinCondition(),
-                ),
+                    StandardGameRules(
+                        CompulsoryJumpsValidator(),
+                        object : PostPlayValidator {
+                            override fun getPostPlayResult(
+                                play: Play,
+                                board: GameBoard,
+                                player: Player,
+                            ): PlayResult {
+                                return PlayResult(play, "Valid move")
+                            }
+                        },
+                        ExtinctionWinCondition(),
+                    ),
                 turnManager = MultiTurnManager(WHITE),
             ),
         )

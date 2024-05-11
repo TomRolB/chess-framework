@@ -1,8 +1,8 @@
 package edu.austral.dissis.chess.engine.rules.standard.gamerules
 
-import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.PrePlayValidator
+import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Piece

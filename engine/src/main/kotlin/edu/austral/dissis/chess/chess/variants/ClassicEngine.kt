@@ -30,7 +30,7 @@ import edu.austral.dissis.chess.ui.UiPieceAdapter
 // TODO: should see which code is shared across engines and create a basic
 // getEngine() with all specific arguments
 fun getClassicEngine(): StandardGameEngine {
-    val validator = RectangleBoardValidator(8, 8)
+    val validator = RectangleBoardValidator(numberRows = 8, numberCols = 8)
     val board = getClassicInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -62,10 +62,10 @@ fun getClassicInitialBoard(validator: PositionValidator) =
                 getRook(WHITE),
             ),
         )
-        .fillRow(2, List(8) { getPawn(WHITE) })
-        .fillRow(7, List(8) { getPawn(BLACK) })
+        .fillRow(row = 2, List(size = 8) { getPawn(WHITE) })
+        .fillRow(row = 7, List(size = 8) { getPawn(BLACK) })
         .fillRow(
-            8,
+            row = 8,
             listOf(
                 getRook(BLACK),
                 getKnight(BLACK),

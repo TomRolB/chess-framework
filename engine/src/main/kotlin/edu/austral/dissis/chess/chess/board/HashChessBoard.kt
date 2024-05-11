@@ -1,6 +1,5 @@
 package edu.austral.dissis.chess.chess.board
 
-import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KING
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
@@ -69,9 +68,7 @@ class HashChessBoard private constructor(
         return boardMap.keys
     }
 
-    override fun getAllPositionsOfPlayer(
-        player: Player,
-    ): Iterable<Position> {
+    override fun getAllPositionsOfPlayer(player: Player): Iterable<Position> {
         return boardMap.keys.filter {
             val position: Position = it
             val piece = boardMap[position]!!

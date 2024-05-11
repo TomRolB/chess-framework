@@ -12,8 +12,11 @@ import edu.austral.dissis.chess.engine.rules.pieces.PlayUpdater
 // TODO: make readable. Could probably create helper classes for Move, Play, etc.
 
 // TODO: this is causing a null pointer at PathMovementRules, for some reason.
-class PendingJumpUpdater: PlayUpdater {
-    override fun update(play: Play, board: GameBoard): Play {
+class PendingJumpUpdater : PlayUpdater {
+    override fun update(
+        play: Play,
+        board: GameBoard,
+    ): Play {
 //        val (pieceNextTurn, to) =
 //            play
 //                .extractMoveAction()

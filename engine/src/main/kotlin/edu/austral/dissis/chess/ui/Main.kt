@@ -1,6 +1,9 @@
 package edu.austral.dissis.chess.ui
 
 import edu.austral.dissis.chess.checkers.getCheckersEngine
+import edu.austral.dissis.chess.chess.variants.getCapablancaEngine
+import edu.austral.dissis.chess.chess.variants.getClassicEngine
+import edu.austral.dissis.chess.chess.variants.getExtinctionEngine
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.DefaultImageResolver
 import edu.austral.dissis.chess.gui.GameView
@@ -15,11 +18,13 @@ fun main() {
 
 class ChessGameApplication : Application() {
     private val gameEngine =
-        getCheckersEngine()
+        listOf(
+            getCheckersEngine(),
+            getClassicEngine(),
+            getCapablancaEngine(),
+            getExtinctionEngine()
+        )[0]
 
-//        getClassicEngine()
-//        getCapablancaEngine()
-//        getExtinctionEngine()
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
     override fun start(primaryStage: Stage) {
