@@ -22,6 +22,7 @@ import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.board.BoardBuilder
+import edu.austral.dissis.chess.engine.board.BoardParser
 import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
@@ -55,6 +56,11 @@ fun getCapablancaEngine(): StandardGameEngine {
 }
 
 private fun getInitialBoard(validator: PositionValidator) =
+    BoardParser
+        .withPieces(mapOf(
+
+        ))
+
     BoardBuilder(validator)
         .fillRow(
             1,

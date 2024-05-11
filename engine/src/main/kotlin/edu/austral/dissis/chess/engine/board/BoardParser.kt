@@ -29,6 +29,8 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
 
         var boardBuilder: BoardBuilder
 
+
+        //TODO: modularize
         return stringBoard
             .drop(n = 1)
             .dropLast(n = 1)
@@ -37,13 +39,21 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
                 stringRow
                     .split(POSITION_DELIMITER)
 //                    .drop(n = 1)
-                    .map { pieces[it] }
+                    .map { getPiece(it) }
             }
             .also { boardBuilder = BoardBuilder(getValidator(it)) }
             .forEachIndexed() { idx, row ->
                 boardBuilder = boardBuilder.fillRow(idx + 1, row)
             }
             .let { boardBuilder.build() }
+    }
+
+    private fun getPiece(symbol: String): Piece {
+        return pieces[symbol]
+            ?.clone()
+            ?: throw IllegalArgumentException(
+                "No piece passed to be associated with $symbol"
+            )
     }
 
     private fun getValidator(rows: List<List<Piece?>>): RectangularBoardValidator {
