@@ -91,11 +91,14 @@ fun Play.includesTakeAction(): Boolean {
         .any { it is Take }
 }
 
-fun Play.replaceMoveActionInPlay(replacerMethod: () -> Play) {
+fun Play.replaceMoveAction(
+    board: GameBoard,
+    replacerMethod: (Play, Move, GameBoard) -> Play
+): Play {
     return this.actions
         .map {
             if (it is Move) {
-                replacerMethod.invoke()
+                replacerMethod.invoke(this, it, board)
             } else {
                 it
             }

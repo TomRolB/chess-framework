@@ -7,34 +7,11 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.includesTakeAction
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.engine.rules.pieces.PlayUpdater
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveUpdater
 
 // TODO: make readable. Could probably create helper classes for Move, Play, etc.
-class PendingJumpUpdater : PlayUpdater {
-    override fun update(
-        play: Play,
-        board: GameBoard,
-    ): Play {
-        // TODO: this is repeated in all updaters. Will probably make a function
-        //  updateMoveInPlay() or sth of the sort.
-        return play
-            .actions
-            .map {
-                if (it is Move) {
-                    replaceByPieceIfValid(play, it)
-                } else {
-                    it
-                }
-            }
-            .let {
-                Play(it)
-            }
-    }
-
-    private fun replaceByPieceIfValid(
-        play: Play,
-        move: Move,
-    ): Move {
+class PendingJumpUpdater : MoveUpdater {
+    override fun update(board: GameBoard, play: Play, move: Move): Move {
         val (pieceNextTurn, to) = move.let { it.pieceNextTurn to it.to }
 
         return if (isPerformingMultipleJump(play, pieceNextTurn, to)) {

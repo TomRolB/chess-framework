@@ -1,4 +1,4 @@
-package edu.austral.dissis.chess.engine.rules.pieces
+package edu.austral.dissis.chess.engine.rules.pieces.updaters
 
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard

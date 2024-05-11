@@ -24,16 +24,12 @@ import edu.austral.dissis.chess.engine.rules.pieces.FinalPositionContainsPieceOf
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.PathMovementRules
-import edu.austral.dissis.chess.engine.rules.pieces.Update
-
-// TODO: Think how to provide pieces more conveniently
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveInPlayUpdater
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.Update
 
 // TODO: Many rules are actually general, such as NoSelfCheckInValidPlays.
 //  Consider whether this can be unified somewhere, or if it's better to keep it this way
 //  (for instance, we may want a piece to not be affected by checks at all)
-
-// TODO: How to save nested rules to a class? Simply wrapping it in a piece rule?
-//  Is it really necessary?
 
 // TODO: modularize rules
 
@@ -58,7 +54,7 @@ object ChessPieceProvider {
                 onFailMessage = FRIENDLY_FIRE_MESSAGE,
                 subRule =
                 Update(
-                    updater = HasMovedUpdater(),
+                    updater = MoveInPlayUpdater(HasMovedUpdater()),
                     subRule =
                     CombinedRules(
                         PathMovementRules(0 to 1, SimpleBlockManager(Int.MAX_VALUE)),
@@ -160,13 +156,13 @@ object ChessPieceProvider {
 
     private fun getPawnCoreRules(player: Player) =
         Update(
-            updater = PromotionUpdater(getQueen(player)),
+            updater = MoveInPlayUpdater(PromotionUpdater(getQueen(player))),
             subRule =
             Update(
-                updater = HasMovedUpdater(),
+                updater = MoveInPlayUpdater(HasMovedUpdater()),
                 subRule =
                 Update(
-                    updater = TwoPlacesUpdater(),
+                    updater = MoveInPlayUpdater(TwoPlacesUpdater()),
                     subRule =
                     CombinedRules(
                         NoPieceAtFinalPosition(
@@ -205,7 +201,7 @@ object ChessPieceProvider {
                     onFailMessage = FRIENDLY_FIRE_MESSAGE,
                     subRule =
                     Update(
-                        updater = HasMovedUpdater(),
+                        updater = MoveInPlayUpdater(HasMovedUpdater()),
                         subRule =
                         CombinedRules(
                             IncrementalMovement(1, 0),

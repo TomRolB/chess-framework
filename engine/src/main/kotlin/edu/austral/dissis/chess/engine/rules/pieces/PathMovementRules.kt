@@ -8,15 +8,41 @@ import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import kotlin.math.sign
 
+// TODO: modularize
 // TODO: fix messages
 // TODO: Should mirror inside PathMovementRules
 class PathMovementRules(private val increments: Pair<Int, Int>, private val manager: PathManager) : PieceRule {
-    // TODO: this method is basically a nonsensical wrapper of another
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return getAllPlaysInPath(board, position)
+        var (row, col) = position
+        val player = board.getPieceAt(position)!!.player
+
+        val (rowIncrement, colIncrement) = increments
+
+        row += rowIncrement
+        col += colIncrement
+
+        val result: MutableList<Play> = mutableListOf()
+
+        var currentManager = manager
+
+        while (true) {
+            val possibleTo = Position(row, col)
+
+            val (newManager, play) = currentManager.processPosition(board, position, possibleTo, player)
+
+            currentManager = newManager
+
+            if (currentManager.isBlocked) break
+            if (play != null) result.add(play)
+
+            row += rowIncrement
+            col += colIncrement
+        }
+
+        return result
     }
 
     override fun getPlayResult(
@@ -94,37 +120,4 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
         moveData: MovementData,
         col: Int,
     ) = !(row == moveData.toRow && col == moveData.toCol)
-
-    private fun getAllPlaysInPath(
-        board: GameBoard,
-        position: Position,
-    ): List<Play> {
-        var (row, col) = position
-        val player = board.getPieceAt(position)!!.player
-
-        val (rowIncrement, colIncrement) = increments
-
-        row += rowIncrement
-        col += colIncrement
-
-        val result: MutableList<Play> = mutableListOf()
-
-        var currentManager = manager
-
-        while (true) {
-            val possibleTo = Position(row, col)
-
-            val (newManager, play) = currentManager.processPosition(board, position, possibleTo, player)
-
-            currentManager = newManager
-
-            if (currentManager.isBlocked) break
-            if (play != null) result.add(play)
-
-            row += rowIncrement
-            col += colIncrement
-        }
-
-        return result
-    }
 }

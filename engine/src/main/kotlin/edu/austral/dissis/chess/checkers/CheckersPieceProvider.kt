@@ -12,9 +12,11 @@ import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.PathMovementRules
-import edu.austral.dissis.chess.engine.rules.pieces.Update
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveInPlayUpdater
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.Update
 
-//TODO: variant where men can only take forwards (may combine with the three below)
+//TODO: may combine three below to create AmericanCheckers
+//TODO: variant where men can only take forwards
 //TODO: variant with no compulsory jumps
 //TODO: variant with no flying kings
 
@@ -25,12 +27,12 @@ object CheckersPieceProvider {
             player = player,
             rules =
             Update(
-                PromotionUpdater(getKing(player)),
+                MoveInPlayUpdater(PromotionUpdater(getKing(player))),
                 subRule =
                 JumpsWhenCompulsory(
                     subRule =
                     Update(
-                        PendingJumpUpdater(),
+                        MoveInPlayUpdater(PendingJumpUpdater()),
                         subRule =
                         CombinedRules(
                             PathMovementRules(
@@ -69,7 +71,7 @@ object CheckersPieceProvider {
             player = player,
             rules =
             Update(
-                PendingJumpUpdater(),
+                MoveInPlayUpdater(PendingJumpUpdater()),
                 subRule =
                 JumpsWhenCompulsory(
                     subRule =

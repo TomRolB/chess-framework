@@ -27,8 +27,6 @@ import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
-// TODO: should see which code is shared across engines and create a basic
-// getEngine() with all specific arguments
 fun getChessEngine(): StandardGameEngine {
     val validator = RectangleBoardValidator(numberRows = 8, numberCols = 8)
     val board = getClassicInitialBoard(validator)
