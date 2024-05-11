@@ -90,3 +90,17 @@ fun Play.includesTakeAction(): Boolean {
     return this.actions
         .any { it is Take }
 }
+
+fun Play.replaceMoveActionInPlay(replacerMethod: () -> Play) {
+    return this.actions
+        .map {
+            if (it is Move) {
+                replacerMethod.invoke()
+            } else {
+                it
+            }
+        }
+        .let {
+            Play(it)
+        }
+}

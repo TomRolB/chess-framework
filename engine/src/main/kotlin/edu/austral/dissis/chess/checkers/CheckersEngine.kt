@@ -1,5 +1,6 @@
 package edu.austral.dissis.chess.checkers
 
+import edu.austral.dissis.chess.checkers.CheckersPieceProvider.getMan
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.CompulsoryJumpsValidator
@@ -20,35 +21,35 @@ import edu.austral.dissis.chess.engine.rules.winconditions.ExtinctionWinConditio
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
-// TODO: should see which code is shared across engines and create a basic
-//  getEngine() with all specific arguments
-
-// TODO: part of this code should be used at Exam, to avoid redundancy
 fun getCheckersEngine(): StandardGameEngine {
     val validator = RectangleBoardValidator(numberRows = 8, numberCols = 8)
     val board = getClassicInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
 
-    val gameRules =
-        StandardGameRules(
-            CompulsoryJumpsValidator(),
-            object : PostPlayValidator {
-                override fun getPostPlayResult(
-                    play: Play,
-                    board: GameBoard,
-                    player: Player,
-                ): PlayResult {
-                    return PlayResult(play, "Valid move")
-                }
-            },
-            ExtinctionWinCondition(),
-        )
+    val gameRules = getCheckersGameRules()
 
-    val game = Game(gameRules, board, MultiTurnManager(WHITE))
+    val turnManager = getCheckersTurnManager()
+    val game = Game(gameRules, board, turnManager)
 
     return StandardGameEngine(game, validator, pieceAdapter)
 }
+
+fun getCheckersTurnManager() = MultiTurnManager(WHITE)
+
+fun getCheckersGameRules() = StandardGameRules(
+    CompulsoryJumpsValidator(),
+    object : PostPlayValidator {
+        override fun getPostPlayResult(
+            play: Play,
+            board: GameBoard,
+            player: Player,
+        ): PlayResult {
+            return PlayResult(play, "Valid move")
+        }
+    },
+    ExtinctionWinCondition(),
+)
 
 // TODO: may create a parser to avoid this long function,
 //  and to make all board creations much more clear

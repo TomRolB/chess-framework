@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.chess.rules
 
-import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
+import edu.austral.dissis.chess.chess.pieces.ChessPieceState.MOVED
 import edu.austral.dissis.chess.chess.rules.pawn.PawnPathIsBlocked
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play

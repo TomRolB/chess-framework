@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.chess.rules.updaters
 
-import edu.austral.dissis.chess.chess.pieces.ClassicPieceState
+import edu.austral.dissis.chess.chess.pieces.ChessPieceState
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
@@ -32,10 +32,10 @@ class TwoPlacesUpdater : PlayUpdater {
         move: Move,
     ): Move {
         return if (movedTwoPlaces(move)) {
-            val pieceNextTurn = move.pieceNextTurn.withState(ClassicPieceState.MOVED_TWO_PLACES)
+            val pieceNextTurn = move.pieceNextTurn.withState(ChessPieceState.MOVED_TWO_PLACES)
             move.withPiece(pieceNextTurn)
         } else {
-            val pieceNextTurn = move.pieceNextTurn.withoutState(ClassicPieceState.MOVED_TWO_PLACES)
+            val pieceNextTurn = move.pieceNextTurn.withoutState(ChessPieceState.MOVED_TWO_PLACES)
             move.withPiece(pieceNextTurn)
         }
     }

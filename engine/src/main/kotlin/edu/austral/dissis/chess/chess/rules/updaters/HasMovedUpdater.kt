@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.chess.rules.updaters
 
-import edu.austral.dissis.chess.chess.pieces.ClassicPieceState.MOVED
+import edu.austral.dissis.chess.chess.pieces.ChessPieceState.MOVED
 import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard

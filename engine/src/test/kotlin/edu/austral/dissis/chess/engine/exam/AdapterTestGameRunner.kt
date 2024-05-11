@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine.exam
 
-import edu.austral.dissis.chess.chess.board.HashChessBoard
+import edu.austral.dissis.chess.chess.board.HashGameBoard
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.GameData
@@ -103,7 +103,7 @@ class AdapterTestGameRunner : TestGameRunner {
         val validator = RectangleBoardValidator(board.size.rows, board.size.cols)
         val piecePositions = getEnginePieces(board)
 
-        return HashChessBoard.build(validator, piecePositions)
+        return HashGameBoard.build(validator, piecePositions)
     }
 
     private fun getEnginePieces(board: TestBoard): List<Pair<Position, Piece>> {

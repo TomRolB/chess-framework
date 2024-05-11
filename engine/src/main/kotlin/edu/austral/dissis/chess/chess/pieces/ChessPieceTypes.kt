@@ -11,7 +11,3 @@ enum class ChessPieceTypes : PieceType {
     KING,
 }
 
-enum class CapablancaPieceTypes : PieceType {
-    ARCHBISHOP,
-    CHANCELLOR,
-}

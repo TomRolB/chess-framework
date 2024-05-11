@@ -1,17 +1,17 @@
 package edu.austral.dissis.chess.chess.variants
 
+import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getBishop
+import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getKing
+import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getKnight
+import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getPawn
+import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getQueen
+import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getRook
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.BISHOP
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KING
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.KNIGHT
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.PAWN
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.QUEEN
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.ROOK
-import edu.austral.dissis.chess.chess.pieces.getBishop
-import edu.austral.dissis.chess.chess.pieces.getKing
-import edu.austral.dissis.chess.chess.pieces.getKnight
-import edu.austral.dissis.chess.chess.pieces.getPawn
-import edu.austral.dissis.chess.chess.pieces.getQueen
-import edu.austral.dissis.chess.chess.pieces.getRook
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPostPlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
@@ -29,23 +29,24 @@ import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 // TODO: should see which code is shared across engines and create a basic
 // getEngine() with all specific arguments
-fun getClassicEngine(): StandardGameEngine {
+fun getChessEngine(): StandardGameEngine {
     val validator = RectangleBoardValidator(numberRows = 8, numberCols = 8)
     val board = getClassicInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
 
-    val gameRules =
-        StandardGameRules(
-            ClassicPrePlayValidator(),
-            ClassicPostPlayValidator(),
-            ClassicWinCondition(),
-        )
+    val gameRules = getChessGameRules()
 
     val game = Game(gameRules, board, OneToOneTurnManager(WHITE))
 
     return StandardGameEngine(game, validator, pieceAdapter)
 }
+
+fun getChessGameRules() = StandardGameRules(
+    ClassicPrePlayValidator(),
+    ClassicPostPlayValidator(),
+    ClassicWinCondition(),
+)
 
 fun getClassicInitialBoard(validator: PositionValidator) =
     BoardBuilder(validator)

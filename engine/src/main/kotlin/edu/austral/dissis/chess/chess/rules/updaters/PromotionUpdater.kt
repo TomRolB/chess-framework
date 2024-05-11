@@ -34,8 +34,6 @@ class PromotionUpdater(val pieceNextTurn: Piece) : PlayUpdater {
         move: Move,
         board: GameBoard,
     ): Move {
-        val player = move.pieceNextTurn.player
-
         return if (board.isPositionOnUpperLimit(move.to, move.pieceNextTurn.player)) {
             move.withPiece(pieceNextTurn)
         } else {

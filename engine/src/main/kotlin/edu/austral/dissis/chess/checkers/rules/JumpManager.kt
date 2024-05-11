@@ -60,8 +60,6 @@ class JumpManager : PathManager {
                 minJumps = if (hasEnemyPiece) jumpsNeeded - 1 else jumpsNeeded,
                 maxJumps = if (hasEnemyPiece) jumpsLeft - 1 else jumpsLeft,
                 takes = if (hasEnemyPiece) takes.plus(Take(to, board)) else takes,
-                // TODO: the bug comes from the fact we are updating isBlocked afterwards.
-                //  thus, when reaching a non-existing position, the code executes anyway.
                 isBlocked =
                     !board.positionExists(to) ||
                         board.containsPieceOfPlayer(to, player) ||

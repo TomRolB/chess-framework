@@ -1,6 +1,6 @@
 package edu.austral.dissis.chess.engine.board
 
-import edu.austral.dissis.chess.chess.board.HashChessBoard
+import edu.austral.dissis.chess.chess.board.HashGameBoard
 import edu.austral.dissis.chess.engine.pieces.Piece
 
 class BoardBuilder {
@@ -42,7 +42,7 @@ class BoardBuilder {
         )
     }
 
-    fun build(): HashChessBoard {
-        return HashChessBoard.build(validator, piecesWithPositions)
+    fun build(): HashGameBoard {
+        return HashGameBoard.build(validator, piecesWithPositions)
     }
 }

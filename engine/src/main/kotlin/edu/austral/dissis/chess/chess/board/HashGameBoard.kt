@@ -6,9 +6,7 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.pieces.Piece
 
-// TODO: I think this proxy is no longer necessary, since IsChecked
-//  uses a brute force method now
-class HashChessBoard private constructor(
+class HashGameBoard private constructor(
     private val validator: PositionValidator,
     private val boardMap: Map<Position, Piece>,
 ) : GameBoard {
@@ -16,8 +14,8 @@ class HashChessBoard private constructor(
         fun build(
             validator: PositionValidator,
             pieces: List<Pair<Position, Piece>>,
-        ): HashChessBoard {
-            return HashChessBoard(validator, pieces.toMap())
+        ): HashGameBoard {
+            return HashGameBoard(validator, pieces.toMap())
         }
     }
 
@@ -32,17 +30,17 @@ class HashChessBoard private constructor(
     override fun setPieceAt(
         position: Position,
         piece: Piece,
-    ): HashChessBoard {
+    ): HashGameBoard {
         val newMap = boardMap + (position to piece)
 
-        return HashChessBoard(validator, newMap)
+        return HashGameBoard(validator, newMap)
     }
 
-    override fun delPieceAt(position: Position): HashChessBoard {
+    override fun delPieceAt(position: Position): HashGameBoard {
         val newMap: HashMap<Position, Piece> = HashMap(boardMap)
         newMap.remove(position)
 
-        return HashChessBoard(validator, newMap)
+        return HashGameBoard(validator, newMap)
     }
 
     override fun positionExists(position: Position): Boolean {
