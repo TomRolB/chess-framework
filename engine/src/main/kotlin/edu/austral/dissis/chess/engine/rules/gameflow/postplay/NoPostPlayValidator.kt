@@ -1,14 +1,22 @@
 package edu.austral.dissis.chess.engine.rules.gameflow.postplay
 
+import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 
-interface PostPlayValidator {
-    fun getResult(
+class NoPostPlayValidator : PostPlayValidator {
+    override fun getResult(
         play: Play,
         board: GameBoard,
         player: Player,
-    ): RuleResult
+    ): RuleResult {
+        return RuleResult(
+            board = board,
+            play = play,
+            engineResult = EngineResult.VALID_MOVE,
+            message = "Valid play"
+        )
+    }
 }

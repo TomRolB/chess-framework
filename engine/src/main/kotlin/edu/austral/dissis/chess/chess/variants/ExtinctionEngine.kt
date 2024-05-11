@@ -8,14 +8,11 @@ import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.QUEEN
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.ROOK
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.Play
-import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Player.WHITE
-import edu.austral.dissis.chess.engine.rules.gameflow.postplay.PostPlayValidator
-import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
+import edu.austral.dissis.chess.engine.rules.gameflow.postplay.NoPostPlayValidator
 import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.ExtinctionWinCondition
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
@@ -50,12 +47,3 @@ private fun getPieceIdMap(): Map<PieceType, String> {
     ).toMap()
 }
 
-class NoPostPlayValidator : PostPlayValidator {
-    override fun getPostPlayResult(
-        play: Play,
-        board: GameBoard,
-        player: Player,
-    ): edu.austral.dissis.chess.engine.pieces.PlayResult {
-        return edu.austral.dissis.chess.engine.pieces.PlayResult(play, "Valid play")
-    }
-}
