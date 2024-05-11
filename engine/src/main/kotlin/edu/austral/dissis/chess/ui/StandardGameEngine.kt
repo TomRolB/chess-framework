@@ -9,7 +9,7 @@ import edu.austral.dissis.chess.engine.EngineResult.TIE_BY_WHITE
 import edu.austral.dissis.chess.engine.EngineResult.VALID_MOVE
 import edu.austral.dissis.chess.engine.EngineResult.WHITE_WINS
 import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.gui.BoardSize
 import edu.austral.dissis.chess.gui.ChessPiece
 import edu.austral.dissis.chess.gui.GameEngine
@@ -28,7 +28,7 @@ typealias UiBoard = Map<Position, ChessPiece>
 
 class StandardGameEngine(
     private var game: Game,
-    private val validator: RectangleBoardValidator,
+    private val validator: RectangularBoardValidator,
     private val pieceAdapter: UiPieceAdapter,
 ) : GameEngine {
     private var uiBoard: UiBoard = emptyMap()

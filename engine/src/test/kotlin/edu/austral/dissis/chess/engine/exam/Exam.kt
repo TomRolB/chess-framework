@@ -63,6 +63,7 @@ class Exam {
 //            .debug("king_double_jump_wins.md")
     }
 
+    //TODO: should actually use clone() instead of passing a lambda
     private fun getChessTypes(): Map<() -> Piece, TestPiece> {
         return listOf(WHITE to 'W', BLACK to 'B')
             .flatMap {

@@ -8,7 +8,7 @@ import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.QUEEN
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.ROOK
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Player.WHITE
-import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
 import edu.austral.dissis.chess.engine.rules.gameflow.postplay.NoPostPlayValidator
@@ -21,7 +21,7 @@ import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getExtinctionEngine(): StandardGameEngine {
-    val validator = RectangleBoardValidator(numberRows = 8, numberCols = 8)
+    val validator = RectangularBoardValidator(numberRows = 8, numberCols = 8)
     val board = getClassicInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())

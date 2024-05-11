@@ -2,7 +2,7 @@ package edu.austral.dissis.chess.engine.board
 
 import edu.austral.dissis.chess.engine.Player
 
-class RectangleBoardValidator(val numberRows: Int, val numberCols: Int) : PositionValidator {
+class RectangularBoardValidator(val numberRows: Int, val numberCols: Int) : PositionValidator {
     override fun positionExists(position: Position): Boolean {
         val (row, col) = position
         return (0 < row) && (row <= numberRows) &&

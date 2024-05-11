@@ -23,7 +23,7 @@ import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.board.BoardBuilder
 import edu.austral.dissis.chess.engine.board.PositionValidator
-import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
@@ -34,7 +34,7 @@ import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getCapablancaEngine(): StandardGameEngine {
-    val validator = RectangleBoardValidator(numberRows = 10, numberCols = 10)
+    val validator = RectangularBoardValidator(numberRows = 10, numberCols = 10)
     val board = getInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())

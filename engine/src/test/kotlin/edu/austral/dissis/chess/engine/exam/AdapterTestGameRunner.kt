@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.GameData
 import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.RuleChain
 import edu.austral.dissis.chess.engine.turns.TurnManager
@@ -100,7 +100,7 @@ class AdapterTestGameRunner : TestGameRunner {
     }
 
     private fun initEngineBoard(board: TestBoard): GameBoard {
-        val validator = RectangleBoardValidator(board.size.rows, board.size.cols)
+        val validator = RectangularBoardValidator(board.size.rows, board.size.cols)
         val piecePositions = getEnginePieces(board)
 
         return HashGameBoard.build(validator, piecePositions)

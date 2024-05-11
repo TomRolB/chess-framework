@@ -25,8 +25,7 @@ class BoardBuilder {
         pieces: List<Piece?>,
     ): BoardBuilder {
         val rowPiecesWithPositions =
-            pieces.mapIndexedNotNull {
-                    idx, piece ->
+            pieces.mapIndexedNotNull { idx, piece ->
                 val col = idx + 1
 
                 require(validator.positionExists(Position(row, col))) {

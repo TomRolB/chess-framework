@@ -6,11 +6,9 @@ import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.ViolatesCompulsoryJumps
 import edu.austral.dissis.chess.checkers.rules.ViolatesPendingJumps
 import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.Player.BLACK
-import edu.austral.dissis.chess.engine.Player.WHITE
-import edu.austral.dissis.chess.engine.board.BoardBuilder
-import edu.austral.dissis.chess.engine.board.PositionValidator
-import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
+import edu.austral.dissis.chess.engine.Player.*
+import edu.austral.dissis.chess.engine.board.BoardParser
+import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
 import edu.austral.dissis.chess.engine.rules.gameflow.postplay.NoPostPlayValidator
@@ -22,8 +20,8 @@ import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getCheckersEngine(): StandardGameEngine {
-    val validator = RectangleBoardValidator(numberRows = 8, numberCols = 8)
-    val board = getClassicInitialBoard(validator)
+    val validator = RectangularBoardValidator(numberRows = 8, numberCols = 8)
+    val board = getClassicInitialBoard()
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
 
@@ -51,87 +49,21 @@ fun getCheckersGameRules() =
 
 // TODO: may create a parser to avoid this long function,
 //  and to make all board creations much more clear
-fun getClassicInitialBoard(validator: PositionValidator) =
-    BoardBuilder(validator)
-        .fillRow(
-            row = 1,
-            listOf(
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-                null,
-            ),
+fun getClassicInitialBoard() =
+    BoardParser
+        .withPieces(mapOf('M' to getMan(WHITE)))
+        .parse(
+            """
+                |  |WM|  |WM|  |WM|  |WM|  |WM|
+                |WM|  |WM|  |WM|  |WM|  |WM|  |
+                |  |WM|  |WM|  |WM|  |WM|  |WM|
+                |  |  |  |  |  |  |  |  |  |  |
+                |  |  |  |  |  |BM|  |  |  |  |
+                |BM|  |BM|  |  |  |BM|  |BM|  |
+                |  |BM|  |BM|  |BM|  |BM|  |BM|
+                |BM|  |BM|  |BM|  |BM|  |BM|  |
+            """.trimIndent()
         )
-        .fillRow(
-            row = 2,
-            listOf(
-                null,
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-            ),
-        )
-        .fillRow(
-            row = 3,
-            listOf(
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-                null,
-                getMan(WHITE),
-                null,
-            ),
-        )
-        .fillRow(
-            row = 6,
-            listOf(
-                null,
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-            ),
-        )
-        .fillRow(
-            row = 7,
-            listOf(
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-                null,
-            ),
-        )
-        .fillRow(
-            row = 8,
-            listOf(
-                null,
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-                null,
-                getMan(BLACK),
-            ),
-        )
-        .build()
 
 private fun getPieceIdMap(): Map<PieceType, String> {
     return listOf(
