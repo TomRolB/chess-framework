@@ -5,7 +5,7 @@ import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 
-//TODO: The three different validators
+// TODO: The three different validators
 // of the chain are not so different as
 // it seems. Maybe it's possible to
 // create a composite.

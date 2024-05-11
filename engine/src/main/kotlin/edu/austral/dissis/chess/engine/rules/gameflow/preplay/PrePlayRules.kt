@@ -20,8 +20,9 @@ class PrePlayRules(
     override fun verify(): RuleResult {
         val result = validator.getResult(board, from, to, player)
 
-        return if (result.engineResult != VALID_MOVE) result
-        else {
+        return if (result.engineResult != VALID_MOVE) {
+            result
+        } else {
             val piece = board.getPieceAt(from)!!
             next.verify(piece)
         }

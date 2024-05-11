@@ -20,7 +20,7 @@ class ClassicPostPlayValidator : PostPlayValidator {
             board = board,
             play = if (invalid) null else play,
             engineResult = if (invalid) POST_PLAY_VIOLATION else VALID_MOVE,
-            message = if (invalid) "That movement would leave your king checked" else "Valid move"
+            message = if (invalid) "That movement would leave your king checked" else "Valid move",
         )
     }
 }

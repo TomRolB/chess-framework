@@ -8,15 +8,20 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PrePlayValidator
 
-class ViolatesPendingJumps: PrePlayValidator {
-    override fun getResult(board: GameBoard, from: Position, to: Position, player: Player): RuleResult {
+class ViolatesPendingJumps : PrePlayValidator {
+    override fun getResult(
+        board: GameBoard,
+        from: Position,
+        to: Position,
+        player: Player,
+    ): RuleResult {
         val invalid = anotherPieceHasPendingJump(board, from, player)
 
         return RuleResult(
             board = board,
             play = null,
             engineResult = if (invalid) GENERAL_MOVE_VIOLATION else VALID_MOVE,
-            message = if (invalid) "There's another piece with a pending jump" else "Valid move"
+            message = if (invalid) "There's another piece with a pending jump" else "Valid move",
         )
     }
 
@@ -25,5 +30,5 @@ class ViolatesPendingJumps: PrePlayValidator {
         from: Position,
         player: Player,
     ) = !HasPendingJumps(board, from).verify() &&
-            AnyAllyPieceHasPendingJumps(board, player).verify()
+        AnyAllyPieceHasPendingJumps(board, player).verify()
 }

@@ -5,5 +5,9 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 
 interface MoveUpdater {
-    fun update(board: GameBoard, play: Play, move: Move): Move
+    fun update(
+        board: GameBoard,
+        play: Play,
+        move: Move,
+    ): Move
 }

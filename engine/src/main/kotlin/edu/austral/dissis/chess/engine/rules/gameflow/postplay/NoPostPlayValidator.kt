@@ -16,7 +16,7 @@ class NoPostPlayValidator : PostPlayValidator {
             board = board,
             play = play,
             engineResult = EngineResult.VALID_MOVE,
-            message = "Valid play"
+            message = "Valid play",
         )
     }
 }

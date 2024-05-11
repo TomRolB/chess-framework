@@ -42,14 +42,15 @@ fun getChessEngine(): StandardGameEngine {
     return StandardGameEngine(game, validator, pieceAdapter)
 }
 
-fun getChessGameRules() = StandardGameRules(
-    CompoundPrePlayValidator(
-        StaysStill(),
-        NoPieceOfPlayer(),
-    ),
-    ClassicPostPlayValidator(),
-    ClassicWinCondition(),
-)
+fun getChessGameRules() =
+    StandardGameRules(
+        CompoundPrePlayValidator(
+            StaysStill(),
+            NoPieceOfPlayer(),
+        ),
+        ClassicPostPlayValidator(),
+        ClassicWinCondition(),
+    )
 
 fun getClassicInitialBoard(validator: PositionValidator) =
     BoardBuilder(validator)

@@ -19,10 +19,10 @@ class PostPlayRules(
         val board = arg.execute()
 
         val result = validator.getResult(arg, board, player)
-        return if (result.engineResult != VALID_MOVE) result
-        else {
+        return if (result.engineResult != VALID_MOVE) {
+            result
+        } else {
             next.verify(arg to board)
         }
     }
-
 }

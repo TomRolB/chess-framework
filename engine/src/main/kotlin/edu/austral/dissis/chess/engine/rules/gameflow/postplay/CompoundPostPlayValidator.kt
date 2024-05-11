@@ -5,13 +5,16 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
-import edu.austral.dissis.chess.engine.pieces.PlayResult
 
 class CompoundPostPlayValidator(
     val firstValidator: PostPlayValidator,
-    vararg val moreValidators: PostPlayValidator
-): PostPlayValidator {
-    override fun getResult(play: Play, board: GameBoard, player: Player): RuleResult {
+    vararg val moreValidators: PostPlayValidator,
+) : PostPlayValidator {
+    override fun getResult(
+        play: Play,
+        board: GameBoard,
+        player: Player,
+    ): RuleResult {
         var result = firstValidator.getResult(play, board, player)
 
         for (validator in moreValidators) {

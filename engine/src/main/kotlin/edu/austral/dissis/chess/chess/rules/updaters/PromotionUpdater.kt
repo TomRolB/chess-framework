@@ -10,7 +10,11 @@ import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveUpdater
 //  the same 'pieceNextTurn'. Should copy the piece or create it
 //  in the moment.
 class PromotionUpdater(val pieceNextTurn: Piece) : MoveUpdater {
-    override fun update(board: GameBoard, play: Play, move: Move): Move {
+    override fun update(
+        board: GameBoard,
+        play: Play,
+        move: Move,
+    ): Move {
         return if (board.isPositionOnUpperLimit(move.to, move.pieceNextTurn.player)) {
             move.withPiece(pieceNextTurn.clone())
         } else {

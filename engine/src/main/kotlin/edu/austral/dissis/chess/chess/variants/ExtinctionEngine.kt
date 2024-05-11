@@ -21,7 +21,7 @@ import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getExtinctionEngine(): StandardGameEngine {
-    val validator = RectangleBoardValidator(numberRows =  8, numberCols = 8)
+    val validator = RectangleBoardValidator(numberRows = 8, numberCols = 8)
     val board = getClassicInitialBoard(validator)
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -51,4 +51,3 @@ private fun getPieceIdMap(): Map<PieceType, String> {
         KING to "king",
     ).toMap()
 }
-

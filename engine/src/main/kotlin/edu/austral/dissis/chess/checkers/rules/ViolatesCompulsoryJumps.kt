@@ -9,17 +9,22 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PrePlayValidator
 
-class ViolatesCompulsoryJumps: PrePlayValidator {
-    override fun getResult(board: GameBoard, from: Position, to: Position, player: Player): RuleResult {
+class ViolatesCompulsoryJumps : PrePlayValidator {
+    override fun getResult(
+        board: GameBoard,
+        from: Position,
+        to: Position,
+        player: Player,
+    ): RuleResult {
         val currentPiece = board.getPieceAt(from)!!
         val invalid = anotherPieceMustJump(currentPiece, board, from, player)
 
         return RuleResult(
-                board = board,
-                play = null,
-                engineResult = if (invalid) GENERAL_MOVE_VIOLATION else VALID_MOVE,
-                message = if (invalid) "One of your pieces has a compulsory jump" else "Valid play"
-            )
+            board = board,
+            play = null,
+            engineResult = if (invalid) GENERAL_MOVE_VIOLATION else VALID_MOVE,
+            message = if (invalid) "One of your pieces has a compulsory jump" else "Valid play",
+        )
     }
 
     private fun anotherPieceMustJump(
@@ -28,7 +33,7 @@ class ViolatesCompulsoryJumps: PrePlayValidator {
         from: Position,
         player: Player,
     ) = !HasAvailableJumps(currentPiece, board, from).verify() &&
-            piecesHaveAvailableJumps(board, player)
+        piecesHaveAvailableJumps(board, player)
 
     // TODO: may convert to rule
     private fun piecesHaveAvailableJumps(

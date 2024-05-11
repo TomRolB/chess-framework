@@ -8,9 +8,14 @@ import edu.austral.dissis.chess.engine.board.Position
 
 class CompoundPrePlayValidator(
     val firstValidator: PrePlayValidator,
-    vararg val moreValidators: PrePlayValidator
-): PrePlayValidator {
-    override fun getResult(board: GameBoard, from: Position, to: Position, player: Player): RuleResult {
+    vararg val moreValidators: PrePlayValidator,
+) : PrePlayValidator {
+    override fun getResult(
+        board: GameBoard,
+        from: Position,
+        to: Position,
+        player: Player,
+    ): RuleResult {
         var result = firstValidator.getResult(board, from, to, player)
 
         for (validator in moreValidators) {

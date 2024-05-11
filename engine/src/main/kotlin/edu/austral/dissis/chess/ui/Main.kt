@@ -22,7 +22,7 @@ class ChessGameApplication : Application() {
             getCheckersEngine(),
             getChessEngine(),
             getCapablancaEngine(),
-            getExtinctionEngine()
+            getExtinctionEngine(),
         )[0]
 
     private val imageResolver = CachedImageResolver(DefaultImageResolver())

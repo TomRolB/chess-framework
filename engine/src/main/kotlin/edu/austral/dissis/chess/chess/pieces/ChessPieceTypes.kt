@@ -10,4 +10,3 @@ enum class ChessPieceTypes : PieceType {
     KNIGHT,
     KING,
 }
-

@@ -93,7 +93,7 @@ fun Play.includesTakeAction(): Boolean {
 
 fun Play.replaceMoveAction(
     board: GameBoard,
-    replacerMethod: (Play, Move, GameBoard) -> Play
+    replacerMethod: (Play, Move, GameBoard) -> Play,
 ): Play {
     return this.actions
         .map {

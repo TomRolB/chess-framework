@@ -37,23 +37,24 @@ fun getCheckersEngine(): StandardGameEngine {
 
 fun getCheckersTurnManager() = MultiTurnManager(WHITE)
 
-fun getCheckersGameRules() = StandardGameRules(
-    CompoundPrePlayValidator(
-        StaysStill(),
-        NoPieceOfPlayer(),
-        ViolatesPendingJumps(),
-        ViolatesCompulsoryJumps()
-    ),
-    NoPostPlayValidator(),
-    ExtinctionWinCondition()
-)
+fun getCheckersGameRules() =
+    StandardGameRules(
+        CompoundPrePlayValidator(
+            StaysStill(),
+            NoPieceOfPlayer(),
+            ViolatesPendingJumps(),
+            ViolatesCompulsoryJumps(),
+        ),
+        NoPostPlayValidator(),
+        ExtinctionWinCondition(),
+    )
 
 // TODO: may create a parser to avoid this long function,
 //  and to make all board creations much more clear
 fun getClassicInitialBoard(validator: PositionValidator) =
     BoardBuilder(validator)
         .fillRow(
-            1,
+            row = 1,
             listOf(
                 getMan(WHITE),
                 null,
@@ -66,7 +67,7 @@ fun getClassicInitialBoard(validator: PositionValidator) =
             ),
         )
         .fillRow(
-            2,
+            row = 2,
             listOf(
                 null,
                 getMan(WHITE),

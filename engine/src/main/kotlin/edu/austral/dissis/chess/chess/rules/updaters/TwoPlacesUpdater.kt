@@ -8,7 +8,11 @@ import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveUpdater
 import kotlin.math.absoluteValue
 
 class TwoPlacesUpdater : MoveUpdater {
-    override fun update(board: GameBoard, play: Play, move: Move): Move {
+    override fun update(
+        board: GameBoard,
+        play: Play,
+        move: Move,
+    ): Move {
         return if (movedTwoPlaces(move)) {
             val pieceNextTurn = move.pieceNextTurn.withState(MOVED_TWO_PLACES)
             move.withPiece(pieceNextTurn)

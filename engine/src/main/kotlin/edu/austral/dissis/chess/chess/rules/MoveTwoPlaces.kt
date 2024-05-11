@@ -9,6 +9,7 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
+import edu.austral.dissis.chess.engine.rules.All
 import edu.austral.dissis.chess.engine.rules.Not
 import edu.austral.dissis.chess.engine.rules.SimpleRule
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
@@ -44,7 +45,7 @@ class MoveTwoPlaces(
 
         // TODO: turn into normal boolean conditions?
         val conditions =
-            edu.austral.dissis.chess.engine.rules.All(
+            All(
                 SimpleRule(!hasEverMoved),
                 Not(PawnPathIsBlocked(board, moveData)),
             )

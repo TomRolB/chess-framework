@@ -8,9 +8,13 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 
 class CompoundWinCondition(
     val firstValidator: WinCondition,
-    vararg val moreValidators: WinCondition
-): WinCondition {
-    override fun getResult(board: GameBoard, play: Play, player: Player): RuleResult {
+    vararg val moreValidators: WinCondition,
+) : WinCondition {
+    override fun getResult(
+        board: GameBoard,
+        play: Play,
+        player: Player,
+    ): RuleResult {
         var result = firstValidator.getResult(board, play, player)
 
         for (validator in moreValidators) {

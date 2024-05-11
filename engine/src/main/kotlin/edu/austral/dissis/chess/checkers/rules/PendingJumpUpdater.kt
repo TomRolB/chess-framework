@@ -11,7 +11,11 @@ import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveUpdater
 
 // TODO: make readable. Could probably create helper classes for Move, Play, etc.
 class PendingJumpUpdater : MoveUpdater {
-    override fun update(board: GameBoard, play: Play, move: Move): Move {
+    override fun update(
+        board: GameBoard,
+        play: Play,
+        move: Move,
+    ): Move {
         val (pieceNextTurn, to) = move.let { it.pieceNextTurn to it.to }
 
         return if (isPerformingMultipleJump(play, pieceNextTurn, to)) {

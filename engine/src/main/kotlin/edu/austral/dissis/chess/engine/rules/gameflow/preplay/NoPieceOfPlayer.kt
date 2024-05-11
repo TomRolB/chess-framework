@@ -7,15 +7,20 @@ import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 
-class NoPieceOfPlayer: PrePlayValidator {
-    override fun getResult(board: GameBoard, from: Position, to: Position, player: Player): RuleResult {
+class NoPieceOfPlayer : PrePlayValidator {
+    override fun getResult(
+        board: GameBoard,
+        from: Position,
+        to: Position,
+        player: Player,
+    ): RuleResult {
         val invalid = from == to
 
         return RuleResult(
             board = board,
             play = null,
             engineResult = if (invalid) GENERAL_MOVE_VIOLATION else VALID_MOVE,
-            message = if (invalid) "This tile does not contain a piece of yours" else "Valid play"
+            message = if (invalid) "This tile does not contain a piece of yours" else "Valid play",
         )
     }
 }
