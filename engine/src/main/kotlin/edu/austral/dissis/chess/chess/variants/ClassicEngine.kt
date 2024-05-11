@@ -13,7 +13,6 @@ import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.PAWN
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.QUEEN
 import edu.austral.dissis.chess.chess.pieces.ChessPieceTypes.ROOK
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPostPlayValidator
-import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Player.BLACK
@@ -23,6 +22,9 @@ import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
+import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
+import edu.austral.dissis.chess.engine.rules.gameflow.preplay.NoPieceOfPlayer
+import edu.austral.dissis.chess.engine.rules.gameflow.preplay.StaysStill
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
@@ -41,7 +43,10 @@ fun getChessEngine(): StandardGameEngine {
 }
 
 fun getChessGameRules() = StandardGameRules(
-    ClassicPrePlayValidator(),
+    CompoundPrePlayValidator(
+        StaysStill(),
+        NoPieceOfPlayer(),
+    ),
     ClassicPostPlayValidator(),
     ClassicWinCondition(),
 )
