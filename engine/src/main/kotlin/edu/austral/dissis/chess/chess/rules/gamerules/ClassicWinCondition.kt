@@ -11,7 +11,7 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.not
 
 class ClassicWinCondition : WinCondition {
-    override fun getGameResult(
+    override fun getResult(
         board: GameBoard,
         play: Play,
         player: Player,

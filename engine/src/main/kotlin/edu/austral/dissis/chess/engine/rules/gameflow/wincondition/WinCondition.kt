@@ -6,7 +6,7 @@ import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 
 interface WinCondition {
-    fun getGameResult(
+    fun getResult(
         board: GameBoard,
         play: Play,
         player: Player,

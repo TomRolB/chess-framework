@@ -13,7 +13,6 @@ class GameOverRules(
     override fun verify(arg: Pair<Play, GameBoard>): RuleResult {
         val (play, board) = arg
 
-        val finalResult = winCondition.getGameResult(board, play, player)
-        return finalResult
+        return winCondition.getResult(board, play, player)
     }
 }

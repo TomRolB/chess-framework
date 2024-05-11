@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 
 class ExtinctionWinCondition : WinCondition {
-    override fun getGameResult(
+    override fun getResult(
         board: GameBoard,
         play: Play,
         player: Player,
