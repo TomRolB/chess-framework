@@ -20,7 +20,6 @@ import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getCheckersEngine(): StandardGameEngine {
-    val validator = RectangularBoardValidator(numberRows = 8, numberCols = 8)
     val board = getClassicInitialBoard()
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -30,7 +29,7 @@ fun getCheckersEngine(): StandardGameEngine {
     val turnManager = getCheckersTurnManager()
     val game = Game(gameRules, board, turnManager)
 
-    return StandardGameEngine(game, validator, pieceAdapter)
+    return StandardGameEngine(game, board.validator as RectangularBoardValidator, pieceAdapter)
 }
 
 fun getCheckersTurnManager() = MultiTurnManager(WHITE)

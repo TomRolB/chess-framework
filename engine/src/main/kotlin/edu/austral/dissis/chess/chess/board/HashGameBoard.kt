@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.pieces.Piece
 
 class HashGameBoard private constructor(
-    private val validator: PositionValidator,
+    val validator: PositionValidator,
     private val boardMap: Map<Position, Piece>,
 ) : GameBoard {
     companion object {

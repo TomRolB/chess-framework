@@ -91,7 +91,7 @@ class StandardGameEngine(
             )
 
         return InitialState(
-            boardSize = BoardSize(validator.numberRows, validator.numberCols),
+            boardSize = BoardSize(validator.numberCols, validator.numberRows),
             pieces = uiBoard.values.toList(),
             currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
         )
