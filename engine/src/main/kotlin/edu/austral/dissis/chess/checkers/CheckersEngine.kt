@@ -3,21 +3,24 @@ package edu.austral.dissis.chess.checkers
 import edu.austral.dissis.chess.checkers.CheckersPieceProvider.getMan
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
-import edu.austral.dissis.chess.checkers.rules.CompulsoryJumpsValidator
+import edu.austral.dissis.chess.checkers.rules.ViolatesCompulsoryJumps
+import edu.austral.dissis.chess.checkers.rules.ViolatesPendingJumps
+import edu.austral.dissis.chess.chess.rules.gamerules.ClassicPrePlayValidator
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
-import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.BoardBuilder
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.PositionValidator
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.pieces.PlayResult
-import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
-import edu.austral.dissis.chess.engine.rules.winconditions.ExtinctionWinCondition
+import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
+import edu.austral.dissis.chess.engine.rules.gameflow.postplay.PostPlayValidator
+import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
+import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.ExtinctionWinCondition
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
@@ -38,7 +41,11 @@ fun getCheckersEngine(): StandardGameEngine {
 fun getCheckersTurnManager() = MultiTurnManager(WHITE)
 
 fun getCheckersGameRules() = StandardGameRules(
-    CompulsoryJumpsValidator(),
+    CompoundPrePlayValidator(
+        ClassicPrePlayValidator(),
+        ViolatesPendingJumps(),
+        ViolatesCompulsoryJumps()
+    ),
     object : PostPlayValidator {
         override fun getPostPlayResult(
             play: Play,

@@ -1,5 +1,7 @@
-package edu.austral.dissis.chess.engine
+package edu.austral.dissis.chess.engine.rules.gameflow.postplay
 
+import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 

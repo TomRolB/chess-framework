@@ -1,9 +1,8 @@
-package edu.austral.dissis.chess.engine.rules.standard.gamerules
+package edu.austral.dissis.chess.engine.rules.gameflow.postplay
 
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.PostPlayValidator
 import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position

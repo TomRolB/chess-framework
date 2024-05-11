@@ -1,4 +1,4 @@
-package edu.austral.dissis.chess.engine.rules.standard.gamerules
+package edu.austral.dissis.chess.engine.rules.gameflow.play
 
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Play

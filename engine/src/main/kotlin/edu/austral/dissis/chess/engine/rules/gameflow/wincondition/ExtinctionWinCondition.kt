@@ -1,10 +1,9 @@
-package edu.austral.dissis.chess.engine.rules.winconditions
+package edu.austral.dissis.chess.engine.rules.gameflow.wincondition
 
 import edu.austral.dissis.chess.engine.EngineResult
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.RuleResult
-import edu.austral.dissis.chess.engine.WinCondition
 import edu.austral.dissis.chess.engine.board.GameBoard
 
 class ExtinctionWinCondition : WinCondition {

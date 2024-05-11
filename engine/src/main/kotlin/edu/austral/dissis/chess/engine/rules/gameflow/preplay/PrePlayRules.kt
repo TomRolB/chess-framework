@@ -1,7 +1,7 @@
-package edu.austral.dissis.chess.engine.rules.standard.gamerules
+package edu.austral.dissis.chess.engine.rules.gameflow.preplay
 
+import edu.austral.dissis.chess.engine.EngineResult.VALID_MOVE
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.PrePlayValidator
 import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
@@ -18,9 +18,10 @@ class PrePlayRules(
     val next: RuleChain<Piece, RuleResult>,
 ) : Rule<RuleResult> {
     override fun verify(): RuleResult {
-        val resultOnViolation = validator.getResultOnViolation(board, from, to, player)
+        val result = validator.getResult(board, from, to, player)
 
-        return resultOnViolation ?: let {
+        return if (result.engineResult != VALID_MOVE) result
+        else {
             val piece = board.getPieceAt(from)!!
             next.verify(piece)
         }

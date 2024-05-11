@@ -11,12 +11,12 @@ import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Player.WHITE
-import edu.austral.dissis.chess.engine.PostPlayValidator
+import edu.austral.dissis.chess.engine.rules.gameflow.postplay.PostPlayValidator
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.RectangleBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
-import edu.austral.dissis.chess.engine.rules.standard.gamerules.StandardGameRules
-import edu.austral.dissis.chess.engine.rules.winconditions.ExtinctionWinCondition
+import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
+import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.ExtinctionWinCondition
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
