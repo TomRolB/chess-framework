@@ -80,7 +80,7 @@ class Piece {
     }
 
     fun clone(): Piece {
-        return Piece(type, player, rules, states)
+        return Piece(type, player, rules, HashSet(states))
     }
 }
 
