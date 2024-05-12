@@ -72,13 +72,16 @@ class PathMovementRules : PieceRule {
         from: Position,
         to: Position,
     ): PlayResult {
-        val moveData = MovementData(from, to)
+        val player = board.getPieceAt(from)!!.player
+        val moveData =
+            if (mirroredRowIncrement) MovementData(from, to, board, player)
+            else MovementData(from, to)
 
         //TODO: improve
         return if (isViolated(moveData)) {
             PlayResult(null, "Piece cannot move this way")
         } else {
-            val play = getPlayIfValid(moveData, board)
+            val play = getPlayIfValid(moveData, board, player)
             if (play == null) {
                 PlayResult(null, "Cannot move there: the path is blocked")
             } else {
@@ -96,8 +99,8 @@ class PathMovementRules : PieceRule {
 
     private fun areVectorsParallel(
         moveData: MovementData,
-        it: Pair<Int, Int>,
-    ) = moveData.colDelta * it.first == moveData.rowDelta * it.second
+        increments: Pair<Int, Int>,
+    ) = moveData.colDelta * increments.first == moveData.rowDelta * increments.second
 
     private fun doVectorsShareOrientation(
         moveData: MovementData,
@@ -109,9 +112,10 @@ class PathMovementRules : PieceRule {
     private fun getPlayIfValid(
         moveData: MovementData,
         board: GameBoard,
+        player: Player,
     ): Play? {
-        val rowIncrement = moveData.rowDelta.sign
-        val colIncrement = moveData.colDelta.sign
+        val rowIncrement = getMirrored(increments.first, player)
+        val colIncrement = increments.second
 
         var row = moveData.fromRow + rowIncrement
         var col = moveData.fromCol + colIncrement
@@ -121,7 +125,6 @@ class PathMovementRules : PieceRule {
 
         while (!currentManager.isBlocked) {
             val to = Position(row, col)
-            val player = board.getPieceAt(moveData.from)!!.player
 
             val (newManager, newPlay) = currentManager.processPosition(board, moveData.from, to, player)
             currentManager = newManager

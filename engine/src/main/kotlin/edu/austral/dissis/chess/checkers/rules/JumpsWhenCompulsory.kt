@@ -29,7 +29,7 @@ class JumpsWhenCompulsory(val subRule: PieceRule) : PieceRule {
     ): PlayResult {
         val pieceBeforePlay = board.getPieceAt(from)!!
         val result = subRule.getPlayResult(board, from, to)
-
+// TODO: improve
         return when {
             result.play == null -> result
             HasAvailableJumps(pieceBeforePlay, board, from).verify() &&

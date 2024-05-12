@@ -1,4 +1,4 @@
-# Men can move diagonally
+# Man can move diagonally
 
 # Size
 width = 8

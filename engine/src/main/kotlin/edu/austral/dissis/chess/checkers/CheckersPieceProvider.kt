@@ -138,19 +138,35 @@ object CheckersPieceProvider {
             CombinedRules(
                 PathMovementRules(
                     increments = 1 to 1,
-                    JumpManager(2, 0, 1),
+                    JumpManager(2, 1, 1),
                 ),
                 PathMovementRules(
                     increments = 1 to -1,
-                    JumpManager(2, 0, 1),
+                    JumpManager(2, 1, 1),
                 ),
                 PathMovementRules(
                     increments = -1 to 1,
-                    JumpManager(2, 0, 1),
+                    JumpManager(2, 1, 1),
                 ),
                 PathMovementRules(
                     increments = -1 to -1,
-                    JumpManager(2, 0, 1),
+                    JumpManager(2, 1, 1),
+                ),
+                NoPieceAtFinalPosition(
+                    subRule =
+                    IncrementalMovement(1, 1, player),
+                ),
+                NoPieceAtFinalPosition(
+                    subRule =
+                    IncrementalMovement(1, -1, player),
+                ),
+                NoPieceAtFinalPosition(
+                    subRule =
+                    IncrementalMovement(-1, 1, player),
+                ),
+                NoPieceAtFinalPosition(
+                    subRule =
+                    IncrementalMovement(-1, -1, player),
                 ),
             ),
         )

@@ -28,7 +28,7 @@ class NoPieceAtFinalPosition(val subRule: PieceRule) : PieceRule {
         val playResult = subRule.getPlayResult(board, from, to)
 
         // TODO: Could this be more readable?
-        return if (playResult.play != null && !board.isOccupied(to)) {
+        return if (playResult.play == null || !board.isOccupied(to)) {
             playResult
         } else {
             PlayResult(null, "There is a piece blocking that position")
