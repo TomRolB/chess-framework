@@ -6,3 +6,8 @@ enum class CheckersPieceType : PieceType {
     MAN,
     KING,
 }
+
+enum class AmericanCheckersPieceType : PieceType {
+    AMERICAN_MAN,
+    AMERICAN_KING
+}

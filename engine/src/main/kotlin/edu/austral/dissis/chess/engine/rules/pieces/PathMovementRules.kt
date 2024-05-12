@@ -2,16 +2,34 @@ package edu.austral.dissis.chess.engine.rules.pieces
 
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
+import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import kotlin.math.sign
 
+// TODO: class too long?
 // TODO: modularize
 // TODO: fix messages
-// TODO: Should mirror inside PathMovementRules
-class PathMovementRules(private val increments: Pair<Int, Int>, private val manager: PathManager) : PieceRule {
+class PathMovementRules : PieceRule {
+    private val increments: Pair<Int, Int>
+    private val mirroredRowIncrement: Boolean
+    private val manager: PathManager
+
+    constructor(increments: Pair<Int, Int>, manager: PathManager) {
+        this.increments = increments
+        this.mirroredRowIncrement = false
+        this.manager = manager
+    }
+
+    constructor(increments: Pair<Int, Int>, mirroredRowIncrement: Boolean, manager: PathManager) {
+        this.increments = increments
+        this.mirroredRowIncrement = mirroredRowIncrement
+        this.manager = manager
+    }
+
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
@@ -19,7 +37,8 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
         var (row, col) = position
         val player = board.getPieceAt(position)!!.player
 
-        val (rowIncrement, colIncrement) = increments
+        val rowIncrement = getMirrored(increments.first, player)
+        val colIncrement = increments.second
 
         row += rowIncrement
         col += colIncrement
@@ -45,6 +64,9 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
         return result
     }
 
+    private fun getMirrored(rowIncrement: Int, player: Player) =
+        if (!mirroredRowIncrement || player == WHITE) rowIncrement else -rowIncrement
+
     override fun getPlayResult(
         board: GameBoard,
         from: Position,
@@ -52,6 +74,7 @@ class PathMovementRules(private val increments: Pair<Int, Int>, private val mana
     ): PlayResult {
         val moveData = MovementData(from, to)
 
+        //TODO: improve
         return if (isViolated(moveData)) {
             PlayResult(null, "Piece cannot move this way")
         } else {

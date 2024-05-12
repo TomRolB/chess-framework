@@ -26,8 +26,8 @@ import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
-import edu.austral.dissis.chess.engine.rules.gameflow.preplay.NoPieceOfPlayer
-import edu.austral.dissis.chess.engine.rules.gameflow.preplay.StaysStill
+import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PieceOfPlayer
+import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CannotStayStill
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
@@ -41,8 +41,8 @@ fun getCapablancaEngine(): StandardGameEngine {
     val gameRules =
         StandardGameRules(
             CompoundPrePlayValidator(
-                StaysStill(),
-                NoPieceOfPlayer(),
+                CannotStayStill(),
+                PieceOfPlayer(),
             ),
             ClassicPostPlayValidator(),
             ClassicWinCondition(),

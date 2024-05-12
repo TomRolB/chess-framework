@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 
-class NoPieceOfPlayer : PrePlayValidator {
+class PieceOfPlayer : PrePlayValidator {
     override fun getResult(
         board: GameBoard,
         from: Position,
