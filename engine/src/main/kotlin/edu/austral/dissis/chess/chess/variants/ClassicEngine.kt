@@ -17,8 +17,7 @@ import edu.austral.dissis.chess.chess.rules.gamerules.ClassicWinCondition
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
-import edu.austral.dissis.chess.engine.board.BoardBuilder
-import edu.austral.dissis.chess.engine.board.PositionValidator
+import edu.austral.dissis.chess.engine.board.BoardParser
 import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
@@ -31,7 +30,7 @@ import edu.austral.dissis.chess.ui.UiPieceAdapter
 
 fun getChessEngine(): StandardGameEngine {
     val validator = RectangularBoardValidator(numberRows = 8, numberCols = 8)
-    val board = getClassicInitialBoard(validator)
+    val board = getClassicChessBoard()
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
 
@@ -52,39 +51,36 @@ fun getChessGameRules() =
         ClassicWinCondition(),
     )
 
-fun getClassicInitialBoard(validator: PositionValidator) =
-    BoardBuilder(validator)
-        .fillRow(
-            1,
-            listOf(
-                getRook(WHITE),
-                getKnight(WHITE),
-                getBishop(WHITE),
-                getQueen(WHITE),
-                getKing(WHITE),
-                getBishop(WHITE),
-                getKnight(WHITE),
-                getRook(WHITE),
-            ),
+fun getClassicChessBoard() =
+    BoardParser
+        .withPieces(mapOf(
+            "WP" to getPawn(WHITE),
+            "WR" to getRook(WHITE),
+            "WN" to getKnight(WHITE),
+            "WB" to getBishop(WHITE),
+            "WQ" to getQueen(WHITE),
+            "WK" to getKing(WHITE),
+            "BP" to getPawn(BLACK),
+            "BR" to getRook(BLACK),
+            "BN" to getKnight(BLACK),
+            "BB" to getBishop(BLACK),
+            "BQ" to getQueen(BLACK),
+            "BK" to getKing(BLACK),
+        ))
+        .parse(
+            """
+                |WR|WN|WB|WQ|WK|WB|WN|WR|
+                |WP|WP|WP|WP|WP|WP|WP|WP|
+                |  |  |  |  |  |  |  |  |
+                |  |  |  |  |  |  |  |  |
+                |  |  |  |  |  |  |  |  |
+                |  |  |  |  |  |  |  |  |
+                |BP|BP|BP|BP|BP|BP|BP|BP|
+                |BR|BN|BB|BQ|BK|BB|BN|BR|
+            """.trimIndent()
         )
-        .fillRow(row = 2, List(size = 8) { getPawn(WHITE) })
-        .fillRow(row = 7, List(size = 8) { getPawn(BLACK) })
-        .fillRow(
-            row = 8,
-            listOf(
-                getRook(BLACK),
-                getKnight(BLACK),
-                getBishop(BLACK),
-                getQueen(BLACK),
-                getKing(BLACK),
-                getBishop(BLACK),
-                getKnight(BLACK),
-                getRook(BLACK),
-            ),
-        )
-        .build()
 
-private fun getPieceIdMap(): Map<PieceType, String> {
+fun getPieceIdMap(): Map<PieceType, String> {
     return listOf(
         PAWN to "pawn",
         ROOK to "rook",

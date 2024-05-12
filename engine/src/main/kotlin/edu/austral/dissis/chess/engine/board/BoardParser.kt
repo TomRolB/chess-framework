@@ -48,8 +48,9 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
             .let { boardBuilder.build() }
     }
 
-    private fun getPiece(symbol: String): Piece {
-        return pieces[symbol]
+    private fun getPiece(symbol: String): Piece? {
+        return if (symbol == "  ") null
+        else pieces[symbol]
             ?.clone()
             ?: throw IllegalArgumentException(
                 "No piece passed to be associated with $symbol"

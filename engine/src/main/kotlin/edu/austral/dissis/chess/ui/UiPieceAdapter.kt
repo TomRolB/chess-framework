@@ -34,7 +34,7 @@ class UiPieceAdapter(private val pieceIdMap: Map<PieceType, String>) {
             position = Position(pos.row, pos.col),
             pieceId =
                 pieceIdMap[piece.type] ?: throw IllegalArgumentException(
-                    "No pieceId was specified for this piece type",
+                    "No pieceId was specified for piece type ${piece.type}",
                 ),
         )
     }
