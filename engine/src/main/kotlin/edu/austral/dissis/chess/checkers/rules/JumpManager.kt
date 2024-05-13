@@ -48,7 +48,7 @@ class JumpManager : PathManager {
         val hasEnemyPiece = board.containsPieceOfPlayer(to, !player)
 
         val play =
-            if (board.isOccupied(to) || jumpsNeeded > 0) {
+            if (!board.positionExists(to) || board.isOccupied(to) || jumpsNeeded > 0) {
                 null
             } else {
                 Play(takes + Move(from, to, board))
