@@ -15,18 +15,18 @@ import kotlin.math.sign
 class PathMovementRules : PieceRule {
     private val rowIncrement: Int
     private val colIncrement: Int
-    private val manager: PathManager
+    private val pathManager: PathManager
 
     constructor(increments: Pair<Int, Int>, manager: PathManager) {
         this.rowIncrement = increments.first
         this.colIncrement = increments.second
-        this.manager = manager
+        this.pathManager = manager
     }
 
     constructor(increments: Pair<Int, Int>, mirroredRowIncrement: Boolean, manager: PathManager) {
         this.rowIncrement = if (mirroredRowIncrement) -increments.first else increments.first
         this.colIncrement = increments.second
-        this.manager = manager
+        this.pathManager = manager
     }
 
     override fun getValidPlays(
@@ -34,25 +34,15 @@ class PathMovementRules : PieceRule {
         position: Position,
     ): Iterable<Play> {
         val player = board.getPieceAt(position)!!.player
-
-        var row = position.row + rowIncrement
-        var col = position.col + colIncrement
-
         val result: MutableList<Play> = mutableListOf()
+        var currentManager = pathManager
 
-        var currentManager = manager
-
-        while (!currentManager.isBlocked) {
-            val possibleTo = Position(row, col)
-
+        for (possibleTo in PositionIterator(position, rowIncrement, colIncrement)) {
             val (newManager, play) = currentManager.processPosition(board, position, possibleTo, player)
-
             currentManager = newManager
 
             if (play != null) result.add(play)
-
-            row += rowIncrement
-            col += colIncrement
+            if (currentManager.isBlocked) break
         }
 
         return result
@@ -103,25 +93,20 @@ class PathMovementRules : PieceRule {
         board: GameBoard,
         player: Player,
     ): Play? {
-        var row = moveData.fromRow + rowIncrement
-        var col = moveData.fromCol + colIncrement
-
-        var currentManager = manager
+        var currentManager = pathManager
         var play: Play? = null
 
-        while (!currentManager.isBlocked) {
-            val to = Position(row, col)
+        for (pos in PositionIterator(moveData.from, rowIncrement, colIncrement)) {
 
-            val (newManager, newPlay) = currentManager.processPosition(board, moveData.from, to, player)
+            val (newManager, newPlay) = currentManager.processPosition(board, moveData.from, pos, player)
             currentManager = newManager
 
-            if (reachedFinalPosition(row, moveData, col)) {
+            if (reachedFinalPosition(pos.row, moveData, pos.col)) {
                 play = newPlay
                 break
             }
 
-            row += rowIncrement
-            col += colIncrement
+            if (currentManager.isBlocked) break
         }
 
         return play
@@ -132,14 +117,5 @@ class PathMovementRules : PieceRule {
         moveData: MovementData,
         col: Int,
     ) = row == moveData.toRow && col == moveData.toCol
-
-    private class PositionIterator: Iterator<Position> {
-        override fun hasNext(): Boolean {
-            TODO("Not yet implemented")
-        }
-
-        override fun next(): Position {
-            TODO("Not yet implemented")
-        }
-    }
 }
+
