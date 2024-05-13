@@ -3,8 +3,10 @@ package edu.austral.dissis.chess.engine.rules.pieces
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.areVectorsParallel
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.doVectorsShareOrientation
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import kotlin.math.sign
@@ -73,19 +75,12 @@ class PathMovementRules : PieceRule {
     }
 
     private fun invalidDirection(moveData: MovementData): Boolean {
-        return !areVectorsParallel(moveData) ||
-                !doVectorsShareOrientation(moveData)
+        val dataVector = moveData.rowDelta to moveData.colDelta
+        val incrementVector = rowIncrement to colIncrement
 
-    }
+        return !areVectorsParallel(dataVector, incrementVector) ||
+                !doVectorsShareOrientation(dataVector, incrementVector)
 
-    private fun areVectorsParallel(
-        moveData: MovementData,
-    ) = moveData.colDelta * rowIncrement == moveData.rowDelta * colIncrement
-
-    private fun doVectorsShareOrientation(
-        moveData: MovementData,
-    ): Boolean {
-        return moveData.rowDelta.sign == rowIncrement.sign
     }
 
     private fun getPlayIfValid(
@@ -101,7 +96,7 @@ class PathMovementRules : PieceRule {
             val (newManager, newPlay) = currentManager.processPosition(board, moveData.from, pos, player)
             currentManager = newManager
 
-            if (reachedFinalPosition(pos.row, moveData, pos.col)) {
+            if (reachedFinalPosition(moveData, pos.row, pos.col)) {
                 play = newPlay
                 break
             }
@@ -113,8 +108,8 @@ class PathMovementRules : PieceRule {
     }
 
     private fun reachedFinalPosition(
-        row: Int,
         moveData: MovementData,
+        row: Int,
         col: Int,
     ) = row == moveData.toRow && col == moveData.toCol
 }
