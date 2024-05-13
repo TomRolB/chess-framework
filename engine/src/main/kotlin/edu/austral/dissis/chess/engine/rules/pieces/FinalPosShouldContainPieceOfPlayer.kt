@@ -8,7 +8,7 @@ import edu.austral.dissis.chess.engine.extractMoveAction
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class FinalPositionContainsPieceOfPlayer(
+class FinalPosShouldContainPieceOfPlayer(
     val player: Player,
     val shouldContain: Boolean,
     val onFailMessage: String,

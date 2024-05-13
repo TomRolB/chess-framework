@@ -12,31 +12,31 @@ import edu.austral.dissis.chess.engine.rules.pieces.PathManager
 // TODO: make more readable
 class JumpManager : PathManager {
     override val isBlocked: Boolean
-    val takes: List<Take>
-    val tilesLeft: Int
-    val jumpsNeeded: Int
-    val jumpsLeft: Int
+    private val takeActions: List<Take>
+    private val tilesLeft: Int
+    private val jumpsNeeded: Int
+    private val jumpsLeft: Int
 
     constructor(pathLimit: Int, minJumps: Int, maxJumps: Int) {
         this.isBlocked = false
         this.tilesLeft = pathLimit - 1
         this.jumpsNeeded = minJumps
         this.jumpsLeft = maxJumps
-        this.takes = emptyList()
+        this.takeActions = emptyList()
     }
 
     private constructor(
-        pathLimit: Int,
+        tileLimit: Int,
         minJumps: Int,
         maxJumps: Int,
-        takes: List<Take>,
+        takeActions: List<Take>,
         isBlocked: Boolean,
     ) {
         this.isBlocked = isBlocked
-        this.tilesLeft = pathLimit - 1
+        this.tilesLeft = tileLimit - 1
         this.jumpsNeeded = minJumps
         this.jumpsLeft = maxJumps
-        this.takes = takes
+        this.takeActions = takeActions
     }
 
     override fun processPosition(
@@ -47,26 +47,44 @@ class JumpManager : PathManager {
     ): Pair<PathManager, Play?> {
         val hasEnemyPiece = board.containsPieceOfPlayer(to, !player)
 
-        val play =
-            if (!board.positionExists(to) || board.isOccupied(to) || jumpsNeeded > 0) {
-                null
-            } else {
-                Play(takes + Move(from, to, board))
-            }
+        val play = getPlayIfValid(board, to, from)
 
-        val manager =
-            JumpManager(
-                pathLimit = tilesLeft - 1,
-                minJumps = if (hasEnemyPiece) jumpsNeeded - 1 else jumpsNeeded,
-                maxJumps = if (hasEnemyPiece) jumpsLeft - 1 else jumpsLeft,
-                takes = if (hasEnemyPiece) takes.plus(Take(to, board)) else takes,
-                isBlocked =
-                    !board.positionExists(to) ||
-                        board.containsPieceOfPlayer(to, player) ||
-                        tilesLeft <= 0 ||
-                        (jumpsLeft <= 0 && hasEnemyPiece),
-            )
+        val manager = getUpdatedManager(hasEnemyPiece, to, board, player)
 
         return manager to play
     }
+
+    private fun getUpdatedManager(
+        hasEnemyPiece: Boolean,
+        to: Position,
+        board: GameBoard,
+        player: Player,
+    ) = JumpManager(
+        tileLimit = tilesLeft - 1,
+        minJumps = if (hasEnemyPiece) jumpsNeeded - 1 else jumpsNeeded,
+        maxJumps = if (hasEnemyPiece) jumpsLeft - 1 else jumpsLeft,
+        takeActions = if (hasEnemyPiece) takeActions.plus(Take(to, board)) else takeActions,
+        isBlocked =
+        !board.positionExists(to) ||
+                board.containsPieceOfPlayer(to, player) ||
+                tilesLeft <= 0 ||
+                (jumpsLeft <= 0 && hasEnemyPiece),
+    )
+
+    private fun getPlayIfValid(
+        board: GameBoard,
+        to: Position,
+        from: Position,
+    ): Play? {
+        return if (cannotMoveThere(board, to)) {
+            null
+        } else {
+            Play(takeActions + Move(from, to, board))
+        }
+    }
+
+    private fun cannotMoveThere(
+        board: GameBoard,
+        to: Position,
+    ) = !board.positionExists(to) || board.isOccupied(to) || jumpsNeeded > 0
 }

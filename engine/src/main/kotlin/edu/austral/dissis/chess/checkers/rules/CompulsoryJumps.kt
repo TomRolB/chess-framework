@@ -29,36 +29,15 @@ class CompulsoryJumps : PrePlayValidator {
         )
     }
 
-//    private fun anotherPieceMustJump(
-//        currentPiece: Piece,
-//        board: GameBoard,
-//        from: Position,
-//        player: Player,
-//    ): Boolean {
-//        return All(
-//            Not(HasAvailableJumps(currentPiece, board, from)),
-//            PiecesHaveAvailableJumps(board, player)
-//        ).verify()
-//    }
-
     private fun anotherPieceMustJump(
         currentPiece: Piece,
         board: GameBoard,
         from: Position,
         player: Player,
-    ) = !HasAvailableJumps(currentPiece, board, from).verify() &&
-        piecesHaveAvailableJumps(board, player)
-
-    // TODO: may convert to rule
-    private fun piecesHaveAvailableJumps(
-        board: GameBoard,
-        player: Player,
     ): Boolean {
-        return board
-            .getAllPositionsOfPlayer(player)
-            .any {
-                val piece = board.getPieceAt(it)!!
-                HasAvailableJumps(piece, board, it).verify()
-            }
+        return All(
+            Not(HasAvailableJumps(currentPiece, board, from)),
+            PiecesHaveAvailableJumps(board, player)
+        ).verify()
     }
 }

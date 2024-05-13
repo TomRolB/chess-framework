@@ -9,7 +9,6 @@ import edu.austral.dissis.chess.engine.includesTakeAction
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveUpdater
 
-// TODO: make readable. Could probably create helper classes for Move, Play, etc.
 class PendingJumpUpdater : MoveUpdater {
     override fun update(
         board: GameBoard,
