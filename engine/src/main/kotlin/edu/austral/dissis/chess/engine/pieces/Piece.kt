@@ -4,6 +4,7 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 
 // TODO: maybe it's possible to completely decouple rules from Piece.
 //  It would be done by getting the piece type on IsPlayValid and
@@ -88,15 +89,3 @@ class Piece {
 //  since sometimes we have null plays or unnecessary messages.
 data class PlayResult(val play: Play?, val message: String)
 
-interface PieceRule {
-    fun getValidPlays(
-        board: GameBoard,
-        position: Position,
-    ): Iterable<Play>
-
-    fun getPlayResult(
-        board: GameBoard,
-        from: Position,
-        to: Position,
-    ): PlayResult
-}

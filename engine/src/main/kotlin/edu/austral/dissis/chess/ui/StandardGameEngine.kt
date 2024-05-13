@@ -97,8 +97,6 @@ class StandardGameEngine(
         )
     }
 
-    // TODO: see if code below can be simplified
-
     override fun redo(): NewGameState {
         undoStack.push(game to currentState)
         val (redoGame, redoState) = redoStack.pop()

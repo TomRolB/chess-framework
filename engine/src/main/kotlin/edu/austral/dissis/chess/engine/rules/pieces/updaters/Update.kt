@@ -3,7 +3,7 @@ package edu.austral.dissis.chess.engine.rules.pieces.updaters
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.pieces.PieceRule
+import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
 class Update(val updater: PlayUpdater, val subRule: PieceRule) : PieceRule {

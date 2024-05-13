@@ -7,9 +7,8 @@ import edu.austral.dissis.chess.engine.Take
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.not
-import edu.austral.dissis.chess.engine.rules.pieces.PathManager
+import edu.austral.dissis.chess.engine.rules.pieces.path.PathManager
 
-// TODO: make more readable
 class JumpManager : PathManager {
     override val isBlocked: Boolean
     private val takeActions: List<Take>
@@ -46,9 +45,7 @@ class JumpManager : PathManager {
         player: Player,
     ): Pair<PathManager, Play?> {
         val hasEnemyPiece = board.containsPieceOfPlayer(to, !player)
-
         val play = getPlayIfValid(board, to, from)
-
         val manager = getUpdatedManager(hasEnemyPiece, to, board, player)
 
         return manager to play

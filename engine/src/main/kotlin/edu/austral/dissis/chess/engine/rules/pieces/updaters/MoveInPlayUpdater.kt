@@ -5,7 +5,6 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 
 class MoveInPlayUpdater(val moveUpdater: MoveUpdater) : PlayUpdater {
-    // TODO: make more clear, if possible
     override fun update(
         play: Play,
         board: GameBoard,

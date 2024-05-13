@@ -1,4 +1,4 @@
-package edu.austral.dissis.chess.engine.rules.pieces
+package edu.austral.dissis.chess.engine.rules.pieces.path
 
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.areVectorsParallel
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.doVectorsShareOrientation
-import edu.austral.dissis.chess.engine.pieces.PieceRule
+import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
 // TODO: class too long?

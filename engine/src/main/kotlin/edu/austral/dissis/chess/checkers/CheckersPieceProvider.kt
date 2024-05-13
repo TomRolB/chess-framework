@@ -13,7 +13,7 @@ import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
-import edu.austral.dissis.chess.engine.rules.pieces.PathMovementRules
+import edu.austral.dissis.chess.engine.rules.pieces.path.PathMovementRules
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveInPlayUpdater
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.Update
 

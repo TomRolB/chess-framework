@@ -1,8 +1,7 @@
-package edu.austral.dissis.chess.engine.rules.pieces
+package edu.austral.dissis.chess.engine.rules
 
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.pieces.PieceType
-import edu.austral.dissis.chess.engine.rules.RuleChain
 
 class IsPieceOfType(
     private val pieceType: PieceType,

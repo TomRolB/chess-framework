@@ -5,7 +5,7 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.rules.pieces.PathManager
+import edu.austral.dissis.chess.engine.rules.pieces.path.PathManager
 
 class SimpleBlockManager : PathManager {
     override val isBlocked: Boolean
