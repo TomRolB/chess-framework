@@ -4,6 +4,7 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.extractMoveAction
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
 class NoPieceAtFinalPosition(val subRule: PieceRule) : PieceRule {
@@ -26,10 +27,10 @@ class NoPieceAtFinalPosition(val subRule: PieceRule) : PieceRule {
     ): PlayResult {
         val playResult = subRule.getPlayResult(board, from, to)
 
-        return if (playResult.play == null || !board.isOccupied(to)) {
+        return if (playResult is InvalidPlay || !board.isOccupied(to)) {
             playResult
         } else {
-            PlayResult(null, "There is a piece blocking that position")
+            InvalidPlay("There is a piece blocking that position")
         }
     }
 }

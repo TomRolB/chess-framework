@@ -8,8 +8,10 @@ import edu.austral.dissis.chess.engine.Take
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.not
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
+import edu.austral.dissis.chess.engine.pieces.ValidPlay
 import edu.austral.dissis.chess.engine.rules.ContainsPieceOfPlayer
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
@@ -26,9 +28,11 @@ class EnPassant : PieceRule {
         val upAndRight = Position(position.row + rowDelta, position.col + 1)
 
         return listOfNotNull(
-            getPlayResult(board, position, upAndLeft).play,
-            getPlayResult(board, position, upAndRight).play,
+            getPlayResult(board, position, upAndLeft),
+            getPlayResult(board, position, upAndRight),
         )
+            .filterIsInstance<ValidPlay>()
+            .map { it.play }
     }
 
     private fun getRowDelta(
@@ -48,17 +52,16 @@ class EnPassant : PieceRule {
             areSubRulesValid(board, possibleEnemyPawnPosition, player) &&
             movingDiagonally(player, board, from, to)
         ) {
-            PlayResult(
+            ValidPlay(
                 Play(
                     listOf(
                         Move(from, to, board),
                         Take(possibleEnemyPawnPosition, board),
                     ),
                 ),
-                "valid play",
             )
         } else {
-            PlayResult(null, "Piece cannot move this way")
+            InvalidPlay("Piece cannot move this way")
         }
     }
 
@@ -92,6 +95,6 @@ class EnPassant : PieceRule {
                 IncrementalMovement(1, 1, player),
                 IncrementalMovement(1, -1, player),
             )
-        return validMovements.getPlayResult(board, from, to).play != null
+        return validMovements.getPlayResult(board, from, to) is ValidPlay
     }
 }

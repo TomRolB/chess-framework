@@ -7,8 +7,10 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
+import edu.austral.dissis.chess.engine.pieces.ValidPlay
 import edu.austral.dissis.chess.engine.rules.All
 import edu.austral.dissis.chess.engine.rules.Not
 import edu.austral.dissis.chess.engine.rules.SimpleRule
@@ -25,12 +27,12 @@ class MoveTwoPlaces(
         position: Position,
     ): Iterable<Play> {
         val destination = Position(position.row + subRule.rowDelta, position.col + subRule.colDelta)
-        val play = getPlayResult(board, position, destination).play
+        val result = getPlayResult(board, position, destination)
 
-        return if (play == null) {
+        return if (result !is ValidPlay) {
             emptyList()
         } else {
-            listOf(play)
+            listOf(result.play)
         }
     }
 
@@ -50,8 +52,8 @@ class MoveTwoPlaces(
                 Not(PawnPathIsBlocked(board, moveData)),
             )
 
-        return if (result.play != null && !conditions.verify()) {
-            PlayResult(null, "Cannot move two places")
+        return if (result is ValidPlay && !conditions.verify()) {
+            InvalidPlay("Cannot move two places")
         } else {
             result
         }

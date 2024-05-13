@@ -6,7 +6,9 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.pieces.PlayResult
+import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
 class IncrementalMovement : PieceRule {
     val rowDelta: Int
@@ -28,10 +30,9 @@ class IncrementalMovement : PieceRule {
     ): Iterable<Play> {
         val to = Position(position.row + rowDelta, position.col + colDelta)
 
-        return getPlayResult(board, position, to)
-            .play
-            ?.let { listOf(it) }
-            ?: emptyList()
+        return listOf(getPlayResult(board, position, to))
+            .filterIsInstance<ValidPlay>()
+            .map{ it.play }
     }
 
     override fun getPlayResult(
@@ -45,14 +46,10 @@ class IncrementalMovement : PieceRule {
         val isColDeltaValid = moveData.colDelta == colDelta
 
         return when {
-            !isRowDeltaValid || !isColDeltaValid -> PlayResult(null, "Piece cannot move that way")
-            !board.positionExists(from) -> PlayResult(null, "Initial position does not exist")
-            !board.positionExists(to) -> PlayResult(null, "Final position does not exist")
-            else ->
-                PlayResult(
-                    play = Move(from, to, board).asPlay(),
-                    message = "Valid play",
-                )
+            !isRowDeltaValid || !isColDeltaValid -> InvalidPlay("Piece cannot move that way")
+            !board.positionExists(from) -> InvalidPlay("Initial position does not exist")
+            !board.positionExists(to) -> InvalidPlay("Final position does not exist")
+            else -> ValidPlay(Move(from, to, board).asPlay())
         }
     }
 }

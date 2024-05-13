@@ -4,9 +4,11 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.includesTakeAction
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
+import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
 class JumpsWhenCompulsory(val subRule: PieceRule) : PieceRule {
     override fun getValidPlays(
@@ -32,11 +34,11 @@ class JumpsWhenCompulsory(val subRule: PieceRule) : PieceRule {
         val result = subRule.getPlayResult(board, from, to)
 
         return when {
-            result.play == null -> {
+            result !is ValidPlay -> {
                 result
             }
             isIgnoringCompulsoryJump(result.play, pieceBeforePlay, board, from) -> {
-                PlayResult(null, "This piece has a compulsory jump")
+                InvalidPlay("This piece has a compulsory jump")
             }
             else -> {
                 result

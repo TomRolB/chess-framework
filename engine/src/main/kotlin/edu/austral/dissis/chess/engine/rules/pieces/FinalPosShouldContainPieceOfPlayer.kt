@@ -5,6 +5,7 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.extractMoveAction
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
 class FinalPosShouldContainPieceOfPlayer(
@@ -34,12 +35,12 @@ class FinalPosShouldContainPieceOfPlayer(
 
         // TODO: Could this be more readable?
         return if (
-            playResult.play == null ||
+            playResult is InvalidPlay ||
             board.containsPieceOfPlayer(to, player) == shouldContain
         ) {
             playResult
         } else {
-            PlayResult(null, onFailMessage)
+            InvalidPlay(onFailMessage)
         }
     }
 }

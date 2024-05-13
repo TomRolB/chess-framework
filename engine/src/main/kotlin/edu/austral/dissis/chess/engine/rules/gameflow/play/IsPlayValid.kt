@@ -5,7 +5,9 @@ import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.pieces.ValidPlay
 import edu.austral.dissis.chess.engine.rules.RuleChain
 
 class IsPlayValid(
@@ -15,12 +17,12 @@ class IsPlayValid(
     val next: RuleChain<Play, RuleResult>,
 ) : RuleChain<Piece, RuleResult> {
     override fun verify(arg: Piece): RuleResult {
-        val (play, message) = arg.getPlayResult(board, from, to)
+        val result = arg.getPlayResult(board, from, to)
 
-        return if (play == null) {
-            RuleResult(board, null, EngineResult.PIECE_VIOLATION, message)
+        return if (result is InvalidPlay) {
+            RuleResult(board, null, EngineResult.PIECE_VIOLATION, result.message)
         } else {
-            next.verify(play)
+            next.verify((result as ValidPlay).play)
         }
     }
 }

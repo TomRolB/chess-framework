@@ -3,8 +3,10 @@ package edu.austral.dissis.chess.engine.rules.pieces.updaters
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
+import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
 class Update(val updater: PlayUpdater, val subRule: PieceRule) : PieceRule {
     override fun getValidPlays(
@@ -23,12 +25,11 @@ class Update(val updater: PlayUpdater, val subRule: PieceRule) : PieceRule {
     ): PlayResult {
         val result = subRule.getPlayResult(board, from, to)
 
-        return if (result.play == null) {
+        return if (result !is ValidPlay) {
             result
         } else {
-            PlayResult(
+            ValidPlay(
                 play = updater.update(result.play, board),
-                message = result.message,
             )
         }
     }

@@ -7,8 +7,10 @@ import edu.austral.dissis.chess.engine.areVectorsParallel
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.doVectorsShareOrientation
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
+import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
 // TODO: class too long?
 // TODO: modularize
@@ -60,14 +62,14 @@ class PathMovementRules : PieceRule {
         // TODO: improve
         return when {
             invalidDirection(moveData) -> {
-                PlayResult(null, "Moving in invalid direction")
+                InvalidPlay("Moving in invalid direction")
             }
             else -> {
                 val play = getPlayIfValid(moveData, board, player)
                 if (play == null) {
-                    PlayResult(null, "Cannot move there: the path is blocked")
+                    InvalidPlay("Cannot move there: the path is blocked")
                 } else {
-                    PlayResult(play, "Valid move")
+                    ValidPlay(play)
                 }
             }
         }

@@ -6,9 +6,11 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
+import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
+import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
 private const val C_COLUMN = 3
 
@@ -20,10 +22,12 @@ class Castling : PieceRule {
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return listOfNotNull(
-            getPlayResult(board, position, Position(position.row, C_COLUMN)).play,
-            getPlayResult(board, position, Position(position.row, G_COLUMN)).play,
+        return listOf(
+            getPlayResult(board, position, Position(position.row, C_COLUMN)),
+            getPlayResult(board, position, Position(position.row, G_COLUMN)),
         )
+            .filterIsInstance<ValidPlay>()
+            .map { it.play }
     }
 
     override fun getPlayResult(
@@ -40,7 +44,7 @@ class Castling : PieceRule {
 
             getCastling(from, to, board, king, rookFrom, rookTo, movedRook)
         } else {
-            PlayResult(null, "Cannot perform castling")
+            InvalidPlay("Cannot perform castling")
         }
     }
 
@@ -67,14 +71,13 @@ class Castling : PieceRule {
         rookFrom: Position?,
         rookTo: Position?,
         movedRook: Piece,
-    ) = PlayResult(
+    ) = ValidPlay(
         Play(
             listOf(
                 Move(from, to, board, pieceNextTurn = king.withState(MOVED)),
                 Move(rookFrom!!, rookTo!!, board, pieceNextTurn = movedRook),
             ),
-        ),
-        message = "Valid play",
+        )
     )
 }
 
