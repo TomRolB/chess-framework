@@ -18,7 +18,7 @@ class JumpsWhenCompulsory(val subRule: PieceRule) : PieceRule {
 
         return validPlays
             .filter {
-                hasAvailableJumps || pieceActuallyTookAnEnemy(it)
+                !hasAvailableJumps || pieceActuallyTookAnEnemy(it)
             }
     }
 

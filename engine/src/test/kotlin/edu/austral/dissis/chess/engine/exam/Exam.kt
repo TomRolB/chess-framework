@@ -60,7 +60,7 @@ class Exam {
             ),
         )
             .test()
-//            .debug("man_can_move_diagonally.md")
+//            .debug("man_cannot_avoid_jump.md")
     }
 
     //TODO: should actually use clone() instead of passing a lambda

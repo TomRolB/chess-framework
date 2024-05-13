@@ -3,8 +3,8 @@ package edu.austral.dissis.chess.checkers
 import edu.austral.dissis.chess.checkers.CheckersPieceProvider.getMan
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
-import edu.austral.dissis.chess.checkers.rules.ViolatesCompulsoryJumps
-import edu.austral.dissis.chess.checkers.rules.ViolatesPendingJumps
+import edu.austral.dissis.chess.checkers.rules.CompulsoryJumps
+import edu.austral.dissis.chess.checkers.rules.PendingJumps
 import edu.austral.dissis.chess.engine.Game
 import edu.austral.dissis.chess.engine.Player.*
 import edu.austral.dissis.chess.engine.board.BoardParser
@@ -39,8 +39,8 @@ fun getCheckersGameRules() =
         CompoundPrePlayValidator(
             CannotStayStill(),
             PieceOfPlayer(),
-            ViolatesPendingJumps(),
-            ViolatesCompulsoryJumps(),
+            PendingJumps(),
+            CompulsoryJumps(),
         ),
         NoPostPlayValidator(),
         ExtinctionWinCondition(),

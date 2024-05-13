@@ -54,8 +54,8 @@ class PathMovementRules : PieceRule {
 
             currentManager = newManager
 
-            if (currentManager.isBlocked) break
             if (play != null) result.add(play)
+            if (currentManager.isBlocked) break
 
             row += rowIncrement
             col += colIncrement
