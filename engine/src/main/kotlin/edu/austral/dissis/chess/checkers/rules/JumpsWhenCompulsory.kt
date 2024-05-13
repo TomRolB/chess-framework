@@ -50,7 +50,7 @@ class JumpsWhenCompulsory(val subRule: PieceRule) : PieceRule {
         board: GameBoard,
         from: Position,
     ) = HasAvailableJumps(pieceBeforePlay, board, from).verify() &&
-            !pieceActuallyTookAnEnemy(play)
+        !pieceActuallyTookAnEnemy(play)
 
     private fun pieceActuallyTookAnEnemy(play: Play) = play.includesTakeAction()
 }

@@ -9,7 +9,6 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.doVectorsShareOrientation
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
-import kotlin.math.sign
 
 // TODO: class too long?
 // TODO: modularize
@@ -58,7 +57,7 @@ class PathMovementRules : PieceRule {
         val player = board.getPieceAt(from)!!.player
         val moveData = MovementData(from, to)
 
-        //TODO: improve
+        // TODO: improve
         return when {
             invalidDirection(moveData) -> {
                 PlayResult(null, "Moving in invalid direction")
@@ -79,8 +78,7 @@ class PathMovementRules : PieceRule {
         val incrementVector = rowIncrement to colIncrement
 
         return !areVectorsParallel(dataVector, incrementVector) ||
-                !doVectorsShareOrientation(dataVector, incrementVector)
-
+            !doVectorsShareOrientation(dataVector, incrementVector)
     }
 
     private fun getPlayIfValid(
@@ -89,22 +87,19 @@ class PathMovementRules : PieceRule {
         player: Player,
     ): Play? {
         var currentManager = pathManager
-        var play: Play? = null
 
         for (pos in PositionIterator(moveData.from, rowIncrement, colIncrement)) {
-
             val (newManager, newPlay) = currentManager.processPosition(board, moveData.from, pos, player)
             currentManager = newManager
 
             if (reachedFinalPosition(moveData, pos.row, pos.col)) {
-                play = newPlay
-                break
+                return newPlay
             }
 
             if (currentManager.isBlocked) break
         }
 
-        return play
+        return null
     }
 
     private fun reachedFinalPosition(
@@ -113,4 +108,3 @@ class PathMovementRules : PieceRule {
         col: Int,
     ) = row == moveData.toRow && col == moveData.toCol
 }
-

@@ -44,7 +44,7 @@ fun getCheckersGameRules() =
             CompulsoryJumps(),
         ),
         NoPostPlayValidator(),
-        DeadlockWinCondition()
+        DeadlockWinCondition(),
     )
 
 fun getCheckersBoard() =
@@ -52,15 +52,15 @@ fun getCheckersBoard() =
         .withPieces(mapOf("WM" to getMan(WHITE), "BM" to getMan(BLACK)))
         .parse(
             """
-                |  |WM|  |WM|  |WM|  |WM|
-                |WM|  |WM|  |WM|  |WM|  |
-                |  |WM|  |WM|  |WM|  |WM|
-                |  |  |  |  |  |  |  |  |
-                |  |  |  |  |  |  |  |  |
-                |BM|  |BM|  |BM|  |BM|  |
-                |  |BM|  |BM|  |BM|  |BM|
-                |BM|  |BM|  |BM|  |BM|  |
-            """.trimIndent()
+            |  |WM|  |WM|  |WM|  |WM|
+            |WM|  |WM|  |WM|  |WM|  |
+            |  |WM|  |WM|  |WM|  |WM|
+            |  |  |  |  |  |  |  |  |
+            |  |  |  |  |  |  |  |  |
+            |BM|  |BM|  |BM|  |BM|  |
+            |  |BM|  |BM|  |BM|  |BM|
+            |BM|  |BM|  |BM|  |BM|  |
+            """.trimIndent(),
         )
 
 private fun getPieceIdMap(): Map<PieceType, String> {

@@ -29,8 +29,7 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
 
         var boardBuilder: BoardBuilder
 
-
-        //TODO: modularize
+        // TODO: modularize
         return stringBoard
             .drop(n = 1)
             .dropLast(n = 1)
@@ -42,19 +41,22 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
                     .map { getPiece(it) }
             }
             .also { boardBuilder = BoardBuilder(getValidator(it)) }
-            .forEachIndexed() { idx, row ->
+            .forEachIndexed { idx, row ->
                 boardBuilder = boardBuilder.fillRow(idx + 1, row)
             }
             .let { boardBuilder.build() }
     }
 
     private fun getPiece(symbol: String): Piece? {
-        return if (symbol == "  ") null
-        else pieces[symbol]
-            ?.clone()
-            ?: throw IllegalArgumentException(
-                "No piece passed to be associated with $symbol"
-            )
+        return if (symbol == "  ") {
+            null
+        } else {
+            pieces[symbol]
+                ?.clone()
+                ?: throw IllegalArgumentException(
+                    "No piece passed to be associated with $symbol",
+                )
+        }
     }
 
     private fun getValidator(rows: List<List<Piece?>>): RectangularBoardValidator {
@@ -68,10 +70,9 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
 
         return RectangularBoardValidator(
             numberRows = rows.size,
-            numberCols = rows[0].size
+            numberCols = rows[0].size,
         )
     }
 
     private fun allRowsHaveEqualLength(rows: List<List<Piece?>>) = rows.all { it.size == rows[0].size }
-
 }

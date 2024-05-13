@@ -21,9 +21,9 @@ import edu.austral.dissis.chess.engine.board.BoardParser
 import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
+import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CannotStayStill
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PieceOfPlayer
-import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CannotStayStill
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
@@ -53,31 +53,33 @@ fun getChessGameRules() =
 
 fun getClassicChessBoard() =
     BoardParser
-        .withPieces(mapOf(
-            "WP" to getPawn(WHITE),
-            "WR" to getRook(WHITE),
-            "WN" to getKnight(WHITE),
-            "WB" to getBishop(WHITE),
-            "WQ" to getQueen(WHITE),
-            "WK" to getKing(WHITE),
-            "BP" to getPawn(BLACK),
-            "BR" to getRook(BLACK),
-            "BN" to getKnight(BLACK),
-            "BB" to getBishop(BLACK),
-            "BQ" to getQueen(BLACK),
-            "BK" to getKing(BLACK),
-        ))
+        .withPieces(
+            mapOf(
+                "WP" to getPawn(WHITE),
+                "WR" to getRook(WHITE),
+                "WN" to getKnight(WHITE),
+                "WB" to getBishop(WHITE),
+                "WQ" to getQueen(WHITE),
+                "WK" to getKing(WHITE),
+                "BP" to getPawn(BLACK),
+                "BR" to getRook(BLACK),
+                "BN" to getKnight(BLACK),
+                "BB" to getBishop(BLACK),
+                "BQ" to getQueen(BLACK),
+                "BK" to getKing(BLACK),
+            ),
+        )
         .parse(
             """
-                |WR|WN|WB|WQ|WK|WB|WN|WR|
-                |WP|WP|WP|WP|WP|WP|WP|WP|
-                |  |  |  |  |  |  |  |  |
-                |  |  |  |  |  |  |  |  |
-                |  |  |  |  |  |  |  |  |
-                |  |  |  |  |  |  |  |  |
-                |BP|BP|BP|BP|BP|BP|BP|BP|
-                |BR|BN|BB|BQ|BK|BB|BN|BR|
-            """.trimIndent()
+            |WR|WN|WB|WQ|WK|WB|WN|WR|
+            |WP|WP|WP|WP|WP|WP|WP|WP|
+            |  |  |  |  |  |  |  |  |
+            |  |  |  |  |  |  |  |  |
+            |  |  |  |  |  |  |  |  |
+            |  |  |  |  |  |  |  |  |
+            |BP|BP|BP|BP|BP|BP|BP|BP|
+            |BR|BN|BB|BQ|BK|BB|BN|BR|
+            """.trimIndent(),
         )
 
 fun getPieceIdMap(): Map<PieceType, String> {

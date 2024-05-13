@@ -42,7 +42,7 @@ fun getAmericanCheckersGameRules() =
         NoPostPlayValidator(),
         CompoundWinCondition(
             ExtinctionWinCondition(),
-            DeadlockWinCondition()
+            DeadlockWinCondition(),
         ),
     )
 
@@ -51,15 +51,15 @@ fun getAmericanCheckersBoard() =
         .withPieces(mapOf("WM" to getAmericanMan(WHITE), "BM" to getAmericanMan(BLACK)))
         .parse(
             """
-                |  |WM|  |WM|  |WM|  |WM|
-                |WM|  |WM|  |WM|  |WM|  |
-                |  |WM|  |WM|  |WM|  |WM|
-                |  |  |  |  |  |  |  |  |
-                |  |  |  |  |  |  |  |  |
-                |BM|  |BM|  |BM|  |BM|  |
-                |  |BM|  |BM|  |BM|  |BM|
-                |BM|  |BM|  |BM|  |BM|  |
-            """.trimIndent()
+            |  |WM|  |WM|  |WM|  |WM|
+            |WM|  |WM|  |WM|  |WM|  |
+            |  |WM|  |WM|  |WM|  |WM|
+            |  |  |  |  |  |  |  |  |
+            |  |  |  |  |  |  |  |  |
+            |BM|  |BM|  |BM|  |BM|  |
+            |  |BM|  |BM|  |BM|  |BM|
+            |BM|  |BM|  |BM|  |BM|  |
+            """.trimIndent(),
         )
 
 private fun getPieceIdMap(): Map<PieceType, String> {

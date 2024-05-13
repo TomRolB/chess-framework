@@ -1,7 +1,7 @@
 package edu.austral.dissis.chess.checkers
 
-import edu.austral.dissis.chess.checkers.AmericanCheckersPieceType.AMERICAN_MAN
 import edu.austral.dissis.chess.checkers.AmericanCheckersPieceType.AMERICAN_KING
+import edu.austral.dissis.chess.checkers.AmericanCheckersPieceType.AMERICAN_MAN
 import edu.austral.dissis.chess.checkers.CheckersPieceType.KING
 import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.JumpManager
@@ -23,7 +23,7 @@ object CheckersPieceProvider {
             type = MAN,
             player = player,
             rules =
-            getManRules(player),
+                getManRules(player),
         )
 
     fun getKing(player: Player) =
@@ -31,7 +31,7 @@ object CheckersPieceProvider {
             type = KING,
             player = player,
             rules =
-            getKingRules(),
+                getKingRules(),
         )
 
     fun getAmericanKing(player: Player) =
@@ -39,7 +39,7 @@ object CheckersPieceProvider {
             type = AMERICAN_KING,
             player = player,
             rules =
-            getAmericanKingRules(player),
+                getAmericanKingRules(player),
         )
 
     fun getAmericanMan(player: Player) =
@@ -47,136 +47,136 @@ object CheckersPieceProvider {
             type = AMERICAN_MAN,
             player = player,
             rules =
-            getAmericanManRules(player),
+                getAmericanManRules(player),
         )
 
     private fun getManRules(player: Player): Update {
         return Update(
             MoveInPlayUpdater(PromotionUpdater(getKing(player))),
             subRule =
-            JumpsWhenCompulsory(
-                subRule =
-                Update(
-                    MoveInPlayUpdater(PendingJumpUpdater()),
+                JumpsWhenCompulsory(
                     subRule =
-                    CombinedRules(
-                        NoPieceAtFinalPosition(
+                        Update(
+                            MoveInPlayUpdater(PendingJumpUpdater()),
                             subRule =
-                            IncrementalMovement(1, 1, player),
+                                CombinedRules(
+                                    NoPieceAtFinalPosition(
+                                        subRule =
+                                            IncrementalMovement(1, 1, player),
+                                    ),
+                                    NoPieceAtFinalPosition(
+                                        subRule =
+                                            IncrementalMovement(1, -1, player),
+                                    ),
+                                    PathMovementRules(
+                                        increments = 1 to 1,
+                                        JumpManager(2, 1, 1),
+                                    ),
+                                    PathMovementRules(
+                                        increments = 1 to -1,
+                                        JumpManager(2, 1, 1),
+                                    ),
+                                    PathMovementRules(
+                                        increments = -1 to 1,
+                                        JumpManager(2, 1, 1),
+                                    ),
+                                    PathMovementRules(
+                                        increments = -1 to -1,
+                                        JumpManager(2, 1, 1),
+                                    ),
+                                ),
                         ),
-                        NoPieceAtFinalPosition(
-                            subRule =
-                            IncrementalMovement(1, -1, player),
-                        ),
-                        PathMovementRules(
-                            increments = 1 to 1,
-                            JumpManager(2, 1, 1),
-                        ),
-                        PathMovementRules(
-                            increments = 1 to -1,
-                            JumpManager(2, 1, 1),
-                        ),
-                        PathMovementRules(
-                            increments = -1 to 1,
-                            JumpManager(2, 1, 1),
-                        ),
-                        PathMovementRules(
-                            increments = -1 to -1,
-                            JumpManager(2, 1, 1),
-                        ),
-                    ),
                 ),
-            ),
         )
     }
 
-    private fun getKingRules() = Update(
-        MoveInPlayUpdater(PendingJumpUpdater()),
-        subRule =
-        JumpsWhenCompulsory(
+    private fun getKingRules() =
+        Update(
+            MoveInPlayUpdater(PendingJumpUpdater()),
             subRule =
-            CombinedRules(
-                PathMovementRules(
-                    increments = 1 to 1,
-                    JumpManager(Int.MAX_VALUE, 0, 1),
+                JumpsWhenCompulsory(
+                    subRule =
+                        CombinedRules(
+                            PathMovementRules(
+                                increments = 1 to 1,
+                                JumpManager(Int.MAX_VALUE, 0, 1),
+                            ),
+                            PathMovementRules(
+                                increments = 1 to -1,
+                                JumpManager(Int.MAX_VALUE, 0, 1),
+                            ),
+                            PathMovementRules(
+                                increments = -1 to 1,
+                                JumpManager(Int.MAX_VALUE, 0, 1),
+                            ),
+                            PathMovementRules(
+                                increments = -1 to -1,
+                                JumpManager(Int.MAX_VALUE, 0, 1),
+                            ),
+                        ),
                 ),
-                PathMovementRules(
-                    increments = 1 to -1,
-                    JumpManager(Int.MAX_VALUE, 0, 1),
-                ),
-                PathMovementRules(
-                    increments = -1 to 1,
-                    JumpManager(Int.MAX_VALUE, 0, 1),
-                ),
-                PathMovementRules(
-                    increments = -1 to -1,
-                    JumpManager(Int.MAX_VALUE, 0, 1),
-                ),
-            ),
-        ),
-    )
+        )
 
     private fun getAmericanManRules(player: Player): Update {
         return Update(
             MoveInPlayUpdater(PromotionUpdater(getAmericanKing(player))),
             subRule =
-            CombinedRules(
-                NoPieceAtFinalPosition(
-                    subRule =
-                    IncrementalMovement(1, 1, player),
+                CombinedRules(
+                    NoPieceAtFinalPosition(
+                        subRule =
+                            IncrementalMovement(1, 1, player),
+                    ),
+                    NoPieceAtFinalPosition(
+                        subRule =
+                            IncrementalMovement(1, -1, player),
+                    ),
+                    PathMovementRules(
+                        increments = 1 to 1,
+                        mirroredRowIncrement = true,
+                        JumpManager(2, 1, 1),
+                    ),
+                    PathMovementRules(
+                        increments = 1 to -1,
+                        mirroredRowIncrement = true,
+                        JumpManager(2, 1, 1),
+                    ),
                 ),
-                NoPieceAtFinalPosition(
-                    subRule =
-                    IncrementalMovement(1, -1, player),
-                ),
-                PathMovementRules(
-                    increments = 1 to 1,
-                    mirroredRowIncrement = true,
-                    JumpManager(2, 1, 1),
-                ),
-                PathMovementRules(
-                    increments = 1 to -1,
-                    mirroredRowIncrement = true,
-                    JumpManager(2, 1, 1),
-                ),
-            ),
         )
     }
 
-
-
-    private fun getAmericanKingRules(player: Player) = CombinedRules(
-        NoPieceAtFinalPosition(
-            subRule =
-            IncrementalMovement(1, 1, player),
-        ),
-        NoPieceAtFinalPosition(
-            subRule =
-            IncrementalMovement(1, -1, player),
-        ),
-        NoPieceAtFinalPosition(
-            subRule =
-            IncrementalMovement(-1, 1, player),
-        ),
-        NoPieceAtFinalPosition(
-            subRule =
-            IncrementalMovement(-1, -1, player),
-        ),
-        PathMovementRules(
-            increments = 1 to 1,
-            JumpManager(2, 1, 1),
-        ),
-        PathMovementRules(
-            increments = 1 to -1,
-            JumpManager(2, 1, 1),
-        ),
-        PathMovementRules(
-            increments = -1 to 1,
-            JumpManager(2, 1, 1),
-        ),
-        PathMovementRules(
-            increments = -1 to -1,
-            JumpManager(2, 1, 1),
-        ),
-    )
+    private fun getAmericanKingRules(player: Player) =
+        CombinedRules(
+            NoPieceAtFinalPosition(
+                subRule =
+                    IncrementalMovement(1, 1, player),
+            ),
+            NoPieceAtFinalPosition(
+                subRule =
+                    IncrementalMovement(1, -1, player),
+            ),
+            NoPieceAtFinalPosition(
+                subRule =
+                    IncrementalMovement(-1, 1, player),
+            ),
+            NoPieceAtFinalPosition(
+                subRule =
+                    IncrementalMovement(-1, -1, player),
+            ),
+            PathMovementRules(
+                increments = 1 to 1,
+                JumpManager(2, 1, 1),
+            ),
+            PathMovementRules(
+                increments = 1 to -1,
+                JumpManager(2, 1, 1),
+            ),
+            PathMovementRules(
+                increments = -1 to 1,
+                JumpManager(2, 1, 1),
+            ),
+            PathMovementRules(
+                increments = -1 to -1,
+                JumpManager(2, 1, 1),
+            ),
+        )
 }

@@ -65,7 +65,7 @@ class JumpManager : PathManager {
         maxJumps = if (hasEnemyPiece) jumpsLeft - 1 else jumpsLeft,
         takeActions = if (hasEnemyPiece) takeActions.plus(Take(to, board)) else takeActions,
         isBlocked =
-        !board.positionExists(to) ||
+            !board.positionExists(to) ||
                 board.containsPieceOfPlayer(to, player) ||
                 tilesLeft <= 0 ||
                 (jumpsLeft <= 0 && hasEnemyPiece),

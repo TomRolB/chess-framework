@@ -37,7 +37,7 @@ class CompulsoryJumps : PrePlayValidator {
     ): Boolean {
         return All(
             Not(HasAvailableJumps(currentPiece, board, from)),
-            PiecesHaveAvailableJumps(board, player)
+            PiecesHaveAvailableJumps(board, player),
         ).verify()
     }
 }
