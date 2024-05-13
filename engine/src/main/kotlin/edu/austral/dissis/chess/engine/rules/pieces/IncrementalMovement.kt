@@ -14,18 +14,15 @@ import edu.austral.dissis.chess.engine.pieces.PlayResult
 class IncrementalMovement : PieceRule {
     val rowDelta: Int
     val colDelta: Int
-    val playerToBeMirrored: Player?
 
     constructor(rowDelta: Int, colDelta: Int) {
         this.rowDelta = rowDelta
         this.colDelta = colDelta
-        this.playerToBeMirrored = null
     }
 
-    constructor(rowDelta: Int, colDelta: Int, player: Player) {
-        this.rowDelta = rowDelta
+    constructor(rowDelta: Int, colDelta: Int, mirrorForPlayer: Player) {
+        this.rowDelta = if (mirrorForPlayer == Player.WHITE) rowDelta else -rowDelta
         this.colDelta = colDelta
-        this.playerToBeMirrored = player
     }
 
     override fun getValidPlays(
@@ -45,12 +42,7 @@ class IncrementalMovement : PieceRule {
         from: Position,
         to: Position,
     ): PlayResult {
-        val moveData =
-            if (playerToBeMirrored != null) {
-                MovementData(from, to, board, playerToBeMirrored)
-            } else {
-                MovementData(from, to)
-            }
+        val moveData = MovementData(from, to)
 
         val isRowDeltaValid = moveData.rowDelta == rowDelta
         val isColDeltaValid = moveData.colDelta == colDelta

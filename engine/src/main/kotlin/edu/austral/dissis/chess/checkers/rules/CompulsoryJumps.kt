@@ -7,6 +7,8 @@ import edu.austral.dissis.chess.engine.RuleResult
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.rules.All
+import edu.austral.dissis.chess.engine.rules.Not
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PrePlayValidator
 
 class CompulsoryJumps : PrePlayValidator {
@@ -26,6 +28,18 @@ class CompulsoryJumps : PrePlayValidator {
             message = if (invalid) "One of your pieces has a compulsory jump" else "Valid play",
         )
     }
+
+//    private fun anotherPieceMustJump(
+//        currentPiece: Piece,
+//        board: GameBoard,
+//        from: Position,
+//        player: Player,
+//    ): Boolean {
+//        return All(
+//            Not(HasAvailableJumps(currentPiece, board, from)),
+//            PiecesHaveAvailableJumps(board, player)
+//        ).verify()
+//    }
 
     private fun anotherPieceMustJump(
         currentPiece: Piece,

@@ -6,16 +6,17 @@ import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.CompulsoryJumps
 import edu.austral.dissis.chess.checkers.rules.PendingJumps
 import edu.austral.dissis.chess.engine.Game
-import edu.austral.dissis.chess.engine.Player.*
+import edu.austral.dissis.chess.engine.Player.BLACK
+import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.board.BoardParser
 import edu.austral.dissis.chess.engine.board.RectangularBoardValidator
 import edu.austral.dissis.chess.engine.pieces.PieceType
 import edu.austral.dissis.chess.engine.rules.gameflow.StandardGameRules
 import edu.austral.dissis.chess.engine.rules.gameflow.postplay.NoPostPlayValidator
+import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CannotStayStill
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PieceOfPlayer
-import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CannotStayStill
-import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.ExtinctionWinCondition
+import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.DeadlockWinCondition
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
@@ -43,7 +44,7 @@ fun getCheckersGameRules() =
             CompulsoryJumps(),
         ),
         NoPostPlayValidator(),
-        ExtinctionWinCondition(),
+        DeadlockWinCondition()
     )
 
 fun getCheckersBoard() =

@@ -14,6 +14,8 @@ import edu.austral.dissis.chess.engine.rules.gameflow.postplay.NoPostPlayValidat
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CannotStayStill
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PieceOfPlayer
+import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.CompoundWinCondition
+import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.DeadlockWinCondition
 import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.ExtinctionWinCondition
 import edu.austral.dissis.chess.ui.StandardGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
@@ -38,7 +40,10 @@ fun getAmericanCheckersGameRules() =
             PieceOfPlayer(),
         ),
         NoPostPlayValidator(),
-        ExtinctionWinCondition(),
+        CompoundWinCondition(
+            ExtinctionWinCondition(),
+            DeadlockWinCondition()
+        ),
     )
 
 fun getAmericanCheckersBoard() =
