@@ -9,8 +9,6 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-// TODO: may be replaced by PathMovementRules limited by 1 space
-//  or not really, since it would be inefficient, and knight should jump.
 class IncrementalMovement : PieceRule {
     val rowDelta: Int
     val colDelta: Int

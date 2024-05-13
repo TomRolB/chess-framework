@@ -60,6 +60,14 @@ object CheckersPieceProvider {
                     MoveInPlayUpdater(PendingJumpUpdater()),
                     subRule =
                     CombinedRules(
+                        NoPieceAtFinalPosition(
+                            subRule =
+                            IncrementalMovement(1, 1, player),
+                        ),
+                        NoPieceAtFinalPosition(
+                            subRule =
+                            IncrementalMovement(1, -1, player),
+                        ),
                         PathMovementRules(
                             increments = 1 to 1,
                             JumpManager(2, 1, 1),
@@ -75,14 +83,6 @@ object CheckersPieceProvider {
                         PathMovementRules(
                             increments = -1 to -1,
                             JumpManager(2, 1, 1),
-                        ),
-                        NoPieceAtFinalPosition(
-                            subRule =
-                            IncrementalMovement(1, 1, player),
-                        ),
-                        NoPieceAtFinalPosition(
-                            subRule =
-                            IncrementalMovement(1, -1, player),
                         ),
                     ),
                 ),
@@ -121,6 +121,14 @@ object CheckersPieceProvider {
             MoveInPlayUpdater(PromotionUpdater(getAmericanKing(player))),
             subRule =
             CombinedRules(
+                NoPieceAtFinalPosition(
+                    subRule =
+                    IncrementalMovement(1, 1, player),
+                ),
+                NoPieceAtFinalPosition(
+                    subRule =
+                    IncrementalMovement(1, -1, player),
+                ),
                 PathMovementRules(
                     increments = 1 to 1,
                     mirroredRowIncrement = true,
@@ -131,14 +139,6 @@ object CheckersPieceProvider {
                     mirroredRowIncrement = true,
                     JumpManager(2, 1, 1),
                 ),
-                NoPieceAtFinalPosition(
-                    subRule =
-                    IncrementalMovement(1, 1, player),
-                ),
-                NoPieceAtFinalPosition(
-                    subRule =
-                    IncrementalMovement(1, -1, player),
-                ),
             ),
         )
     }
@@ -146,22 +146,6 @@ object CheckersPieceProvider {
 
 
     private fun getAmericanKingRules(player: Player) = CombinedRules(
-        PathMovementRules(
-            increments = 1 to 1,
-            JumpManager(2, 1, 1),
-        ),
-        PathMovementRules(
-            increments = 1 to -1,
-            JumpManager(2, 1, 1),
-        ),
-        PathMovementRules(
-            increments = -1 to 1,
-            JumpManager(2, 1, 1),
-        ),
-        PathMovementRules(
-            increments = -1 to -1,
-            JumpManager(2, 1, 1),
-        ),
         NoPieceAtFinalPosition(
             subRule =
             IncrementalMovement(1, 1, player),
@@ -177,6 +161,22 @@ object CheckersPieceProvider {
         NoPieceAtFinalPosition(
             subRule =
             IncrementalMovement(-1, -1, player),
+        ),
+        PathMovementRules(
+            increments = 1 to 1,
+            JumpManager(2, 1, 1),
+        ),
+        PathMovementRules(
+            increments = 1 to -1,
+            JumpManager(2, 1, 1),
+        ),
+        PathMovementRules(
+            increments = -1 to 1,
+            JumpManager(2, 1, 1),
+        ),
+        PathMovementRules(
+            increments = -1 to -1,
+            JumpManager(2, 1, 1),
         ),
     )
 }

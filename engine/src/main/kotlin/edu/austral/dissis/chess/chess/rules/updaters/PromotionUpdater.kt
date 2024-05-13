@@ -6,9 +6,6 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveUpdater
 
-// TODO: Passing a piece instance would make all piece promote to
-//  the same 'pieceNextTurn'. Should copy the piece or create it
-//  in the moment.
 class PromotionUpdater(val pieceNextTurn: Piece) : MoveUpdater {
     override fun update(
         board: GameBoard,

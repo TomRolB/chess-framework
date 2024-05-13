@@ -3,7 +3,6 @@ package edu.austral.dissis.chess.engine.rules.pieces
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.PieceRule
@@ -14,19 +13,19 @@ import kotlin.math.sign
 // TODO: modularize
 // TODO: fix messages
 class PathMovementRules : PieceRule {
-    private val increments: Pair<Int, Int>
-    private val mirroredRowIncrement: Boolean
+    private val rowIncrement: Int
+    private val colIncrement: Int
     private val manager: PathManager
 
     constructor(increments: Pair<Int, Int>, manager: PathManager) {
-        this.increments = increments
-        this.mirroredRowIncrement = false
+        this.rowIncrement = increments.first
+        this.colIncrement = increments.second
         this.manager = manager
     }
 
     constructor(increments: Pair<Int, Int>, mirroredRowIncrement: Boolean, manager: PathManager) {
-        this.increments = increments
-        this.mirroredRowIncrement = mirroredRowIncrement
+        this.rowIncrement = if (mirroredRowIncrement) -increments.first else increments.first
+        this.colIncrement = increments.second
         this.manager = manager
     }
 
@@ -34,20 +33,16 @@ class PathMovementRules : PieceRule {
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        var (row, col) = position
         val player = board.getPieceAt(position)!!.player
 
-        val rowIncrement = getMirrored(increments.first, player)
-        val colIncrement = increments.second
-
-        row += rowIncrement
-        col += colIncrement
+        var row = position.row + rowIncrement
+        var col = position.col + colIncrement
 
         val result: MutableList<Play> = mutableListOf()
 
         var currentManager = manager
 
-        while (true) {
+        while (!currentManager.isBlocked) {
             val possibleTo = Position(row, col)
 
             val (newManager, play) = currentManager.processPosition(board, position, possibleTo, player)
@@ -55,7 +50,6 @@ class PathMovementRules : PieceRule {
             currentManager = newManager
 
             if (play != null) result.add(play)
-            if (currentManager.isBlocked) break
 
             row += rowIncrement
             col += colIncrement
@@ -64,49 +58,44 @@ class PathMovementRules : PieceRule {
         return result
     }
 
-    private fun getMirrored(rowIncrement: Int, player: Player) =
-        if (!mirroredRowIncrement || player == WHITE) rowIncrement else -rowIncrement
-
     override fun getPlayResult(
         board: GameBoard,
         from: Position,
         to: Position,
     ): PlayResult {
         val player = board.getPieceAt(from)!!.player
-        val moveData =
-            if (mirroredRowIncrement) MovementData(from, to, board, player)
-            else MovementData(from, to)
+        val moveData = MovementData(from, to)
 
         //TODO: improve
-        return if (isViolated(moveData)) {
-            PlayResult(null, "Piece cannot move this way")
-        } else {
-            val play = getPlayIfValid(moveData, board, player)
-            if (play == null) {
-                PlayResult(null, "Cannot move there: the path is blocked")
-            } else {
-                PlayResult(play, "Valid move")
+        return when {
+            invalidDirection(moveData) -> {
+                PlayResult(null, "Moving in invalid direction")
+            }
+            else -> {
+                val play = getPlayIfValid(moveData, board, player)
+                if (play == null) {
+                    PlayResult(null, "Cannot move there: the path is blocked")
+                } else {
+                    PlayResult(play, "Valid move")
+                }
             }
         }
     }
 
-    private fun isViolated(moveData: MovementData): Boolean {
-        return !(
-            areVectorsParallel(moveData, increments) &&
-                doVectorsShareOrientation(moveData, increments)
-        )
+    private fun invalidDirection(moveData: MovementData): Boolean {
+        return !areVectorsParallel(moveData) ||
+                !doVectorsShareOrientation(moveData)
+
     }
 
     private fun areVectorsParallel(
         moveData: MovementData,
-        increments: Pair<Int, Int>,
-    ) = moveData.colDelta * increments.first == moveData.rowDelta * increments.second
+    ) = moveData.colDelta * rowIncrement == moveData.rowDelta * colIncrement
 
     private fun doVectorsShareOrientation(
         moveData: MovementData,
-        increment: Pair<Int, Int>,
     ): Boolean {
-        return moveData.rowDelta.sign == increment.first.sign
+        return moveData.rowDelta.sign == rowIncrement.sign
     }
 
     private fun getPlayIfValid(
@@ -114,9 +103,6 @@ class PathMovementRules : PieceRule {
         board: GameBoard,
         player: Player,
     ): Play? {
-        val rowIncrement = getMirrored(increments.first, player)
-        val colIncrement = increments.second
-
         var row = moveData.fromRow + rowIncrement
         var col = moveData.fromCol + colIncrement
 
@@ -129,7 +115,7 @@ class PathMovementRules : PieceRule {
             val (newManager, newPlay) = currentManager.processPosition(board, moveData.from, to, player)
             currentManager = newManager
 
-            if (!reachedFinalPosition(row, moveData, col)) {
+            if (reachedFinalPosition(row, moveData, col)) {
                 play = newPlay
                 break
             }
@@ -145,5 +131,15 @@ class PathMovementRules : PieceRule {
         row: Int,
         moveData: MovementData,
         col: Int,
-    ) = !(row == moveData.toRow && col == moveData.toCol)
+    ) = row == moveData.toRow && col == moveData.toCol
+
+    private class PositionIterator: Iterator<Position> {
+        override fun hasNext(): Boolean {
+            TODO("Not yet implemented")
+        }
+
+        override fun next(): Position {
+            TODO("Not yet implemented")
+        }
+    }
 }

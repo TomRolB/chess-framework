@@ -28,10 +28,6 @@ class CombinedRules(vararg rules: PieceRule) : PieceRule {
             if (playResult.play != null) return playResult
         }
 
-        // TODO: consider actually returning a combination of failure messages
-
-        // TODO: Cannot select last message
-
         return playResult
     }
 }

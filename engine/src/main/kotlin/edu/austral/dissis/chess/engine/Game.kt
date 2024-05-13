@@ -38,7 +38,6 @@ class Game(
     }
 }
 
-// TODO: consider implementing an interface
 enum class EngineResult {
     GENERAL_MOVE_VIOLATION,
     PIECE_VIOLATION,
