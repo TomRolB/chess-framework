@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.chess.rules.SimpleBlockManager
 import edu.austral.dissis.chess.chess.rules.castling.Castling
 import edu.austral.dissis.chess.chess.rules.pawn.EnPassant
 import edu.austral.dissis.chess.chess.rules.updaters.HasMovedUpdater
-import edu.austral.dissis.chess.chess.rules.updaters.PromotionUpdater
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.PromotionUpdater
 import edu.austral.dissis.chess.chess.rules.updaters.TwoPlacesUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.not

@@ -3,6 +3,7 @@ package edu.austral.dissis.chess.engine.rules.pieces.path
 import edu.austral.dissis.chess.engine.MovementData
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.areVectorsParallel
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
@@ -12,9 +13,6 @@ import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
-// TODO: class too long?
-// TODO: modularize
-// TODO: fix messages
 class PathMovementRules : PieceRule {
     private val rowIncrement: Int
     private val colIncrement: Int
@@ -26,8 +24,8 @@ class PathMovementRules : PieceRule {
         this.pathManager = manager
     }
 
-    constructor(increments: Pair<Int, Int>, mirroredRowIncrement: Boolean, manager: PathManager) {
-        this.rowIncrement = if (mirroredRowIncrement) -increments.first else increments.first
+    constructor(increments: Pair<Int, Int>, asPlayer: Player, manager: PathManager) {
+        this.rowIncrement = if (asPlayer == BLACK) -increments.first else increments.first
         this.colIncrement = increments.second
         this.pathManager = manager
     }
@@ -59,7 +57,6 @@ class PathMovementRules : PieceRule {
         val player = board.getPieceAt(from)!!.player
         val moveData = MovementData(from, to)
 
-        // TODO: improve
         return when {
             invalidDirection(moveData) -> {
                 InvalidPlay("Moving in invalid direction")

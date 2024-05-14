@@ -17,10 +17,6 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 
-// TODO: Many rules are actually general, such as NoSelfCheckInValidPlays.
-//  Consider whether this can be unified somewhere, or if it's better to keep it this way
-//  (for instance, we may want a piece to not be affected by checks at all)
-
 object ChessPieceProvider {
     fun getRook(player: Player) =
         Piece(
@@ -58,7 +54,6 @@ object ChessPieceProvider {
         )
 
     fun getPawn(player: Player) =
-        // TODO: Chaining updates?
         Piece(
             PAWN,
             player,

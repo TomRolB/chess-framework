@@ -29,7 +29,6 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
 
         var boardBuilder: BoardBuilder
 
-        // TODO: modularize
         return stringBoard
             .drop(n = 1)
             .dropLast(n = 1)

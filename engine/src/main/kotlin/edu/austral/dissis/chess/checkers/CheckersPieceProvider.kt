@@ -7,8 +7,9 @@ import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.JumpManager
 import edu.austral.dissis.chess.checkers.rules.JumpsWhenCompulsory
 import edu.austral.dissis.chess.checkers.rules.PendingJumpUpdater
-import edu.austral.dissis.chess.chess.rules.updaters.PromotionUpdater
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.PromotionUpdater
 import edu.austral.dissis.chess.engine.Player
+import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
@@ -132,12 +133,12 @@ object CheckersPieceProvider {
                     ),
                     PathMovementRules(
                         increments = 1 to 1,
-                        mirroredRowIncrement = true,
+                        asPlayer = player,
                         JumpManager(2, 1, 1),
                     ),
                     PathMovementRules(
                         increments = 1 to -1,
-                        mirroredRowIncrement = true,
+                        asPlayer = player,
                         JumpManager(2, 1, 1),
                     ),
                 ),

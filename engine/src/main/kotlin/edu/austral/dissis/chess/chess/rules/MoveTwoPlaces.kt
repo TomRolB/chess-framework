@@ -16,7 +16,6 @@ import edu.austral.dissis.chess.engine.rules.Not
 import edu.austral.dissis.chess.engine.rules.SimpleRule
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 
-// TODO: could be replaced if MoveType can be passed a limit in a future
 class MoveTwoPlaces(
     private val player: Player,
 ) : PieceRule {
@@ -45,7 +44,6 @@ class MoveTwoPlaces(
         val hasEverMoved = board.getPieceAt(from)!!.hasState(MOVED)
         val result = subRule.getPlayResult(board, from, to)
 
-        // TODO: turn into normal boolean conditions?
         val conditions =
             All(
                 SimpleRule(!hasEverMoved),

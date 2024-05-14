@@ -190,9 +190,4 @@ Play *--> Action
 Action *-> ChessBoard
 ClassicMoveType -> MovementData
 
-
-
-'TODO: The fact that you cannot take your own pieces is a general rule. Check and checkmate are, too; even board-limit rules. Think about which general rules could be represented and how.
-
-
 @enduml

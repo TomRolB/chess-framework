@@ -16,7 +16,6 @@ private const val C_COLUMN = 3
 
 private const val G_COLUMN = 7
 
-// TODO: shouldn't be tied to rook
 class Castling : PieceRule {
     override fun getValidPlays(
         board: GameBoard,

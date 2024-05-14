@@ -6,12 +6,6 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 
-// TODO: maybe it's possible to completely decouple rules from Piece.
-//  It would be done by getting the piece type on IsPlayValid and
-//  mapping it to the corresponding rule.
-//  The first question to be asked, anyway, is whether this is strictly
-//  necessary, since we are good with polymorphism.
-
 class Piece {
     val type: PieceType
     val player: Player

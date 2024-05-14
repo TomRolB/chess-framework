@@ -33,7 +33,6 @@ class FinalPosShouldContainPieceOfPlayer(
     ): PlayResult {
         val playResult = subRule.getPlayResult(board, from, to)
 
-        // TODO: Could this be more readable?
         return if (
             playResult is InvalidPlay ||
             board.containsPieceOfPlayer(to, player) == shouldContain

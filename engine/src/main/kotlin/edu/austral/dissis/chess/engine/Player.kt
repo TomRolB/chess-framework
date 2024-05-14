@@ -1,6 +1,5 @@
 package edu.austral.dissis.chess.engine
 
-// TODO: Consider implementing an interface
 enum class Player {
     BLACK,
     WHITE,
