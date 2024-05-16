@@ -22,10 +22,11 @@ import edu.austral.dissis.chess.gui.NewGameState
 import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 import edu.austral.dissis.chess.gui.UndoState
-import java.util.Stack
+import java.util.*
 
 typealias UiBoard = Map<Position, ChessPiece>
 
+//TODO: rename
 class StandardGameEngine(
     private var game: Game,
     private val validator: RectangularBoardValidator,
@@ -141,3 +142,4 @@ class StandardGameEngine(
         return currentState
     }
 }
+

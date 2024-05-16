@@ -11,7 +11,7 @@ import edu.austral.ingsis.clientserver.Server
 import edu.austral.ingsis.clientserver.netty.server.NettyServerBuilder
 
 fun main() {
-    val responseContainer = ResponseContainer(Awaiting)
+    val responseToSend = ResponseContainer(Awaiting)
     val gameContainer = GameContainer(
         Game(
             getChessGameRules(),
@@ -21,7 +21,7 @@ fun main() {
     )
     val playerMap: MutableMap<String, Player> = mutableMapOf()
 
-    val server: Server = buildServer(playerMap, gameContainer, responseContainer)
+    val server: Server = buildServer(playerMap, gameContainer, responseToSend)
 
     server.start()
 
@@ -30,14 +30,14 @@ fun main() {
     //  receive a RuleResult from the server.
 
     while (true) {
-        when (val response = responseContainer.response) {
+        when (val response = responseToSend.response) {
             is Broadcast<*> -> {
                 server.broadcast(response.message)
-                responseContainer.response = Awaiting
+                responseToSend.response = Awaiting
             }
             is Unicast<*> -> {
                 server.sendMessage(response.clientId, response.message)
-                responseContainer.response = Awaiting
+                responseToSend.response = Awaiting
             }
             Awaiting -> {
                 // Do nothing. Keep waiting for messages.
