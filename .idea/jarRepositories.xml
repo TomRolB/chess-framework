@@ -31,5 +31,10 @@
       <option name="name" value="maven2" />
       <option name="url" value="https://maven.pkg.github.com/austral-ingsis/chess-ui" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven3" />
+      <option name="name" value="maven3" />
+      <option name="url" value="https://maven.pkg.github.com/austral-ingsis/simple-client-server" />
+    </remote-repository>
   </component>
 </project>

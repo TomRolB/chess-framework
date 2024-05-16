@@ -30,7 +30,11 @@ fun getCheckersEngine(): StandardGameEngine {
     val turnManager = getCheckersTurnManager()
     val game = Game(gameRules, board, turnManager)
 
-    return StandardGameEngine(game, board.validator as RectangularBoardValidator, pieceAdapter)
+    require(board.validator is RectangularBoardValidator) {
+        "Non-rectangular boards are not supported"
+    }
+
+    return StandardGameEngine(game, board.validator, pieceAdapter)
 }
 
 fun getCheckersTurnManager() = MultiTurnManager(WHITE)

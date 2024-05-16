@@ -1,8 +1,12 @@
 package edu.austral.dissis.chess.ui
 
+import edu.austral.dissis.chess.checkers.getAmericanCheckersEngine
+import edu.austral.dissis.chess.checkers.getCheckersEngine
+import edu.austral.dissis.chess.chess.variants.getCapablancaEngine
+import edu.austral.dissis.chess.chess.variants.getChessEngine
+import edu.austral.dissis.chess.chess.variants.getExtinctionEngine
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.DefaultImageResolver
-import edu.austral.dissis.chess.gui.GameView
 import edu.austral.dissis.chess.gui.SimpleGameEngine
 import edu.austral.dissis.chess.gui.createGameViewFrom
 import javafx.application.Application
@@ -16,7 +20,13 @@ fun main() {
 }
 
 class ChessGameApplication : Application() {
-    private val gameEngine = SimpleGameEngine()
+    private val gameEngine = listOf(
+        getCheckersEngine(),
+        getAmericanCheckersEngine(),
+        getChessEngine(),
+        getCapablancaEngine(),
+        getExtinctionEngine(),
+    )[1]
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
     companion object {
