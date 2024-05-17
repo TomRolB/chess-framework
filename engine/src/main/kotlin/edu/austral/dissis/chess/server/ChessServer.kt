@@ -24,8 +24,12 @@ fun main() {
     )
     val playerMap: MutableMap<String, Player> = mutableMapOf()
 
-    val server: Server = buildServer(playerMap, engine, responseToSend)
+    val connListener = ServerConnectionListener(playerMap, responseToSend, engine)
+    val moveListener = MoveListener(engine, responseToSend, playerMap)
+    val server: Server = buildServer(playerMap, engine, responseToSend, connListener, moveListener)
 
+    connListener.server = server
+    moveListener.server = server
     server.start()
 
     // TODO: the first approach is for the client to have sth like
@@ -40,10 +44,12 @@ fun main() {
             is Broadcast<*> -> {
                 server.broadcast(response.message)
                 responseToSend.response = Awaiting
+                println("Broadcast ${response.message.type} message")
             }
             is Unicast<*> -> {
                 server.sendMessage(response.clientId, response.message)
                 responseToSend.response = Awaiting
+                println("Sent ${response.message.type} message")
             }
             Awaiting -> {
                 // Do nothing. Keep waiting for messages.
@@ -56,14 +62,16 @@ private fun buildServer(
     playerMap: MutableMap<String, Player>,
     engine: StandardGameEngine,
     responseContainer: ResponseContainer,
+    connListener: ServerConnectionListener,
+    moveListener: MoveListener,
 ): Server {
     return NettyServerBuilder.createDefault()
         .withPort(8095)
-        .withConnectionListener(ServerConnectionListener(playerMap))
+        .withConnectionListener(connListener)
         .addMessageListener(
             messageType = "move",
             messageTypeReference = object : TypeReference<Message<MovePayload>>() {},
-            messageListener = MoveListener(engine, responseContainer, playerMap)
+            messageListener = moveListener
         )
         .build()
 }

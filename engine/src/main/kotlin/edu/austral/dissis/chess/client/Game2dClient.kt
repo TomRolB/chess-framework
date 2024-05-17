@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.DefaultImageResolver
 import edu.austral.dissis.chess.gui.GameEventListener
+import edu.austral.dissis.chess.gui.GameOver
 import edu.austral.dissis.chess.gui.GameView
 import edu.austral.dissis.chess.gui.ImageResolver
 import edu.austral.dissis.chess.gui.InitialState
+import edu.austral.dissis.chess.gui.InvalidMove
 import edu.austral.dissis.chess.gui.Move
-import edu.austral.dissis.chess.gui.MoveResult
+import edu.austral.dissis.chess.gui.NewGameState
 import edu.austral.dissis.chess.server.AckPayload
 import edu.austral.dissis.chess.server.AcknowledgeListener
 import edu.austral.dissis.chess.server.MovePayload
@@ -37,41 +39,61 @@ class OnlineChessApplication : Application() {
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
     companion object {
-        const val GameTitle = "Online Chess"
+        const val GAME_TITLE = "Online Chess"
     }
 
     //TODO: modularize
     override fun start(primaryStage: Stage) {
         val initialContext = InitialContext() //TODO: may reduce all containers to a Context or sth of the sort
 
-        val moveResultListener = MoveResultListener()
-        val client = buildClient(initialContext, moveResultListener)
+        val invalidMoveListener = MoveResultListener<InvalidMove>()
+        val newGameStateListener = MoveResultListener<NewGameState>()
+        val gameOverListener = MoveResultListener<GameOver>()
+        val ackListener = AcknowledgeListener(initialContext)
+        val client = buildClient(invalidMoveListener, newGameStateListener, gameOverListener, ackListener)
 
         val root = createGameView(imageResolver, client, initialContext)
+        invalidMoveListener.gameView = root
+        ackListener.gameView = root
+        client.connect()
 
-        moveResultListener.gameView = root
-        client.connect();
-
-        primaryStage.title = GameTitle
+        primaryStage.title = GAME_TITLE
         primaryStage.scene = Scene(root)
         primaryStage.show()
     }
 
     private fun buildClient(
-        initialContext: InitialContext,
-        moveResultListener: MoveResultListener,
+        invalidMoveListener: MoveResultListener<InvalidMove>,
+        newGameStateListener: MoveResultListener<NewGameState>,
+        gameOverListener: MoveResultListener<GameOver>,
+        ackListener: AcknowledgeListener,
     ) = NettyClientBuilder.createDefault()
         .withAddress(InetSocketAddress("localhost", 8095))
         .withConnectionListener(MyClientConnectionListener())
         .addMessageListener(
             messageType = "ack",
             messageTypeReference = object : TypeReference<Message<AckPayload>>() {},
-            messageListener = AcknowledgeListener(initialContext)
+            messageListener = ackListener
         )
         .addMessageListener(
-            messageType = "move result",
-            messageTypeReference = object : TypeReference<Message<MoveResult>>() {},
-            messageListener = moveResultListener
+            messageType = "invalid move",
+            // TODO: Seems like this type reference is causing an exception,
+            //  since MoveResult is an interface, and apparently jackson is
+            //  is unable to infer the actual MoveResult implementation
+            //  Possible solution: Create a message listener for each MoveResult
+            //  implementation.
+            messageTypeReference = object : TypeReference<Message<InvalidMove>>() {},
+            messageListener = invalidMoveListener
+        )
+        .addMessageListener(
+            messageType = "new game state",
+            messageTypeReference = object : TypeReference<Message<NewGameState>>() {},
+            messageListener = newGameStateListener
+        )
+        .addMessageListener(
+            messageType = "game over",
+            messageTypeReference = object : TypeReference<Message<GameOver>>() {},
+            messageListener = gameOverListener
         )
         .build()
 
@@ -99,7 +121,6 @@ class OnlineChessApplication : Application() {
         }
 
         gameView.addListener(uiOnlyEventListener)
-        gameView.handleInitialState(initialContext.initialState)
 
         return gameView
     }

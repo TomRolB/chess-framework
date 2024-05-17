@@ -5,7 +5,7 @@ import edu.austral.dissis.chess.gui.MoveResult
 import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.MessageListener
 
-class MoveResultListener : MessageListener<MoveResult> {
+class MoveResultListener<T: MoveResult> : MessageListener<T> {
 
     lateinit var gameView: GameView
 
@@ -21,7 +21,7 @@ class MoveResultListener : MessageListener<MoveResult> {
 //
 //        client.send(Message())
 //    }
-    override fun handleMessage(message: Message<MoveResult>) {
+    override fun handleMessage(message: Message<T>) {
         gameView.handleMoveResult(message.payload)
     }
 

@@ -23,6 +23,7 @@ import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 import edu.austral.dissis.chess.gui.UndoState
 import java.util.*
+import edu.austral.dissis.chess.engine.board.Position as EnginePosition
 
 typealias UiBoard = Map<Position, ChessPiece>
 
@@ -72,8 +73,8 @@ class StandardGameEngine(
         }
     }
 
-    private fun adapt(pos: Position): edu.austral.dissis.chess.engine.board.Position {
-        return edu.austral.dissis.chess.engine.board.Position(pos.row, pos.column)
+    private fun adapt(pos: Position): EnginePosition {
+        return EnginePosition(pos.row, pos.column)
     }
 
     override fun init(): InitialState {
