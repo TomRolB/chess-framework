@@ -10,8 +10,6 @@ import edu.austral.dissis.chess.gui.ImageResolver
 import edu.austral.dissis.chess.gui.InvalidMove
 import edu.austral.dissis.chess.gui.Move
 import edu.austral.dissis.chess.gui.NewGameState
-import edu.austral.dissis.chess.server.AckPayload
-import edu.austral.dissis.chess.server.AcknowledgeListener
 import edu.austral.dissis.chess.server.MovePayload
 import edu.austral.ingsis.clientserver.Client
 import edu.austral.ingsis.clientserver.Message
@@ -42,14 +40,13 @@ class OnlineChessApplication : Application() {
     }
 
     //TODO: modularize
-    //TODO: no messages displaying in any client
     override fun start(primaryStage: Stage) {
         val initialContext = InitialContext() //TODO: may reduce all containers to a Context or sth of the sort
 
         //TODO: may put all listeners into an object to make the code more readable
         val invalidMoveListener = MoveResultListener<InvalidMove>()
         val newGameStateListener = MoveResultListener<NewGameState>()
-        val gameOverListener = MoveResultListener<GameOver>() //TODO: exception when receiving a GameOver result: There's a null pointer at the piece adapter
+        val gameOverListener = MoveResultListener<GameOver>()
         val ackListener = AcknowledgeListener(initialContext)
         val client = buildClient(invalidMoveListener, newGameStateListener, gameOverListener, ackListener)
 

@@ -1,5 +1,6 @@
 package edu.austral.dissis.chess.server
 
+import edu.austral.dissis.chess.client.AckPayload
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE

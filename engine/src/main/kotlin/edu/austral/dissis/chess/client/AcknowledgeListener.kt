@@ -1,6 +1,5 @@
-package edu.austral.dissis.chess.server
+package edu.austral.dissis.chess.client
 
-import edu.austral.dissis.chess.client.InitialContext
 import edu.austral.dissis.chess.gui.GameView
 import edu.austral.dissis.chess.gui.InitialState
 import edu.austral.ingsis.clientserver.Message
