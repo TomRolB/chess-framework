@@ -7,7 +7,6 @@ import edu.austral.dissis.chess.gui.GameEventListener
 import edu.austral.dissis.chess.gui.GameOver
 import edu.austral.dissis.chess.gui.GameView
 import edu.austral.dissis.chess.gui.ImageResolver
-import edu.austral.dissis.chess.gui.InitialState
 import edu.austral.dissis.chess.gui.InvalidMove
 import edu.austral.dissis.chess.gui.Move
 import edu.austral.dissis.chess.gui.NewGameState
@@ -43,12 +42,14 @@ class OnlineChessApplication : Application() {
     }
 
     //TODO: modularize
+    //TODO: no messages displaying in any client
     override fun start(primaryStage: Stage) {
         val initialContext = InitialContext() //TODO: may reduce all containers to a Context or sth of the sort
 
+        //TODO: may put all listeners into an object to make the code more readable
         val invalidMoveListener = MoveResultListener<InvalidMove>()
         val newGameStateListener = MoveResultListener<NewGameState>()
-        val gameOverListener = MoveResultListener<GameOver>()
+        val gameOverListener = MoveResultListener<GameOver>() //TODO: exception when receiving a GameOver result: There's a null pointer at the piece adapter
         val ackListener = AcknowledgeListener(initialContext)
         val client = buildClient(invalidMoveListener, newGameStateListener, gameOverListener, ackListener)
 
@@ -69,35 +70,32 @@ class OnlineChessApplication : Application() {
         newGameStateListener: MoveResultListener<NewGameState>,
         gameOverListener: MoveResultListener<GameOver>,
         ackListener: AcknowledgeListener,
-    ) = NettyClientBuilder.createDefault()
-        .withAddress(InetSocketAddress("localhost", 8095))
-        .withConnectionListener(MyClientConnectionListener())
-        .addMessageListener(
-            messageType = "ack",
-            messageTypeReference = object : TypeReference<Message<AckPayload>>() {},
-            messageListener = ackListener
-        )
-        .addMessageListener(
-            messageType = "invalid move",
-            // TODO: Seems like this type reference is causing an exception,
-            //  since MoveResult is an interface, and apparently jackson is
-            //  is unable to infer the actual MoveResult implementation
-            //  Possible solution: Create a message listener for each MoveResult
-            //  implementation.
-            messageTypeReference = object : TypeReference<Message<InvalidMove>>() {},
-            messageListener = invalidMoveListener
-        )
-        .addMessageListener(
-            messageType = "new game state",
-            messageTypeReference = object : TypeReference<Message<NewGameState>>() {},
-            messageListener = newGameStateListener
-        )
-        .addMessageListener(
-            messageType = "game over",
-            messageTypeReference = object : TypeReference<Message<GameOver>>() {},
-            messageListener = gameOverListener
-        )
-        .build()
+    ): Client {
+        return NettyClientBuilder.createDefault()
+            .withAddress(InetSocketAddress("localhost", 8095))
+            .withConnectionListener(MyClientConnectionListener())
+            .addMessageListener(
+                messageType = "ack",
+                messageTypeReference = object : TypeReference<Message<AckPayload>>() {},
+                messageListener = ackListener
+            )
+            .addMessageListener(
+                messageType = "invalid move",
+                messageTypeReference = object : TypeReference<Message<InvalidMove>>() {},
+                messageListener = invalidMoveListener
+            )
+            .addMessageListener(
+                messageType = "new game state",
+                messageTypeReference = object : TypeReference<Message<NewGameState>>() {},
+                messageListener = newGameStateListener
+            )
+            .addMessageListener(
+                messageType = "game over",
+                messageTypeReference = object : TypeReference<Message<GameOver>>() {},
+                messageListener = gameOverListener
+            )
+            .build()
+    }
 
     private fun createGameView(
         imageResolver: ImageResolver,
@@ -136,6 +134,4 @@ class InitialContext {
                         " acknowledge the user for it to send any other message."
             )
         }
-    
-    lateinit var initialState: InitialState 
 }

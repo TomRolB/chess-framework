@@ -12,9 +12,8 @@ import edu.austral.ingsis.clientserver.Server
 
 class MoveListener(
     private val gameEngine: StandardGameEngine,
-    private val responseContainer: ResponseContainer,
     private val playerMap: Map<String, Player?>
-    ): MessageListener<MovePayload> {
+): MessageListener<MovePayload> {
     lateinit var server: Server
 
     override fun handleMessage(message: Message<MovePayload>) {
@@ -47,18 +46,12 @@ class MoveListener(
     private fun broadcastBasedOnResultType(result: MoveResult) {
         server.broadcast(
             message = when (result) {
-                is GameOver -> Message("game over", result)
-                is InvalidMove ->  Message("invalid move", result)
-                is NewGameState ->  Message("new game state", result)
+                is GameOver -> Message<GameOver>("game over", result)
+                is InvalidMove ->  Message<InvalidMove>("invalid move", result)
+                is NewGameState ->  Message<NewGameState>("new game state", result)
             }
         )
     }
-
-//    private fun getMove(message: Message<MovePayload>) =
-//        getPosition(message.payload.move.from) to getPosition(message.payload.move.to)
-//
-//    private fun getPosition(position: UiPosition): Position =
-//        Position(position.row, position.column)
 
     private fun notThisPlayersTurn(message: Message<MovePayload>) =
         gameEngine.game.turnManager.getTurn() != playerMap[message.payload.clientId]

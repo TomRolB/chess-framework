@@ -28,6 +28,7 @@ import edu.austral.dissis.chess.engine.board.Position as EnginePosition
 typealias UiBoard = Map<Position, ChessPiece>
 
 //TODO: rename
+// TODO: block undo/redo on win
 class StandardGameEngine(
     var game: Game,
     private val validator: RectangularBoardValidator,
