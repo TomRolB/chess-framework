@@ -54,6 +54,8 @@ class OnlineChessApplication : Application() {
 
         val root = createGameView(imageResolver, client, initialContext)
         invalidMoveListener.gameView = root
+        newGameStateListener.gameView = root
+        gameOverListener.gameView = root
         ackListener.gameView = root
         client.connect()
 
