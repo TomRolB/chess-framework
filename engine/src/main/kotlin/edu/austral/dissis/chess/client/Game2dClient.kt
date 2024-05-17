@@ -1,14 +1,14 @@
 package edu.austral.dissis.chess.client
 
 import com.fasterxml.jackson.core.type.TypeReference
-import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.gui.CachedImageResolver
 import edu.austral.dissis.chess.gui.DefaultImageResolver
-import edu.austral.dissis.chess.gui.GameEngine
 import edu.austral.dissis.chess.gui.GameEventListener
 import edu.austral.dissis.chess.gui.GameView
 import edu.austral.dissis.chess.gui.ImageResolver
+import edu.austral.dissis.chess.gui.InitialState
 import edu.austral.dissis.chess.gui.Move
+import edu.austral.dissis.chess.gui.MoveResult
 import edu.austral.dissis.chess.server.AckPayload
 import edu.austral.dissis.chess.server.AcknowledgeListener
 import edu.austral.dissis.chess.server.MovePayload
@@ -31,55 +31,62 @@ fun main() {
 //    }
 //
 //    client.send(new Message<>("hello", new HelloPayload("Server")));
-}
+//}
 
 class OnlineChessApplication : Application() {
-    val engine : GameEngine //TODO: the 'engine' should not contain an engine per se
-    val idContainer = IdContainer() //TODO: may reduce all containers to a Context or sth of the sort
-
-    val client = NettyClientBuilder.Companion.createDefault()
-        .withAddress(InetSocketAddress("localhost", 8095))
-        .withConnectionListener(MyClientConnectionListener())
-        .addMessageListener(
-            messageType = "ack",
-            messageTypeReference = object : TypeReference<Message<AckPayload>>() {},
-            messageListener = AcknowledgeListener(idContainer)
-        )
-        .addMessageListener(
-            "valid move",
-            messageTypeReference = object : TypeReference<Message<Pair<Position, Position>>>() {},
-            ValidMoveListener(engine))
-        .build()
-
-    client.connect();
-
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
     companion object {
         const val GameTitle = "Online Chess"
     }
 
+    //TODO: modularize
     override fun start(primaryStage: Stage) {
+        val initialContext = InitialContext() //TODO: may reduce all containers to a Context or sth of the sort
+
+        val moveResultListener = MoveResultListener()
+        val client = buildClient(initialContext, moveResultListener)
+
+        val root = createGameView(imageResolver, client, initialContext)
+
+        moveResultListener.gameView = root
+        client.connect();
+
         primaryStage.title = GameTitle
-
-        val root = createGameView(imageResolver, client)
-
         primaryStage.scene = Scene(root)
-
         primaryStage.show()
     }
+
+    private fun buildClient(
+        initialContext: InitialContext,
+        moveResultListener: MoveResultListener,
+    ) = NettyClientBuilder.createDefault()
+        .withAddress(InetSocketAddress("localhost", 8095))
+        .withConnectionListener(MyClientConnectionListener())
+        .addMessageListener(
+            messageType = "ack",
+            messageTypeReference = object : TypeReference<Message<AckPayload>>() {},
+            messageListener = AcknowledgeListener(initialContext)
+        )
+        .addMessageListener(
+            messageType = "move result",
+            messageTypeReference = object : TypeReference<Message<MoveResult>>() {},
+            messageListener = moveResultListener
+        )
+        .build()
 
     private fun createGameView(
         imageResolver: ImageResolver,
         client: Client,
-        idContainer: IdContainer
+        initialContext: InitialContext
     ): GameView {
         val gameView = GameView(imageResolver)
 
         val uiOnlyEventListener = object : GameEventListener {
             override fun handleMove(move: Move) {
                 // here we should send the move to the server
-                client.send(Message("move", MovePayload(idContainer.clientId, move)))
+                client.send(Message("move", MovePayload(initialContext.clientId, move)))
+//                gameView.handleMoveResult(result)
             }
 
             override fun handleUndo() {
@@ -92,18 +99,20 @@ class OnlineChessApplication : Application() {
         }
 
         gameView.addListener(uiOnlyEventListener)
-        gameView.handleInitialState(gameEngine.init())
+        gameView.handleInitialState(initialContext.initialState)
 
         return gameView
     }
 }
 
-class IdContainer {
+class InitialContext {
     var clientId = ""
         get() = field.ifEmpty {
             throw IllegalStateException(
-                "The clientId was not yet assigned. The server must first" +
+                "The clientId has not been assigned yet. The server must first" +
                         " acknowledge the user for it to send any other message."
             )
         }
+    
+    lateinit var initialState: InitialState 
 }

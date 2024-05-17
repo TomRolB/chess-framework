@@ -28,7 +28,7 @@ typealias UiBoard = Map<Position, ChessPiece>
 
 //TODO: rename
 class StandardGameEngine(
-    private var game: Game,
+    var game: Game,
     private val validator: RectangularBoardValidator,
     private val pieceAdapter: UiPieceAdapter,
 ) : GameEngine {
