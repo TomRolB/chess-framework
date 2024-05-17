@@ -39,7 +39,7 @@ class MoveListener(
     ) {
         server.sendMessage(
             clientId = message.payload.clientId,
-            message = Message("move result", result)
+            message = Message("invalid move", result)
         )
     }
 

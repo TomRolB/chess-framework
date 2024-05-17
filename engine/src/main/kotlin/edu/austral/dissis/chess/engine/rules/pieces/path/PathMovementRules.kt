@@ -13,6 +13,9 @@ import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
+
+//TODO: Moving in the correct direction, even though too many spaces, returns
+// the message "Moving in invalid direction"
 class PathMovementRules : PieceRule {
     private val rowIncrement: Int
     private val colIncrement: Int

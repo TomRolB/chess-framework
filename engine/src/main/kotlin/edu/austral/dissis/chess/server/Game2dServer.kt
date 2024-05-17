@@ -1,6 +1,7 @@
 package edu.austral.dissis.chess.server
 
 import com.fasterxml.jackson.core.type.TypeReference
+import edu.austral.dissis.chess.checkers.getCheckersEngine
 import edu.austral.dissis.chess.chess.variants.getChessEngine
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.ingsis.clientserver.Message
@@ -15,7 +16,7 @@ import edu.austral.ingsis.clientserver.netty.server.NettyServerBuilder
 //  on connection, so connecting after the game started puts them in an inconsistent state.
 //  Nevertheless, read-only clients shouldn't actually be able to perform any move.
 fun main() {
-    val engine = getChessEngine()
+    val engine = getCheckersEngine()
 
     //TODO: should we consider synchronization?
 //    val playerMap: MutableMap<String, Player> = Collections.synchronizedMap(emptyMap())
