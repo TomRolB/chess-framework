@@ -29,6 +29,12 @@ typealias UiBoard = Map<Position, ChessPiece>
 
 //TODO: rename
 // TODO: block undo/redo on win
+// TODO: Refactor: may make it immutable in the future. Instead
+//  of having two stacks, we would have a 'previousState' and
+//  a 'nextState' or sth of the sort. This would eliminate the
+//  confusion of manipulating variables (currentState, uiBoard, etc.).
+//  Actually, I think it's impossible, since redo and undo do not return
+//  a GameEngine.
 class StandardGameEngine(
     var game: Game,
     private val validator: RectangularBoardValidator,
