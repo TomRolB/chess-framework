@@ -2,7 +2,6 @@ package edu.austral.dissis.chess.server
 
 import com.fasterxml.jackson.core.type.TypeReference
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.gui.MoveResult
 import edu.austral.dissis.chess.server.ServerConfig.ENGINE
 import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.Server
@@ -19,7 +18,6 @@ fun main() {
     //TODO: should we consider synchronization?
 //    val playerMap: MutableMap<String, Player> = Collections.synchronizedMap(emptyMap())
     val playerMap: MutableMap<String, Player> = mutableMapOf()
-    val resultContainer = ResultContainer(engine.init())
 
     val connListener = ServerConnectionListener(playerMap, engine)
     val moveListener = MoveListener(engine, playerMap)
@@ -28,10 +26,6 @@ fun main() {
     connListener.server = server
     moveListener.server = server
     server.start()
-}
-
-class ResultContainer(result: MoveResult) {
-
 }
 
 private fun buildServer(
