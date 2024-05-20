@@ -23,6 +23,8 @@ fun main() {
     launch(OnlineChessApplication::class.java)
 }
 
+private const val PORT = 8095
+
 class OnlineChessApplication : Application() {
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
@@ -49,7 +51,7 @@ class OnlineChessApplication : Application() {
         initialContext: InitialContext,
     ): Client {
         return NettyClientBuilder.createDefault()
-            .withAddress(InetSocketAddress("localhost", 8095))
+            .withAddress(InetSocketAddress("localhost", PORT))
             .withConnectionListener(MyClientConnectionListener())
             .addMessageListener(
                 messageType = "ack",

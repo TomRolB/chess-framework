@@ -28,7 +28,7 @@ private fun buildServer(
     moveListener: MoveListener,
 ): Server {
     return NettyServerBuilder.createDefault()
-        .withPort(8095)
+        .withPort(port = 8095)
         .withConnectionListener(connListener)
         .addMessageListener(
             messageType = "move",
