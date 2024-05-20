@@ -17,10 +17,10 @@ import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CannotStayStill
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PieceOfPlayer
 import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.DeadlockWinCondition
-import edu.austral.dissis.chess.ui.StandardGameEngine
+import edu.austral.dissis.chess.ui.GameEngineImpl
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
-fun getCheckersEngine(): StandardGameEngine {
+fun getCheckersEngine(): GameEngineImpl {
     val board = getCheckersBoard()
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -34,7 +34,7 @@ fun getCheckersEngine(): StandardGameEngine {
         "Non-rectangular boards are not supported"
     }
 
-    return StandardGameEngine(game, board.validator, pieceAdapter)
+    return GameEngineImpl(game, board.validator, pieceAdapter)
 }
 
 fun getCheckersTurnManager() = MultiTurnManager(WHITE)

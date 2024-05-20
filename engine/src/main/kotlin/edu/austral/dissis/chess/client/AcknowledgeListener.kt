@@ -8,10 +8,9 @@ import javafx.application.Platform
 
 // Listener used by the client
 class AcknowledgeListener(
-    val initialContext: InitialContext,
+    private val gameView: GameView,
+    private val initialContext: InitialContext,
 ) : MessageListener<AckPayload> {
-    lateinit var gameView: GameView
-
     override fun handleMessage(message: Message<AckPayload>) {
         initialContext.clientId = message.payload.clientId
 

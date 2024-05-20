@@ -6,7 +6,6 @@ import edu.austral.dissis.chess.gui.DefaultImageResolver
 import edu.austral.dissis.chess.gui.GameEventListener
 import edu.austral.dissis.chess.gui.GameOver
 import edu.austral.dissis.chess.gui.GameView
-import edu.austral.dissis.chess.gui.ImageResolver
 import edu.austral.dissis.chess.gui.InvalidMove
 import edu.austral.dissis.chess.gui.Move
 import edu.austral.dissis.chess.gui.NewGameState
@@ -24,14 +23,6 @@ fun main() {
     launch(OnlineChessApplication::class.java)
 }
 
-//    while (true) {
-//        if (messageToBeSent.message != null)
-//            client.send(messageToBeSent.message)
-//    }
-//
-//    client.send(new Message<>("hello", new HelloPayload("Server")));
-//}
-
 class OnlineChessApplication : Application() {
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
@@ -39,22 +30,13 @@ class OnlineChessApplication : Application() {
         const val GAME_TITLE = "Online Chess"
     }
 
-    //TODO: modularize
     override fun start(primaryStage: Stage) {
-        val initialContext = InitialContext() //TODO: may reduce all containers to a Context or sth of the sort
+        val initialContext = InitialContext()
 
-        //TODO: may put all listeners into an object to make the code more readable
-        val invalidMoveListener = MoveResultListener<InvalidMove>()
-        val newGameStateListener = MoveResultListener<NewGameState>()
-        val gameOverListener = MoveResultListener<GameOver>()
-        val ackListener = AcknowledgeListener(initialContext)
-        val client = buildClient(invalidMoveListener, newGameStateListener, gameOverListener, ackListener)
+        val gameView = GameView(imageResolver)
+        val client = buildClient(gameView, initialContext)
+        val root = addListener(client, initialContext, gameView)
 
-        val root = createGameView(imageResolver, client, initialContext)
-        invalidMoveListener.gameView = root
-        newGameStateListener.gameView = root
-        gameOverListener.gameView = root
-        ackListener.gameView = root
         client.connect()
 
         primaryStage.title = GAME_TITLE
@@ -63,10 +45,8 @@ class OnlineChessApplication : Application() {
     }
 
     private fun buildClient(
-        invalidMoveListener: MoveResultListener<InvalidMove>,
-        newGameStateListener: MoveResultListener<NewGameState>,
-        gameOverListener: MoveResultListener<GameOver>,
-        ackListener: AcknowledgeListener,
+        gameView: GameView,
+        initialContext: InitialContext
     ): Client {
         return NettyClientBuilder.createDefault()
             .withAddress(InetSocketAddress("localhost", 8095))
@@ -74,38 +54,34 @@ class OnlineChessApplication : Application() {
             .addMessageListener(
                 messageType = "ack",
                 messageTypeReference = object : TypeReference<Message<AckPayload>>() {},
-                messageListener = ackListener
+                messageListener = AcknowledgeListener(gameView, initialContext)
             )
             .addMessageListener(
                 messageType = "invalid move",
                 messageTypeReference = object : TypeReference<Message<InvalidMove>>() {},
-                messageListener = invalidMoveListener
+                messageListener = MoveResultListener<InvalidMove>(gameView)
             )
             .addMessageListener(
                 messageType = "new game state",
                 messageTypeReference = object : TypeReference<Message<NewGameState>>() {},
-                messageListener = newGameStateListener
+                messageListener = MoveResultListener<NewGameState>(gameView)
             )
             .addMessageListener(
                 messageType = "game over",
                 messageTypeReference = object : TypeReference<Message<GameOver>>() {},
-                messageListener = gameOverListener
+                messageListener = MoveResultListener<GameOver>(gameView)
             )
             .build()
     }
 
-    private fun createGameView(
-        imageResolver: ImageResolver,
+    private fun addListener(
         client: Client,
-        initialContext: InitialContext
+        initialContext: InitialContext,
+        gameView: GameView
     ): GameView {
-        val gameView = GameView(imageResolver)
-
         val uiOnlyEventListener = object : GameEventListener {
             override fun handleMove(move: Move) {
-                // here we should send the move to the server
                 client.send(Message("move", MovePayload(initialContext.clientId, move)))
-//                gameView.handleMoveResult(result)
             }
 
             override fun handleUndo() {

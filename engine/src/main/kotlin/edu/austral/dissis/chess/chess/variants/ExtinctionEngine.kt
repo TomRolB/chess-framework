@@ -10,10 +10,10 @@ import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayVal
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PieceOfPlayer
 import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.ExtinctionWinCondition
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
-import edu.austral.dissis.chess.ui.StandardGameEngine
+import edu.austral.dissis.chess.ui.GameEngineImpl
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
-fun getExtinctionEngine(): StandardGameEngine {
+fun getExtinctionEngine(): GameEngineImpl {
     val board = getClassicChessBoard()
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -30,5 +30,5 @@ fun getExtinctionEngine(): StandardGameEngine {
 
     val game = Game(gameRules, board, OneToOneTurnManager(WHITE))
 
-    return StandardGameEngine(game, board.validator as RectangularBoardValidator, pieceAdapter)
+    return GameEngineImpl(game, board.validator as RectangularBoardValidator, pieceAdapter)
 }

@@ -5,13 +5,13 @@ import edu.austral.dissis.chess.gui.GameOver
 import edu.austral.dissis.chess.gui.InvalidMove
 import edu.austral.dissis.chess.gui.MoveResult
 import edu.austral.dissis.chess.gui.NewGameState
-import edu.austral.dissis.chess.ui.StandardGameEngine
+import edu.austral.dissis.chess.ui.GameEngineImpl
 import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.MessageListener
 import edu.austral.ingsis.clientserver.Server
 
 class MoveListener(
-    private val gameEngine: StandardGameEngine,
+    private val gameEngine: GameEngineImpl,
     private val playerMap: Map<String, Player?>
 ): MessageListener<MovePayload> {
     lateinit var server: Server
@@ -24,13 +24,8 @@ class MoveListener(
     }
 
     private fun createResponse(result: MoveResult, message: Message<MovePayload>) {
-        // TODO: may find a way of replacing all this Unicast, Broadcast thing by
-        //  directly using the server. The question is HOW to pass the server to
-        //  this class, since the server is created after the listener. Maybe by
-        //  using a container class, initially empty
         if (result is InvalidMove) returnErrorToSender(message, result)
         else broadcastBasedOnResultType(result)
-
     }
 
     private fun returnErrorToSender(

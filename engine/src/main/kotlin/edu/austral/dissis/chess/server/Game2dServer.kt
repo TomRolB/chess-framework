@@ -7,11 +7,6 @@ import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.Server
 import edu.austral.ingsis.clientserver.netty.server.NettyServerBuilder
 
-// TODO: there's a strange behaviour where a movement from a read-only client causes many
-//  pieces to disappear from the game board.
-//  SOLUTION: This might be happening because all clients are being provided the initial state
-//  on connection, so connecting after the game started puts them in an inconsistent state.
-//  Nevertheless, read-only clients shouldn't actually be able to perform any move.
 fun main() {
     val engine = ENGINE
 
