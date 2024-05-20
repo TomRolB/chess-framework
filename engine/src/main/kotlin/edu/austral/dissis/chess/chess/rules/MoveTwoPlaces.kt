@@ -8,13 +8,13 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.InvalidPlay
-import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
 import edu.austral.dissis.chess.engine.rules.All
 import edu.austral.dissis.chess.engine.rules.Not
 import edu.austral.dissis.chess.engine.rules.SimpleRule
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
+import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 
 class MoveTwoPlaces(
     private val player: Player,

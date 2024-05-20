@@ -7,15 +7,15 @@ import edu.austral.dissis.chess.checkers.CheckersPieceType.MAN
 import edu.austral.dissis.chess.checkers.rules.JumpManager
 import edu.austral.dissis.chess.checkers.rules.JumpsWhenCompulsory
 import edu.austral.dissis.chess.checkers.rules.PendingJumpUpdater
-import edu.austral.dissis.chess.engine.rules.pieces.updaters.PromotionUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.path.PathMovementRules
-import edu.austral.dissis.chess.engine.rules.pieces.updaters.MovementMapper
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.MapPlay
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MovementMapper
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.PromotionUpdater
 
 object CheckersPieceProvider {
     fun getMan(player: Player) =
@@ -78,11 +78,11 @@ object CheckersPieceProvider {
                                     ),
                                     NoPieceAtFinalPosition(
                                         previousRule =
-                                        IncrementalMovement(1, 1, player),
+                                            IncrementalMovement(1, 1, player),
                                     ),
                                     NoPieceAtFinalPosition(
                                         previousRule =
-                                        IncrementalMovement(1, -1, player),
+                                            IncrementalMovement(1, -1, player),
                                     ),
                                 ),
                         ),

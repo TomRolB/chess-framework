@@ -6,9 +6,9 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.includesTakeAction
 import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
+import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 
 class JumpsWhenCompulsory(val previousRule: PieceRule) : PieceRule {
     override fun getValidPlays(

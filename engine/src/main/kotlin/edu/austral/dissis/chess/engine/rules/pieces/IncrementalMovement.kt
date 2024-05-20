@@ -32,7 +32,7 @@ class IncrementalMovement : PieceRule {
 
         return listOf(getPlayResult(board, position, to))
             .filterIsInstance<ValidPlay>()
-            .map{ it.play }
+            .map { it.play }
     }
 
     override fun getPlayResult(

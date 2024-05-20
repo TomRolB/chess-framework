@@ -9,13 +9,10 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.doVectorsShareOrientation
 import edu.austral.dissis.chess.engine.pieces.InvalidPlay
-import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
+import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 
-
-//TODO: Moving in the correct direction, even though too many spaces, returns
-// the message "Moving in invalid direction"
 class PathMovementRules : PieceRule {
     private val rowIncrement: Int
     private val colIncrement: Int

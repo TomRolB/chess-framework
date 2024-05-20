@@ -10,7 +10,7 @@ import edu.austral.ingsis.clientserver.netty.server.NettyServerBuilder
 fun main() {
     val engine = ENGINE
 
-    //TODO: should we consider synchronization?
+    // TODO: should we consider synchronization?
 //    val playerMap: MutableMap<String, Player> = Collections.synchronizedMap(emptyMap())
     val playerMap: MutableMap<String, Player> = mutableMapOf()
 
@@ -33,7 +33,7 @@ private fun buildServer(
         .addMessageListener(
             messageType = "move",
             messageTypeReference = object : TypeReference<Message<MovePayload>>() {},
-            messageListener = moveListener
+            messageListener = moveListener,
         )
         .build()
 }

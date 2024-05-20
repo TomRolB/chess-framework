@@ -46,7 +46,7 @@ class OnlineChessApplication : Application() {
 
     private fun buildClient(
         gameView: GameView,
-        initialContext: InitialContext
+        initialContext: InitialContext,
     ): Client {
         return NettyClientBuilder.createDefault()
             .withAddress(InetSocketAddress("localhost", 8095))
@@ -54,22 +54,22 @@ class OnlineChessApplication : Application() {
             .addMessageListener(
                 messageType = "ack",
                 messageTypeReference = object : TypeReference<Message<AckPayload>>() {},
-                messageListener = AcknowledgeListener(gameView, initialContext)
+                messageListener = AcknowledgeListener(gameView, initialContext),
             )
             .addMessageListener(
                 messageType = "invalid move",
                 messageTypeReference = object : TypeReference<Message<InvalidMove>>() {},
-                messageListener = MoveResultListener<InvalidMove>(gameView)
+                messageListener = MoveResultListener<InvalidMove>(gameView),
             )
             .addMessageListener(
                 messageType = "new game state",
                 messageTypeReference = object : TypeReference<Message<NewGameState>>() {},
-                messageListener = MoveResultListener<NewGameState>(gameView)
+                messageListener = MoveResultListener<NewGameState>(gameView),
             )
             .addMessageListener(
                 messageType = "game over",
                 messageTypeReference = object : TypeReference<Message<GameOver>>() {},
-                messageListener = MoveResultListener<GameOver>(gameView)
+                messageListener = MoveResultListener<GameOver>(gameView),
             )
             .build()
     }
@@ -77,21 +77,22 @@ class OnlineChessApplication : Application() {
     private fun addListener(
         client: Client,
         initialContext: InitialContext,
-        gameView: GameView
+        gameView: GameView,
     ): GameView {
-        val uiOnlyEventListener = object : GameEventListener {
-            override fun handleMove(move: Move) {
-                client.send(Message("move", MovePayload(initialContext.clientId, move)))
-            }
+        val uiOnlyEventListener =
+            object : GameEventListener {
+                override fun handleMove(move: Move) {
+                    client.send(Message("move", MovePayload(initialContext.clientId, move)))
+                }
 
-            override fun handleUndo() {
-                TODO("Yet too implement")
-            }
+                override fun handleUndo() {
+                    TODO("Yet too implement")
+                }
 
-            override fun handleRedo() {
-                TODO("Yet too implement")
+                override fun handleRedo() {
+                    TODO("Yet too implement")
+                }
             }
-        }
 
         gameView.addListener(uiOnlyEventListener)
 
@@ -101,10 +102,11 @@ class OnlineChessApplication : Application() {
 
 class InitialContext {
     var clientId = ""
-        get() = field.ifEmpty {
-            throw IllegalStateException(
-                "The clientId has not been assigned yet. The server must first" +
-                        " acknowledge the user for it to send any other message."
-            )
-        }
+        get() =
+            field.ifEmpty {
+                throw IllegalStateException(
+                    "The clientId has not been assigned yet. The server must first" +
+                        " acknowledge the user for it to send any other message.",
+                )
+            }
 }

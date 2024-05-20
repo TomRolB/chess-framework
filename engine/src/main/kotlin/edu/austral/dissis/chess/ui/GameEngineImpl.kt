@@ -22,18 +22,11 @@ import edu.austral.dissis.chess.gui.NewGameState
 import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.dissis.chess.gui.Position
 import edu.austral.dissis.chess.gui.UndoState
-import java.util.*
+import java.util.Stack
 import edu.austral.dissis.chess.engine.board.Position as EnginePosition
 
 typealias UiBoard = Map<Position, ChessPiece>
 
-//TODO: rename
-// TODO: Refactor: may make it immutable in the future. Instead
-//  of having two stacks, we would have a 'previousState' and
-//  a 'nextState' or sth of the sort. This would eliminate the
-//  confusion of manipulating variables (currentState, uiBoard, etc.).
-//  Actually, I think it's impossible, since redo and undo do not return
-//  a GameEngine.
 class GameEngineImpl(
     var game: Game,
     private val validator: RectangularBoardValidator,
@@ -154,4 +147,3 @@ class GameEngineImpl(
         return currentState
     }
 }
-

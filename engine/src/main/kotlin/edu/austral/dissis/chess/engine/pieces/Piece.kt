@@ -78,4 +78,3 @@ class Piece {
         return Piece(type, player, rules, HashSet(states))
     }
 }
-

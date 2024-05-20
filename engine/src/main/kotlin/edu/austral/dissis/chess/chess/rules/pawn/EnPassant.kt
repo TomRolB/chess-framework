@@ -9,13 +9,13 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.pieces.InvalidPlay
-import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
 import edu.austral.dissis.chess.engine.rules.ContainsPieceOfPlayer
+import edu.austral.dissis.chess.engine.rules.IsPieceOfType
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
-import edu.austral.dissis.chess.engine.rules.IsPieceOfType
+import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 
 class EnPassant : PieceRule {
     override fun getValidPlays(

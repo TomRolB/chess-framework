@@ -27,7 +27,7 @@ import edu.austral.dissis.chess.test.game.TestMoveFailure
 import edu.austral.dissis.chess.test.game.TestMoveResult
 import edu.austral.dissis.chess.test.game.TestMoveSuccess
 import edu.austral.dissis.chess.test.game.WhiteCheckMate
-import java.util.*
+import java.util.Stack
 
 class TestGameRunnerImpl : TestGameRunner {
     private val actionAdapter: ActionAdapter
@@ -39,7 +39,7 @@ class TestGameRunnerImpl : TestGameRunner {
     private lateinit var game: Game
     private lateinit var testBoard: TestBoard
 
-    //TODO: is there any way of reducing this undo/redo logic
+    // TODO: is there any way of reducing this undo/redo logic
     // and UI's to a single class?
     private val undoStack = Stack<RunnerState>()
     private val redoStack = Stack<RunnerState>()
@@ -89,11 +89,13 @@ class TestGameRunnerImpl : TestGameRunner {
             BLACK_WINS -> BlackCheckMate(boardAfterMove)
             TIE_BY_WHITE, TIE_BY_BLACK -> TestMoveDraw(boardAfterMove)
             VALID_MOVE -> {
-                undoStack.push(RunnerState(
-                    game,
-                    TestMoveSuccess(this),
-                    testBoard
-                ))
+                undoStack.push(
+                    RunnerState(
+                        game,
+                        TestMoveSuccess(this),
+                        testBoard,
+                    ),
+                )
                 redoStack.clear()
 
                 this.game = newGame
@@ -141,13 +143,15 @@ class TestGameRunnerImpl : TestGameRunner {
     }
 
     override fun redo(): TestMoveResult {
-        check(!redoStack.isEmpty()) {"No move to redo"}
+        check(!redoStack.isEmpty()) { "No move to redo" }
 
-        undoStack.push(RunnerState(
-            game = game,
-            result = TestMoveSuccess(this),
-            board = testBoard
-        ))
+        undoStack.push(
+            RunnerState(
+                game = game,
+                result = TestMoveSuccess(this),
+                board = testBoard,
+            ),
+        )
         val (redoneGame, redoneState, redoneBoard) = redoStack.pop()
         game = redoneGame
         testBoard = redoneBoard
@@ -156,13 +160,15 @@ class TestGameRunnerImpl : TestGameRunner {
     }
 
     override fun undo(): TestMoveResult {
-        check(!undoStack.isEmpty()) {"No move to undo"}
+        check(!undoStack.isEmpty()) { "No move to undo" }
 
-        redoStack.push(RunnerState(
-            game = game,
-            result = TestMoveSuccess(this),
-            board = testBoard
-        ) )
+        redoStack.push(
+            RunnerState(
+                game = game,
+                result = TestMoveSuccess(this),
+                board = testBoard,
+            ),
+        )
         val (undoneGame, undoneResult, undoneBoard) = undoStack.pop()
         game = undoneGame
         testBoard = undoneBoard

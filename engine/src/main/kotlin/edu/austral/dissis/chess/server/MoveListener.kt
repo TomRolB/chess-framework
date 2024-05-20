@@ -12,8 +12,8 @@ import edu.austral.ingsis.clientserver.Server
 
 class MoveListener(
     private val gameEngine: GameEngineImpl,
-    private val playerMap: Map<String, Player?>
-): MessageListener<MovePayload> {
+    private val playerMap: Map<String, Player?>,
+) : MessageListener<MovePayload> {
     lateinit var server: Server
 
     override fun handleMessage(message: Message<MovePayload>) {
@@ -23,9 +23,15 @@ class MoveListener(
         createResponse(result, message)
     }
 
-    private fun createResponse(result: MoveResult, message: Message<MovePayload>) {
-        if (result is InvalidMove) returnErrorToSender(message, result)
-        else broadcastBasedOnResultType(result)
+    private fun createResponse(
+        result: MoveResult,
+        message: Message<MovePayload>,
+    ) {
+        if (result is InvalidMove) {
+            returnErrorToSender(message, result)
+        } else {
+            broadcastBasedOnResultType(result)
+        }
     }
 
     private fun returnErrorToSender(
@@ -34,17 +40,18 @@ class MoveListener(
     ) {
         server.sendMessage(
             clientId = message.payload.clientId,
-            message = Message("invalid move", result)
+            message = Message("invalid move", result),
         )
     }
 
     private fun broadcastBasedOnResultType(result: MoveResult) {
         server.broadcast(
-            message = when (result) {
-                is GameOver -> Message<GameOver>("game over", result)
-                is InvalidMove ->  Message<InvalidMove>("invalid move", result)
-                is NewGameState ->  Message<NewGameState>("new game state", result)
-            }
+            message =
+                when (result) {
+                    is GameOver -> Message<GameOver>("game over", result)
+                    is InvalidMove -> Message<InvalidMove>("invalid move", result)
+                    is NewGameState -> Message<NewGameState>("new game state", result)
+                },
         )
     }
 

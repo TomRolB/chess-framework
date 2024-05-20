@@ -8,9 +8,9 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.pieces.Piece
-import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
+import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 
 private const val C_COLUMN = 3
 
@@ -76,7 +76,7 @@ class Castling : PieceRule {
                 Move(from, to, board, pieceNextTurn = king.withState(MOVED)),
                 Move(rookFrom!!, rookTo!!, board, pieceNextTurn = movedRook),
             ),
-        )
+        ),
     )
 }
 

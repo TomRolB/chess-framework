@@ -6,7 +6,7 @@ import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.MessageListener
 import javafx.application.Platform
 
-class MoveResultListener<T: MoveResult>(private val gameView: GameView) : MessageListener<T> {
+class MoveResultListener<T : MoveResult>(private val gameView: GameView) : MessageListener<T> {
     override fun handleMessage(message: Message<T>) {
         Platform.runLater { gameView.handleMoveResult(message.payload) }
     }

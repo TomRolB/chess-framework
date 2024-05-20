@@ -7,7 +7,6 @@ import edu.austral.dissis.chess.chess.rules.SimpleBlockManager
 import edu.austral.dissis.chess.chess.rules.castling.Castling
 import edu.austral.dissis.chess.chess.rules.pawn.EnPassant
 import edu.austral.dissis.chess.chess.rules.updaters.HasMovedUpdater
-import edu.austral.dissis.chess.engine.rules.pieces.updaters.PromotionUpdater
 import edu.austral.dissis.chess.chess.rules.updaters.MovedTwoPlacesUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.not
@@ -16,8 +15,9 @@ import edu.austral.dissis.chess.engine.rules.pieces.FinalPosShouldContainPieceOf
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.path.PathMovementRules
-import edu.austral.dissis.chess.engine.rules.pieces.updaters.MovementMapper
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.MapPlay
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MovementMapper
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.PromotionUpdater
 
 object ChessRulesProvider {
     const val FRIENDLY_FIRE_MESSAGE = "Cannot move over ally piece"
