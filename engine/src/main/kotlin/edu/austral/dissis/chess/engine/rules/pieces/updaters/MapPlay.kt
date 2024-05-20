@@ -3,19 +3,18 @@ package edu.austral.dissis.chess.engine.rules.pieces.updaters
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.board.Position
-import edu.austral.dissis.chess.engine.pieces.InvalidPlay
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
-class Update(val updater: PlayUpdater, val subRule: PieceRule) : PieceRule {
+class MapPlay(val mapper: PlayMapper, val previousRule: PieceRule) : PieceRule {
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return subRule
+        return previousRule
             .getValidPlays(board, position)
-            .map { updater.update(it, board) }
+            .map { mapper.update(it, board) }
     }
 
     override fun getPlayResult(
@@ -23,13 +22,13 @@ class Update(val updater: PlayUpdater, val subRule: PieceRule) : PieceRule {
         from: Position,
         to: Position,
     ): PlayResult {
-        val result = subRule.getPlayResult(board, from, to)
+        val result = previousRule.getPlayResult(board, from, to)
 
         return if (result !is ValidPlay) {
             result
         } else {
             ValidPlay(
-                play = updater.update(result.play, board),
+                play = mapper.update(result.play, board),
             )
         }
     }

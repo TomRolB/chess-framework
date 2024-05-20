@@ -19,13 +19,13 @@ import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 class MoveTwoPlaces(
     private val player: Player,
 ) : PieceRule {
-    private val subRule = IncrementalMovement(2, 0, player)
+    private val previousRule = IncrementalMovement(2, 0, player)
 
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        val destination = Position(position.row + subRule.rowDelta, position.col + subRule.colDelta)
+        val destination = Position(position.row + previousRule.rowDelta, position.col + previousRule.colDelta)
         val result = getPlayResult(board, position, destination)
 
         return if (result !is ValidPlay) {
@@ -42,7 +42,7 @@ class MoveTwoPlaces(
     ): PlayResult {
         val moveData = MovementData(from, to, board, player)
         val hasEverMoved = board.getPieceAt(from)!!.hasState(MOVED)
-        val result = subRule.getPlayResult(board, from, to)
+        val result = previousRule.getPlayResult(board, from, to)
 
         val conditions =
             All(

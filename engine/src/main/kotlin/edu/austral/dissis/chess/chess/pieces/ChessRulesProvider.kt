@@ -8,7 +8,7 @@ import edu.austral.dissis.chess.chess.rules.castling.Castling
 import edu.austral.dissis.chess.chess.rules.pawn.EnPassant
 import edu.austral.dissis.chess.chess.rules.updaters.HasMovedUpdater
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.PromotionUpdater
-import edu.austral.dissis.chess.chess.rules.updaters.TwoPlacesUpdater
+import edu.austral.dissis.chess.chess.rules.updaters.MovedTwoPlacesUpdater
 import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.not
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
@@ -16,8 +16,8 @@ import edu.austral.dissis.chess.engine.rules.pieces.FinalPosShouldContainPieceOf
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.path.PathMovementRules
-import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveInPlayUpdater
-import edu.austral.dissis.chess.engine.rules.pieces.updaters.Update
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MovementMapper
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MapPlay
 
 object ChessRulesProvider {
     const val FRIENDLY_FIRE_MESSAGE = "Cannot move over ally piece"
@@ -25,12 +25,12 @@ object ChessRulesProvider {
     fun getPawnRules(player: Player) =
         NoSelfCheckInValidPlays(
             player,
-            subRule =
+            previousRule =
                 FinalPosShouldContainPieceOfPlayer(
                     player,
                     shouldContain = false,
                     onFailMessage = FRIENDLY_FIRE_MESSAGE,
-                    subRule =
+                    previousRule =
                         updatePlay(player),
                 ),
         )
@@ -38,15 +38,15 @@ object ChessRulesProvider {
     fun getRookRules(player: Player) =
         NoSelfCheckInValidPlays(
             player = player,
-            subRule =
+            previousRule =
                 FinalPosShouldContainPieceOfPlayer(
                     player,
                     shouldContain = false,
                     onFailMessage = FRIENDLY_FIRE_MESSAGE,
-                    subRule =
-                        Update(
-                            updater = MoveInPlayUpdater(HasMovedUpdater()),
-                            subRule =
+                    previousRule =
+                        MapPlay(
+                            mapper = MovementMapper(HasMovedUpdater()),
+                            previousRule =
                                 getRookCoreRules(),
                         ),
                 ),
@@ -75,12 +75,12 @@ object ChessRulesProvider {
     fun getBishopRules(player: Player) =
         NoSelfCheckInValidPlays(
             player = player,
-            subRule =
+            previousRule =
                 FinalPosShouldContainPieceOfPlayer(
                     player,
                     shouldContain = false,
                     onFailMessage = FRIENDLY_FIRE_MESSAGE,
-                    subRule =
+                    previousRule =
                         getBishopCoreRules(),
                 ),
         )
@@ -108,12 +108,12 @@ object ChessRulesProvider {
     fun getKnightRules(player: Player) =
         NoSelfCheckInValidPlays(
             player = player,
-            subRule =
+            previousRule =
                 FinalPosShouldContainPieceOfPlayer(
                     player,
                     shouldContain = false,
                     onFailMessage = FRIENDLY_FIRE_MESSAGE,
-                    subRule =
+                    previousRule =
                         CombinedRules(
                             IncrementalMovement(rowDelta = 2, colDelta = 1),
                             IncrementalMovement(rowDelta = 1, colDelta = 2),
@@ -130,15 +130,15 @@ object ChessRulesProvider {
     const val PAWN_DIAGONAL_MESSAGE = "Can only move diagonally to take an enemy piece"
 
     fun updatePlay(player: Player) =
-        Update(
-            updater = MoveInPlayUpdater(PromotionUpdater(getQueen(player))),
-            subRule =
-                Update(
-                    updater = MoveInPlayUpdater(HasMovedUpdater()),
-                    subRule =
-                        Update(
-                            updater = MoveInPlayUpdater(TwoPlacesUpdater()),
-                            subRule =
+        MapPlay(
+            mapper = MovementMapper(PromotionUpdater(getQueen(player))),
+            previousRule =
+                MapPlay(
+                    mapper = MovementMapper(HasMovedUpdater()),
+                    previousRule =
+                        MapPlay(
+                            mapper = MovementMapper(MovedTwoPlacesUpdater()),
+                            previousRule =
                                 getPawnCoreRules(player),
                         ),
                 ),
@@ -148,19 +148,19 @@ object ChessRulesProvider {
         CombinedRules(
             MoveTwoPlaces(player),
             NoPieceAtFinalPosition(
-                subRule = IncrementalMovement(1, 0, player),
+                previousRule = IncrementalMovement(1, 0, player),
             ),
             FinalPosShouldContainPieceOfPlayer(
                 !player,
                 shouldContain = true,
                 onFailMessage = PAWN_DIAGONAL_MESSAGE,
-                subRule = IncrementalMovement(1, 1, player),
+                previousRule = IncrementalMovement(1, 1, player),
             ),
             FinalPosShouldContainPieceOfPlayer(
                 !player,
                 shouldContain = true,
                 onFailMessage = PAWN_DIAGONAL_MESSAGE,
-                subRule = IncrementalMovement(1, -1, player),
+                previousRule = IncrementalMovement(1, -1, player),
             ),
             EnPassant(),
         )
@@ -168,20 +168,20 @@ object ChessRulesProvider {
     fun getKingRules(player: Player) =
         NoSelfCheckInValidPlays(
             player,
-            subRule =
+            previousRule =
                 FinalPosShouldContainPieceOfPlayer(
                     player,
                     shouldContain = false,
                     onFailMessage = FRIENDLY_FIRE_MESSAGE,
-                    subRule =
+                    previousRule =
                         getKingCoreRules(),
                 ),
         )
 
     fun getKingCoreRules() =
-        Update(
-            updater = MoveInPlayUpdater(HasMovedUpdater()),
-            subRule =
+        MapPlay(
+            mapper = MovementMapper(HasMovedUpdater()),
+            previousRule =
                 CombinedRules(
                     IncrementalMovement(1, 0),
                     IncrementalMovement(1, 1),

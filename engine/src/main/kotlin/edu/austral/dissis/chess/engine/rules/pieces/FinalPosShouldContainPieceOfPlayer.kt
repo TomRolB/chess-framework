@@ -12,13 +12,13 @@ class FinalPosShouldContainPieceOfPlayer(
     val player: Player,
     val shouldContain: Boolean,
     val onFailMessage: String,
-    val subRule: PieceRule,
+    val previousRule: PieceRule,
 ) : PieceRule {
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return subRule
+        return previousRule
             .getValidPlays(board, position)
             .filter {
                 val finalPosition = it.extractMoveAction().to
@@ -31,7 +31,7 @@ class FinalPosShouldContainPieceOfPlayer(
         from: Position,
         to: Position,
     ): PlayResult {
-        val playResult = subRule.getPlayResult(board, from, to)
+        val playResult = previousRule.getPlayResult(board, from, to)
 
         return if (
             playResult is InvalidPlay ||

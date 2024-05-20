@@ -9,14 +9,13 @@ import edu.austral.dissis.chess.checkers.rules.JumpsWhenCompulsory
 import edu.austral.dissis.chess.checkers.rules.PendingJumpUpdater
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.PromotionUpdater
 import edu.austral.dissis.chess.engine.Player
-import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.engine.pieces.Piece
 import edu.austral.dissis.chess.engine.rules.pieces.CombinedRules
 import edu.austral.dissis.chess.engine.rules.pieces.IncrementalMovement
 import edu.austral.dissis.chess.engine.rules.pieces.NoPieceAtFinalPosition
 import edu.austral.dissis.chess.engine.rules.pieces.path.PathMovementRules
-import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveInPlayUpdater
-import edu.austral.dissis.chess.engine.rules.pieces.updaters.Update
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MovementMapper
+import edu.austral.dissis.chess.engine.rules.pieces.updaters.MapPlay
 
 object CheckersPieceProvider {
     fun getMan(player: Player) =
@@ -51,24 +50,16 @@ object CheckersPieceProvider {
                 getAmericanManRules(player),
         )
 
-    private fun getManRules(player: Player): Update {
-        return Update(
-            MoveInPlayUpdater(PromotionUpdater(getKing(player))),
-            subRule =
+    private fun getManRules(player: Player): MapPlay {
+        return MapPlay(
+            MovementMapper(PromotionUpdater(getKing(player))),
+            previousRule =
                 JumpsWhenCompulsory(
-                    subRule =
-                        Update(
-                            MoveInPlayUpdater(PendingJumpUpdater()),
-                            subRule =
+                    previousRule =
+                        MapPlay(
+                            MovementMapper(PendingJumpUpdater()),
+                            previousRule =
                                 CombinedRules(
-                                    NoPieceAtFinalPosition(
-                                        subRule =
-                                            IncrementalMovement(1, 1, player),
-                                    ),
-                                    NoPieceAtFinalPosition(
-                                        subRule =
-                                            IncrementalMovement(1, -1, player),
-                                    ),
                                     PathMovementRules(
                                         increments = 1 to 1,
                                         JumpManager(2, 1, 1),
@@ -85,6 +76,14 @@ object CheckersPieceProvider {
                                         increments = -1 to -1,
                                         JumpManager(2, 1, 1),
                                     ),
+                                    NoPieceAtFinalPosition(
+                                        previousRule =
+                                        IncrementalMovement(1, 1, player),
+                                    ),
+                                    NoPieceAtFinalPosition(
+                                        previousRule =
+                                        IncrementalMovement(1, -1, player),
+                                    ),
                                 ),
                         ),
                 ),
@@ -92,11 +91,11 @@ object CheckersPieceProvider {
     }
 
     private fun getKingRules() =
-        Update(
-            MoveInPlayUpdater(PendingJumpUpdater()),
-            subRule =
+        MapPlay(
+            MovementMapper(PendingJumpUpdater()),
+            previousRule =
                 JumpsWhenCompulsory(
-                    subRule =
+                    previousRule =
                         CombinedRules(
                             PathMovementRules(
                                 increments = 1 to 1,
@@ -118,17 +117,17 @@ object CheckersPieceProvider {
                 ),
         )
 
-    private fun getAmericanManRules(player: Player): Update {
-        return Update(
-            MoveInPlayUpdater(PromotionUpdater(getAmericanKing(player))),
-            subRule =
+    private fun getAmericanManRules(player: Player): MapPlay {
+        return MapPlay(
+            MovementMapper(PromotionUpdater(getAmericanKing(player))),
+            previousRule =
                 CombinedRules(
                     NoPieceAtFinalPosition(
-                        subRule =
+                        previousRule =
                             IncrementalMovement(1, 1, player),
                     ),
                     NoPieceAtFinalPosition(
-                        subRule =
+                        previousRule =
                             IncrementalMovement(1, -1, player),
                     ),
                     PathMovementRules(
@@ -148,19 +147,19 @@ object CheckersPieceProvider {
     private fun getAmericanKingRules(player: Player) =
         CombinedRules(
             NoPieceAtFinalPosition(
-                subRule =
+                previousRule =
                     IncrementalMovement(1, 1, player),
             ),
             NoPieceAtFinalPosition(
-                subRule =
+                previousRule =
                     IncrementalMovement(1, -1, player),
             ),
             NoPieceAtFinalPosition(
-                subRule =
+                previousRule =
                     IncrementalMovement(-1, 1, player),
             ),
             NoPieceAtFinalPosition(
-                subRule =
+                previousRule =
                     IncrementalMovement(-1, -1, player),
             ),
             PathMovementRules(

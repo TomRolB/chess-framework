@@ -4,7 +4,7 @@ import edu.austral.dissis.chess.engine.Move
 import edu.austral.dissis.chess.engine.Play
 import edu.austral.dissis.chess.engine.board.GameBoard
 
-class MoveInPlayUpdater(val moveUpdater: MoveUpdater) : PlayUpdater {
+class MovementMapper(val moveUpdater: MoveUpdater) : PlayMapper {
     override fun update(
         play: Play,
         board: GameBoard,

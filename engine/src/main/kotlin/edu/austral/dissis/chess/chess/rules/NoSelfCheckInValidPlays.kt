@@ -8,12 +8,12 @@ import edu.austral.dissis.chess.engine.board.Position
 import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 
-class NoSelfCheckInValidPlays(val player: Player, val subRule: PieceRule) : PieceRule {
+class NoSelfCheckInValidPlays(val player: Player, val previousRule: PieceRule) : PieceRule {
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        return subRule
+        return previousRule
             .getValidPlays(board, position)
             .filter {
                 !playLeavesKingChecked(it)
@@ -25,7 +25,7 @@ class NoSelfCheckInValidPlays(val player: Player, val subRule: PieceRule) : Piec
         from: Position,
         to: Position,
     ): PlayResult {
-        return subRule.getPlayResult(board, from, to)
+        return previousRule.getPlayResult(board, from, to)
     }
 
     private fun playLeavesKingChecked(play: Play): Boolean {

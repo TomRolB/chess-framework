@@ -7,7 +7,7 @@ import edu.austral.dissis.chess.engine.board.GameBoard
 import edu.austral.dissis.chess.engine.rules.pieces.updaters.MoveUpdater
 import kotlin.math.absoluteValue
 
-class TwoPlacesUpdater : MoveUpdater {
+class MovedTwoPlacesUpdater : MoveUpdater {
     override fun update(
         board: GameBoard,
         play: Play,

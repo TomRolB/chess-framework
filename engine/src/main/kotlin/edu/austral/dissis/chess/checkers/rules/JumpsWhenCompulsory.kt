@@ -10,12 +10,12 @@ import edu.austral.dissis.chess.engine.rules.pieces.PieceRule
 import edu.austral.dissis.chess.engine.pieces.PlayResult
 import edu.austral.dissis.chess.engine.pieces.ValidPlay
 
-class JumpsWhenCompulsory(val subRule: PieceRule) : PieceRule {
+class JumpsWhenCompulsory(val previousRule: PieceRule) : PieceRule {
     override fun getValidPlays(
         board: GameBoard,
         position: Position,
     ): Iterable<Play> {
-        val validPlays = subRule.getValidPlays(board, position)
+        val validPlays = previousRule.getValidPlays(board, position)
 
         val hasAvailableJumps = validPlays.any { it.includesTakeAction() }
 
@@ -31,7 +31,7 @@ class JumpsWhenCompulsory(val subRule: PieceRule) : PieceRule {
         to: Position,
     ): PlayResult {
         val pieceBeforePlay = board.getPieceAt(from)!!
-        val result = subRule.getPlayResult(board, from, to)
+        val result = previousRule.getPlayResult(board, from, to)
 
         return when {
             result !is ValidPlay -> {

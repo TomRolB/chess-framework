@@ -29,7 +29,6 @@ import edu.austral.dissis.chess.test.game.TestMoveSuccess
 import edu.austral.dissis.chess.test.game.WhiteCheckMate
 import java.util.*
 
-//TODO: rename
 class TestGameRunnerImpl : TestGameRunner {
     private val actionAdapter: ActionAdapter
     private val pieceAdapter: PieceAdapter
