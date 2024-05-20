@@ -40,6 +40,7 @@ class StandardGameEngine(
     private val validator: RectangularBoardValidator,
     private val pieceAdapter: UiPieceAdapter,
 ) : GameEngine {
+    private var initialized = false
     private var uiBoard: UiBoard = emptyMap()
     private val actionAdapter = UiActionAdapter(pieceAdapter)
 
@@ -85,19 +86,23 @@ class StandardGameEngine(
     }
 
     override fun init(): InitialState {
-        uiBoard =
-            game.board
-                .getAllPositions().associate {
-                    val chessPiece = pieceAdapter.adaptNew(game.board.getPieceAt(it)!!, it)
-                    chessPiece.position to chessPiece
-                }
+        if (!initialized) {
+            uiBoard =
+                game.board
+                    .getAllPositions().associate {
+                        val chessPiece = pieceAdapter.adaptNew(game.board.getPieceAt(it)!!, it)
+                        chessPiece.position to chessPiece
+                    }
 
-        currentState =
-            NewGameState(
-                pieces = uiBoard.values.toList(),
-                currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
-                undoState = UndoState(canUndo = false, canRedo = false),
-            )
+            currentState =
+                NewGameState(
+                    pieces = uiBoard.values.toList(),
+                    currentPlayer = UiPieceAdapter.adapt(game.turnManager.getTurn()),
+                    undoState = UndoState(canUndo = false, canRedo = false),
+                )
+        }
+
+        initialized = true
 
         return InitialState(
             boardSize = BoardSize(validator.numberCols, validator.numberRows),
