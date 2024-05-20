@@ -30,7 +30,7 @@ import edu.austral.dissis.chess.test.game.WhiteCheckMate
 import java.util.*
 
 //TODO: rename
-class AdapterTestGameRunner : TestGameRunner {
+class TestGameRunnerImpl : TestGameRunner {
     private val actionAdapter: ActionAdapter
     private val pieceAdapter: PieceAdapter
 
@@ -123,7 +123,7 @@ class AdapterTestGameRunner : TestGameRunner {
         val engineBoard: GameBoard = initEngineBoard(board)
         val game = Game(gameRules, engineBoard, turnManager)
 
-        return AdapterTestGameRunner(game, board, pieceAdapter, actionAdapter)
+        return TestGameRunnerImpl(game, board, pieceAdapter, actionAdapter)
     }
 
     private fun initEngineBoard(board: TestBoard): GameBoard {

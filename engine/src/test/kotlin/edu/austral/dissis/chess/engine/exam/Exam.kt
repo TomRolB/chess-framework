@@ -27,7 +27,7 @@ class Exam {
     @TestFactory
     fun `required exam tests`(): Stream<DynamicTest> {
         return GameTester(
-            AdapterTestGameRunner(
+            TestGameRunnerImpl(
                 pieceAdapter = PieceAdapter(getChessTypes()),
                 gameRules = getChessGameRules(),
                 turnManager = OneToOneTurnManager(WHITE),
@@ -40,7 +40,7 @@ class Exam {
     @TestFactory
     fun `custom chess tests`(): Stream<DynamicTest> {
         return ChessGameTester(
-            AdapterTestGameRunner(
+            TestGameRunnerImpl(
                 pieceAdapter = PieceAdapter(getChessTypes()),
                 gameRules = getChessGameRules(),
                 turnManager = OneToOneTurnManager(WHITE),
@@ -53,7 +53,7 @@ class Exam {
     @TestFactory
     fun `custom checkers tests`(): Stream<DynamicTest> {
         return CheckersGameTester(
-            AdapterTestGameRunner(
+            TestGameRunnerImpl(
                 pieceAdapter = PieceAdapter(getCheckersTypes()),
                 gameRules = getCheckersGameRules(),
                 turnManager = getCheckersTurnManager(),
