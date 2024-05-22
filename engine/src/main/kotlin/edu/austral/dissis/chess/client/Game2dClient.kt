@@ -88,11 +88,11 @@ class OnlineChessApplication : Application() {
                 }
 
                 override fun handleUndo() {
-                    TODO("Yet too implement")
+                    client.send(Message("undo", initialContext.clientId))
                 }
 
                 override fun handleRedo() {
-                    TODO("Yet too implement")
+                    client.send(Message("redo", initialContext.clientId))
                 }
             }
 

@@ -12,7 +12,7 @@ import edu.austral.ingsis.clientserver.Server
 
 class MoveListener(
     private val gameEngine: GameEngineImpl,
-    private val playerMap: Map<String, Player?>,
+    private val playerMap: Map<String, Player>,
 ) : MessageListener<MovePayload> {
     lateinit var server: Server
 
