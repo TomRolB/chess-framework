@@ -25,8 +25,8 @@ private fun buildServer(
 ): Server {
     val connListener = ServerConnectionListener(playerMap, engine)
     val moveListener = MoveListener(engine, playerMap)
-    val undoListener = UndoListener(engine, playerMap)
-    val redoListener = RedoListener(engine, playerMap)
+    val undoListener = UndoListener(engine)
+    val redoListener = RedoListener(engine)
 
     val server =
         NettyServerBuilder.createDefault()
