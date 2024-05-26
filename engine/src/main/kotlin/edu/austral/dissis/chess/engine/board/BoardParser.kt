@@ -53,7 +53,7 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
             pieces[symbol]
                 ?.clone()
                 ?: throw IllegalArgumentException(
-                    "No piece passed to be associated with $symbol",
+                    "None of the passed pieces can be associated with $symbol",
                 )
         }
     }

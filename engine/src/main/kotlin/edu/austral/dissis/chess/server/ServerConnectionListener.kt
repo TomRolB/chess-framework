@@ -5,6 +5,8 @@ import edu.austral.dissis.chess.engine.Player
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
 import edu.austral.dissis.chess.gui.GameEngine
+import edu.austral.dissis.chess.gui.GameOver
+import edu.austral.dissis.chess.gui.PlayerColor
 import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.Server
 import edu.austral.ingsis.clientserver.ServerConnectionListener
@@ -35,7 +37,17 @@ class ServerConnectionListener(
     }
 
     override fun handleClientConnectionClosed(clientId: String) {
-        // TODO: Have to do sth else?
         println("Client with id $clientId has disconnected")
+        playerLosesIfDisconnected(clientId)
+    }
+
+    private fun playerLosesIfDisconnected(clientId: String) {
+        when (playerMap[clientId]) {
+            BLACK -> server.broadcast(Message("game over", GameOver(PlayerColor.WHITE)))
+            WHITE -> server.broadcast(Message("game over", GameOver(PlayerColor.BLACK)))
+            null -> {
+                // It is a read-only connection. Do nothing.
+            }
+        }
     }
 }
