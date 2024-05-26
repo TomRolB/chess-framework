@@ -19,31 +19,35 @@ fun main() {
     server.start()
 }
 
-private fun buildServer(engine: GameEngineImpl, playerMap: MutableMap<String, Player>): Server {
+private fun buildServer(
+    engine: GameEngineImpl,
+    playerMap: MutableMap<String, Player>,
+): Server {
     val connListener = ServerConnectionListener(playerMap, engine)
     val moveListener = MoveListener(engine, playerMap)
     val undoListener = UndoListener(engine, playerMap)
     val redoListener = RedoListener(engine, playerMap)
 
-    val server = NettyServerBuilder.createDefault()
-        .withPort(port = 8095)
-        .withConnectionListener(connListener)
-        .addMessageListener(
-            messageType = "move",
-            messageTypeReference = object : TypeReference<Message<MovePayload>>() {},
-            messageListener = moveListener,
-        )
-        .addMessageListener(
-            messageType = "undo",
-            messageTypeReference = object : TypeReference<Message<String>>() {},
-            messageListener = undoListener,
-        )
-        .addMessageListener(
-            messageType = "redo",
-            messageTypeReference = object : TypeReference<Message<String>>() {},
-            messageListener = redoListener,
-        )
-        .build()
+    val server =
+        NettyServerBuilder.createDefault()
+            .withPort(port = 8095)
+            .withConnectionListener(connListener)
+            .addMessageListener(
+                messageType = "move",
+                messageTypeReference = object : TypeReference<Message<MovePayload>>() {},
+                messageListener = moveListener,
+            )
+            .addMessageListener(
+                messageType = "undo",
+                messageTypeReference = object : TypeReference<Message<String>>() {},
+                messageListener = undoListener,
+            )
+            .addMessageListener(
+                messageType = "redo",
+                messageTypeReference = object : TypeReference<Message<String>>() {},
+                messageListener = redoListener,
+            )
+            .build()
 
     connListener.server = server
     moveListener.server = server

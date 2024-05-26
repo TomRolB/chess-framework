@@ -20,6 +20,5 @@ class UndoListener(
         server.broadcast(Message("new game state", result))
     }
 
-    private fun isReadOnly(message: Message<String>) =
-        !playerMap.containsKey(message.payload)
+    private fun isReadOnly(message: Message<String>) = !playerMap.containsKey(message.payload)
 }

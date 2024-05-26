@@ -15,8 +15,11 @@ class BoardBuildingTests {
 
         for (position in getAllCombinationsAsPositions(1..8, 1..8)) {
             val piece: Piece? = gameBoard.getPieceAt(position)
-            if (shouldPositionBeEmpty(position)) assertNull(piece)
-            else assertPiece(position, piece)
+            if (shouldPositionBeEmpty(position)) {
+                assertNull(piece)
+            } else {
+                assertPiece(position, piece)
+            }
         }
     }
 
@@ -26,14 +29,19 @@ class BoardBuildingTests {
     ) {
         assertEquals(piece!!.type, CheckersPieceType.MAN)
 
-        if (position.row <= 3) assertEquals(Player.WHITE, piece.player)
-        else assertEquals(Player.BLACK, piece.player)
+        if (position.row <= 3) {
+            assertEquals(Player.WHITE, piece.player)
+        } else {
+            assertEquals(Player.BLACK, piece.player)
+        }
     }
 
-    private fun shouldPositionBeEmpty(position: Position) =
-        isEven(position) || (position.row in 4..5)
+    private fun shouldPositionBeEmpty(position: Position) = isEven(position) || (position.row in 4..5)
 
-    private fun getAllCombinationsAsPositions(rows: IntRange, cols: IntRange): Iterable<Position> {
+    private fun getAllCombinationsAsPositions(
+        rows: IntRange,
+        cols: IntRange,
+    ): Iterable<Position> {
         return rows.flatMap { row -> cols.map { col -> Position(row, col) } }
     }
 
