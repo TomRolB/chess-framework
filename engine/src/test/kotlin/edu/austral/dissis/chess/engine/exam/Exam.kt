@@ -1,5 +1,7 @@
 package edu.austral.dissis.chess.engine.exam
 
+import edu.austral.dissis.chess.checkers.CheckersPieceProvider.getAmericanKing
+import edu.austral.dissis.chess.checkers.CheckersPieceProvider.getAmericanMan
 import edu.austral.dissis.chess.checkers.CheckersPieceProvider.getMan
 import edu.austral.dissis.chess.checkers.getCheckersGameRules
 import edu.austral.dissis.chess.checkers.getCheckersTurnManager
@@ -14,6 +16,7 @@ import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getRook
 import edu.austral.dissis.chess.chess.variants.getChessGameRules
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
+import edu.austral.dissis.chess.engine.custom.AmericanCheckersGameTester
 import edu.austral.dissis.chess.engine.custom.CapablancaGameTester
 import edu.austral.dissis.chess.engine.custom.CheckersGameTester
 import edu.austral.dissis.chess.engine.custom.ChessGameTester
@@ -79,6 +82,19 @@ class Exam {
 //            .debug("man_cannot_avoid_jump.md")
     }
 
+    @TestFactory
+    fun `custom american checkers tests`(): Stream<DynamicTest> {
+        return AmericanCheckersGameTester(
+            TestGameRunnerImpl(
+                pieceAdapter = PieceAdapter(getAmericanCheckersTypes()),
+                gameRules = getCheckersGameRules(),
+                turnManager = getCheckersTurnManager(),
+            ),
+        )
+            .test()
+//            .debug("king_jumps_backwards.md")
+    }
+
     private fun getChessTypes(): Map<Piece, TestPiece> {
         return listOf(WHITE to 'W', BLACK to 'B')
             .flatMap {
@@ -117,6 +133,17 @@ class Exam {
                 listOf(
                     getMan(it.first) to TestPiece('P', it.second),
                     getCheckersKing(it.first) to TestPiece('K', it.second),
+                )
+            }
+            .toMap()
+    }
+
+    private fun getAmericanCheckersTypes(): Map<Piece, TestPiece> {
+        return listOf(WHITE to 'W', BLACK to 'B')
+            .flatMap {
+                listOf(
+                    getAmericanMan(it.first) to TestPiece('P', it.second),
+                    getAmericanKing(it.first) to TestPiece('K', it.second),
                 )
             }
             .toMap()
