@@ -31,7 +31,7 @@ class Game private constructor(
         board,
         turnManager,
         null,
-        null
+        null,
     )
 
     fun movePiece(
@@ -39,9 +39,7 @@ class Game private constructor(
         to: Position,
     ): Pair<RuleResult, Game> {
         val gameData = GameData(board, turnManager, from, to)
-
         val ruleResult = gameRules.verify(gameData)
-
         val newGame = Game(gameRules, ruleResult.board, turnManager.nextTurn(ruleResult), this, null)
 
         return ruleResult to newGame
@@ -55,9 +53,10 @@ class Game private constructor(
             previousState.board,
             previousState.turnManager,
             previousState.previousState,
-            this
+            this,
         )
     }
+
     fun redo(): Game {
         checkNotNull(nextState) { "There is no movement to redo" }
 

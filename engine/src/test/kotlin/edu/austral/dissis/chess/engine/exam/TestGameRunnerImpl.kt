@@ -129,21 +129,6 @@ class TestGameRunnerImpl : TestGameRunner {
     }
 
     override fun redo(): TestMoveResult {
-//        check(!redoStack.isEmpty()) { "No move to redo" }
-//
-//        undoStack.push(
-//            RunnerState(
-//                game = game,
-//                result = TestMoveSuccess(this),
-//                board = testBoard,
-//            ),
-//        )
-//        val (redoneGame, redoneState, redoneBoard) = redoStack.pop()
-//        game = redoneGame
-//        testBoard = redoneBoard
-
-//        return redoneState
-
         val nextGame = game.redo()
         val nextTestBoard = getTestBoard(nextGame.board)
         testBoard = nextTestBoard
@@ -153,21 +138,6 @@ class TestGameRunnerImpl : TestGameRunner {
     }
 
     override fun undo(): TestMoveResult {
-//        check(!undoStack.isEmpty()) { "No move to undo" }
-//
-//        redoStack.push(
-//            RunnerState(
-//                game = game,
-//                result = TestMoveSuccess(this),
-//                board = testBoard,
-//            ),
-//        )
-//        val (undoneGame, undoneResult, undoneBoard) = undoStack.pop()
-//        game = undoneGame
-//        testBoard = undoneBoard
-//
-//        return undoneResult
-
         val previousGame = game.undo()
         val previousTestBoard = getTestBoard(previousGame.board)
         testBoard = previousTestBoard
@@ -176,20 +146,19 @@ class TestGameRunnerImpl : TestGameRunner {
         return TestMoveSuccess(this)
     }
 
-
-    //TODO: may move somewhere else
+    // TODO: may move somewhere else
     private fun getTestBoard(board: GameBoard): TestBoard {
-        val testPieces = board.getAllPositions()
-            .associate { TestPosition(it.row, it.col) to pieceAdapter.adapt(board.getPieceAt(it)!!) }
+        val testPieces =
+            board.getAllPositions()
+                .associate { TestPosition(it.row, it.col) to pieceAdapter.adapt(board.getPieceAt(it)!!) }
 
         require(board is HashGameBoard && board.validator is RectangularBoardValidator) {
             "Only rectangular boards are accepted"
         }
 
-
         return TestBoard(
             TestSize((board.validator as RectangularBoardValidator).numberRows, (board.validator as RectangularBoardValidator).numberCols),
-            testPieces
+            testPieces,
         )
     }
 }
