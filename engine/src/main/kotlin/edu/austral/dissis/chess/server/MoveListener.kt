@@ -55,7 +55,6 @@ class MoveListener(
         )
     }
 
-    // TODO: use NewGameState's turn instead
     private fun notThisPlayersTurn(message: Message<MovePayload>) =
         gameEngine.game.turnManager.getTurn() != playerMap[message.payload.clientId]
 }

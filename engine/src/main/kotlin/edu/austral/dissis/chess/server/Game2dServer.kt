@@ -11,8 +11,6 @@ import edu.austral.ingsis.clientserver.netty.server.NettyServerBuilder
 fun main() {
     val engine = ENGINE
 
-    // TODO: should we consider synchronization?
-//    val playerMap: MutableMap<String, Player> = Collections.synchronizedMap(emptyMap())
     val playerMap: MutableMap<String, Player> = mutableMapOf()
     val server: Server = buildServer(engine, playerMap)
 

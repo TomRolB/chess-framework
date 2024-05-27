@@ -39,8 +39,6 @@ class TestGameRunnerImpl : TestGameRunner {
     private lateinit var game: Game
     private lateinit var testBoard: TestBoard
 
-    // TODO: is there any way of reducing this undo/redo logic
-    // and UI's to a single class?
     private val undoStack = Stack<RunnerState>()
     private val redoStack = Stack<RunnerState>()
 
