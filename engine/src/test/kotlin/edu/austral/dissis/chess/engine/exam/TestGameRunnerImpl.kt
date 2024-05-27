@@ -157,7 +157,10 @@ class TestGameRunnerImpl : TestGameRunner {
         }
 
         return TestBoard(
-            TestSize((board.validator as RectangularBoardValidator).numberRows, (board.validator as RectangularBoardValidator).numberCols),
+            TestSize(
+                (board.validator as RectangularBoardValidator).numberRows,
+                (board.validator as RectangularBoardValidator).numberCols
+            ),
             testPieces,
         )
     }
