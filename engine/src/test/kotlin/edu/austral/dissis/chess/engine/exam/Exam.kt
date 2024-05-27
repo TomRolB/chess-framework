@@ -20,7 +20,9 @@ import edu.austral.dissis.chess.engine.custom.AmericanCheckersGameTester
 import edu.austral.dissis.chess.engine.custom.CapablancaGameTester
 import edu.austral.dissis.chess.engine.custom.CheckersGameTester
 import edu.austral.dissis.chess.engine.custom.ChessGameTester
+import edu.austral.dissis.chess.engine.custom.IncrementalGameTester
 import edu.austral.dissis.chess.engine.pieces.Piece
+import edu.austral.dissis.chess.engine.turns.IncrementalTurnManager
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
 import edu.austral.dissis.chess.test.TestPiece
 import edu.austral.dissis.chess.test.game.GameTester
@@ -63,6 +65,19 @@ class Exam {
                 pieceAdapter = PieceAdapter(getCapablancaTypes()),
                 gameRules = getChessGameRules(),
                 turnManager = OneToOneTurnManager(WHITE),
+            ),
+        )
+            .test()
+//            .debug("archbishop_can_move_to_corner.md")
+    }
+
+    @TestFactory
+    fun `custom incremental chess tests`(): Stream<DynamicTest> {
+        return IncrementalGameTester(
+            TestGameRunnerImpl(
+                pieceAdapter = PieceAdapter(getCapablancaTypes()),
+                gameRules = getChessGameRules(),
+                turnManager = IncrementalTurnManager(WHITE, initialNumberTurns = 1),
             ),
         )
             .test()
