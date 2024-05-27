@@ -36,9 +36,9 @@ class GameEngineImpl(
     private var uiBoard: UiBoard = emptyMap()
     private val actionAdapter = UiActionAdapter(pieceAdapter)
 
-    private val undoStack = Stack<Pair<Game, NewGameState>>()
+    private val undoStack = Stack<NewGameState>()
     private lateinit var currentState: NewGameState
-    private val redoStack = Stack<Pair<Game, NewGameState>>()
+    private val redoStack = Stack<NewGameState>()
 
     override fun applyMove(move: Move): MoveResult {
         val (from, to) = move
@@ -56,7 +56,7 @@ class GameEngineImpl(
             WHITE_WINS, TIE_BY_WHITE -> GameOver(PlayerColor.WHITE)
             BLACK_WINS, TIE_BY_BLACK -> GameOver(PlayerColor.BLACK)
             VALID_MOVE -> {
-                undoStack.push(game to currentState)
+                undoStack.push(currentState)
                 redoStack.clear()
 
                 this.game = newGame
@@ -79,12 +79,7 @@ class GameEngineImpl(
 
     override fun init(): InitialState {
         if (!initialized) {
-            uiBoard =
-                game.board
-                    .getAllPositions().associate {
-                        val chessPiece = pieceAdapter.adaptNew(game.board.getPieceAt(it)!!, it)
-                        chessPiece.position to chessPiece
-                    }
+            uiBoard = getUiBoard()
 
             currentState =
                 NewGameState(
@@ -103,22 +98,30 @@ class GameEngineImpl(
         )
     }
 
+    private fun getUiBoard(): Map<Position, ChessPiece> {
+        return game.board
+            .getAllPositions().associate {
+                val chessPiece = pieceAdapter.adaptNew(this.game.board.getPieceAt(it)!!, it)
+                chessPiece.position to chessPiece
+            }
+    }
+
     override fun redo(): NewGameState {
-        undoStack.push(game to currentState)
-        val (redoGame, redoState) = redoStack.pop()
-        game = redoGame
-        uiBoard = redoState.pieces.associateBy { it.position }
+        undoStack.push(currentState)
+        val redoneState = redoStack.pop()
+        game = game.redo()
+        uiBoard = redoneState.pieces.associateBy { it.position }
 
         val undoState =
             UndoState(
-                canRedo = !redoStack.isEmpty(),
+                canRedo = game.canRedo(),
                 canUndo = true,
             )
 
         currentState =
             NewGameState(
-                pieces = redoState.pieces,
-                currentPlayer = redoState.currentPlayer,
+                pieces = redoneState.pieces,
+                currentPlayer = redoneState.currentPlayer,
                 undoState,
             )
 
@@ -126,15 +129,16 @@ class GameEngineImpl(
     }
 
     override fun undo(): NewGameState {
-        redoStack.push(game to currentState)
-        val (undoGame, stackState) = undoStack.pop()
-        game = undoGame
+        redoStack.push(currentState)
+        val stackState = undoStack.pop()
+        val undoneGame = game.undo()
+        game = undoneGame
         uiBoard = stackState.pieces.associateBy { it.position }
 
         val undoState =
             UndoState(
                 canRedo = true,
-                canUndo = !undoStack.isEmpty(),
+                canUndo = game.canUndo(),
             )
 
         currentState =
