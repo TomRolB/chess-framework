@@ -3,7 +3,9 @@ package edu.austral.dissis.chess.engine.exam
 import edu.austral.dissis.chess.checkers.CheckersPieceProvider.getMan
 import edu.austral.dissis.chess.checkers.getCheckersGameRules
 import edu.austral.dissis.chess.checkers.getCheckersTurnManager
+import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getArchbishop
 import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getBishop
+import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getChancellor
 import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getKing
 import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getKnight
 import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getPawn
@@ -12,6 +14,7 @@ import edu.austral.dissis.chess.chess.pieces.ChessPieceProvider.getRook
 import edu.austral.dissis.chess.chess.variants.getChessGameRules
 import edu.austral.dissis.chess.engine.Player.BLACK
 import edu.austral.dissis.chess.engine.Player.WHITE
+import edu.austral.dissis.chess.engine.custom.CapablancaGameTester
 import edu.austral.dissis.chess.engine.custom.CheckersGameTester
 import edu.austral.dissis.chess.engine.custom.ChessGameTester
 import edu.austral.dissis.chess.engine.pieces.Piece
@@ -47,7 +50,20 @@ class Exam {
             ),
         )
             .test()
-//            .debug("bishop_can_move_to_corner.md")
+//            .debug("archbishop_can_move_to_corner.md")
+    }
+
+    @TestFactory
+    fun `custom capablanca tests`(): Stream<DynamicTest> {
+        return CapablancaGameTester(
+            TestGameRunnerImpl(
+                pieceAdapter = PieceAdapter(getCapablancaTypes()),
+                gameRules = getChessGameRules(),
+                turnManager = OneToOneTurnManager(WHITE),
+            ),
+        )
+            .test()
+//            .debug("archbishop_can_move_to_corner.md")
     }
 
     @TestFactory
@@ -73,6 +89,23 @@ class Exam {
                     getQueen(it.first) to TestPiece('Q', it.second),
                     getKnight(it.first) to TestPiece('N', it.second),
                     getKing(it.first) to TestPiece('K', it.second),
+                )
+            }
+            .toMap()
+    }
+
+    private fun getCapablancaTypes(): Map<Piece, TestPiece> {
+        return listOf(WHITE to 'W', BLACK to 'B')
+            .flatMap {
+                listOf(
+                    getPawn(it.first) to TestPiece('P', it.second),
+                    getRook(it.first) to TestPiece('R', it.second),
+                    getBishop(it.first) to TestPiece('B', it.second),
+                    getQueen(it.first) to TestPiece('Q', it.second),
+                    getKnight(it.first) to TestPiece('N', it.second),
+                    getKing(it.first) to TestPiece('K', it.second),
+                    getArchbishop(it.first) to TestPiece('A', it.second),
+                    getChancellor(it.first) to TestPiece('C', it.second),
                 )
             }
             .toMap()

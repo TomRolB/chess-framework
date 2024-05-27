@@ -90,7 +90,7 @@ private fun getInitialBoard() =
             """.trimIndent(),
         )
 
-private fun getCapablancaPieceIdMap(): Map<PieceType, String> {
+fun getCapablancaPieceIdMap(): Map<PieceType, String> {
     return listOf(
         PAWN to "pawn",
         ROOK to "rook",
