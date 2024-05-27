@@ -20,6 +20,7 @@ import edu.austral.dissis.chess.engine.rules.RuleChain
 import edu.austral.dissis.chess.engine.turns.TurnManager
 import edu.austral.dissis.chess.test.TestBoard
 import edu.austral.dissis.chess.test.TestPosition
+import edu.austral.dissis.chess.test.TestSize
 import edu.austral.dissis.chess.test.game.BlackCheckMate
 import edu.austral.dissis.chess.test.game.TestGameRunner
 import edu.austral.dissis.chess.test.game.TestMoveDraw
@@ -27,7 +28,6 @@ import edu.austral.dissis.chess.test.game.TestMoveFailure
 import edu.austral.dissis.chess.test.game.TestMoveResult
 import edu.austral.dissis.chess.test.game.TestMoveSuccess
 import edu.austral.dissis.chess.test.game.WhiteCheckMate
-import java.util.Stack
 
 class TestGameRunnerImpl : TestGameRunner {
     private val actionAdapter: ActionAdapter
@@ -38,9 +38,6 @@ class TestGameRunnerImpl : TestGameRunner {
 
     private lateinit var game: Game
     private lateinit var testBoard: TestBoard
-
-    private val undoStack = Stack<RunnerState>()
-    private val redoStack = Stack<RunnerState>()
 
     // Lazy constructor to initialize game once withBoard() is called
     constructor(
@@ -87,15 +84,6 @@ class TestGameRunnerImpl : TestGameRunner {
             BLACK_WINS -> BlackCheckMate(boardAfterMove)
             TIE_BY_WHITE, TIE_BY_BLACK -> TestMoveDraw(boardAfterMove)
             VALID_MOVE -> {
-                undoStack.push(
-                    RunnerState(
-                        game,
-                        TestMoveSuccess(this),
-                        testBoard,
-                    ),
-                )
-                redoStack.clear()
-
                 this.game = newGame
                 this.testBoard = boardAfterMove
 
@@ -141,38 +129,67 @@ class TestGameRunnerImpl : TestGameRunner {
     }
 
     override fun redo(): TestMoveResult {
-        check(!redoStack.isEmpty()) { "No move to redo" }
+//        check(!redoStack.isEmpty()) { "No move to redo" }
+//
+//        undoStack.push(
+//            RunnerState(
+//                game = game,
+//                result = TestMoveSuccess(this),
+//                board = testBoard,
+//            ),
+//        )
+//        val (redoneGame, redoneState, redoneBoard) = redoStack.pop()
+//        game = redoneGame
+//        testBoard = redoneBoard
 
-        undoStack.push(
-            RunnerState(
-                game = game,
-                result = TestMoveSuccess(this),
-                board = testBoard,
-            ),
-        )
-        val (redoneGame, redoneState, redoneBoard) = redoStack.pop()
-        game = redoneGame
-        testBoard = redoneBoard
+//        return redoneState
 
-        return redoneState
+        val nextGame = game.redo()
+        val nextTestBoard = getTestBoard(nextGame.board)
+        testBoard = nextTestBoard
+        game = nextGame
+
+        return TestMoveSuccess(this)
     }
 
     override fun undo(): TestMoveResult {
-        check(!undoStack.isEmpty()) { "No move to undo" }
+//        check(!undoStack.isEmpty()) { "No move to undo" }
+//
+//        redoStack.push(
+//            RunnerState(
+//                game = game,
+//                result = TestMoveSuccess(this),
+//                board = testBoard,
+//            ),
+//        )
+//        val (undoneGame, undoneResult, undoneBoard) = undoStack.pop()
+//        game = undoneGame
+//        testBoard = undoneBoard
+//
+//        return undoneResult
 
-        redoStack.push(
-            RunnerState(
-                game = game,
-                result = TestMoveSuccess(this),
-                board = testBoard,
-            ),
+        val previousGame = game.undo()
+        val previousTestBoard = getTestBoard(previousGame.board)
+        testBoard = previousTestBoard
+        game = previousGame
+
+        return TestMoveSuccess(this)
+    }
+
+
+    //TODO: may move somewhere else
+    private fun getTestBoard(board: GameBoard): TestBoard {
+        val testPieces = board.getAllPositions()
+            .associate { TestPosition(it.row, it.col) to pieceAdapter.adapt(board.getPieceAt(it)!!) }
+
+        require(board is HashGameBoard && board.validator is RectangularBoardValidator) {
+            "Only rectangular boards are accepted"
+        }
+
+
+        return TestBoard(
+            TestSize((board.validator as RectangularBoardValidator).numberRows, (board.validator as RectangularBoardValidator).numberCols),
+            testPieces
         )
-        val (undoneGame, undoneResult, undoneBoard) = undoStack.pop()
-        game = undoneGame
-        testBoard = undoneBoard
-
-        return undoneResult
     }
 }
-
-data class RunnerState(val game: Game, val result: TestMoveResult, val board: TestBoard)

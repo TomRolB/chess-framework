@@ -19,11 +19,21 @@ data class RuleResult(
     val message: String,
 )
 
-class Game(
+class Game private constructor(
     val gameRules: RuleChain<GameData, RuleResult>,
     val board: GameBoard,
     val turnManager: TurnManager,
+    private val previousState: Game?,
+    private val nextState: Game?,
 ) {
+    constructor(gameRules: RuleChain<GameData, RuleResult>, board: GameBoard, turnManager: TurnManager) : this(
+        gameRules,
+        board,
+        turnManager,
+        null,
+        null
+    )
+
     fun movePiece(
         from: Position,
         to: Position,
@@ -32,9 +42,34 @@ class Game(
 
         val ruleResult = gameRules.verify(gameData)
 
-        val newGame = Game(gameRules, ruleResult.board, turnManager.nextTurn(ruleResult))
+        val newGame = Game(gameRules, ruleResult.board, turnManager.nextTurn(ruleResult), this, null)
 
         return ruleResult to newGame
+    }
+
+    fun undo(): Game {
+        checkNotNull(previousState) { "There is no movement to undo" }
+
+        return Game(
+            previousState.gameRules,
+            previousState.board,
+            previousState.turnManager,
+            previousState.previousState,
+            this
+        )
+    }
+    fun redo(): Game {
+        checkNotNull(nextState) { "There is no movement to redo" }
+
+        return nextState
+    }
+
+    fun canUndo(): Boolean {
+        return previousState != null
+    }
+
+    fun canRedo(): Boolean {
+        return nextState != null
     }
 }
 
