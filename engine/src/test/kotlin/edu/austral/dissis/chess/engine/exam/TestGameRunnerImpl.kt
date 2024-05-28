@@ -146,7 +146,6 @@ class TestGameRunnerImpl : TestGameRunner {
         return TestMoveSuccess(this)
     }
 
-    // TODO: may move somewhere else
     private fun getTestBoard(board: GameBoard): TestBoard {
         val testPieces =
             board.getAllPositions()
