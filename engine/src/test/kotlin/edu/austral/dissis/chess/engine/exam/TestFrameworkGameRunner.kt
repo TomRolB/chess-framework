@@ -87,7 +87,6 @@ class TestFrameworkGameRunner : TestGameRunner {
                 this.game = newGame
                 this.testBoard = boardAfterMove
 
-//                val runnerNextTurn = AdapterTestGameRunner(game, boardAfterMove, pieceAdapter, actionAdapter)
                 TestMoveSuccess(this)
             }
         }
@@ -102,11 +101,6 @@ class TestFrameworkGameRunner : TestGameRunner {
     }
 
     override fun withBoard(board: TestBoard): TestGameRunner {
-        // return AdapterTestGameRunner(game, board, pieceTypes)
-
-        // Set pieces at Game (also map board size to validator)
-        // (board is initialized here)
-
         val engineBoard: GameBoard = initEngineBoard(board)
         val game = Game(gameRules, engineBoard, turnManager)
 

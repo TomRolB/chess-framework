@@ -6,7 +6,6 @@ import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.MessageListener
 import javafx.application.Platform
 
-// Listener used by the client
 class AcknowledgeListener(
     private val gameView: GameView,
     private val initialContext: InitialContext,

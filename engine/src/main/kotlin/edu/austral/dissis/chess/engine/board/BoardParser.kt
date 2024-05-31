@@ -36,7 +36,6 @@ class BoardParser private constructor(val pieces: Map<String, Piece>) {
             .map { stringRow ->
                 stringRow
                     .split(POSITION_DELIMITER)
-//                    .drop(n = 1)
                     .map { getPiece(it) }
             }
             .also { boardBuilder = BoardBuilder(getValidator(it)) }
