@@ -35,7 +35,7 @@ class Exam {
     @TestFactory
     fun `required exam tests`(): Stream<DynamicTest> {
         return GameTester(
-            TestGameRunnerImpl(
+            TestFrameworkGameRunner(
                 pieceAdapter = PieceAdapter(getChessTypes()),
                 gameRules = getChessGameRules(),
                 turnManager = OneToOneTurnManager(WHITE),
@@ -48,7 +48,7 @@ class Exam {
     @TestFactory
     fun `custom chess tests`(): Stream<DynamicTest> {
         return ChessGameTester(
-            TestGameRunnerImpl(
+            TestFrameworkGameRunner(
                 pieceAdapter = PieceAdapter(getChessTypes()),
                 gameRules = getChessGameRules(),
                 turnManager = OneToOneTurnManager(WHITE),
@@ -61,7 +61,7 @@ class Exam {
     @TestFactory
     fun `custom capablanca tests`(): Stream<DynamicTest> {
         return CapablancaGameTester(
-            TestGameRunnerImpl(
+            TestFrameworkGameRunner(
                 pieceAdapter = PieceAdapter(getCapablancaTypes()),
                 gameRules = getChessGameRules(),
                 turnManager = OneToOneTurnManager(WHITE),
@@ -74,7 +74,7 @@ class Exam {
     @TestFactory
     fun `custom incremental chess tests`(): Stream<DynamicTest> {
         return IncrementalGameTester(
-            TestGameRunnerImpl(
+            TestFrameworkGameRunner(
                 pieceAdapter = PieceAdapter(getCapablancaTypes()),
                 gameRules = getChessGameRules(),
                 turnManager = IncrementalTurnManager(WHITE, initialNumberTurns = 1),
@@ -87,7 +87,7 @@ class Exam {
     @TestFactory
     fun `custom checkers tests`(): Stream<DynamicTest> {
         return CheckersGameTester(
-            TestGameRunnerImpl(
+            TestFrameworkGameRunner(
                 pieceAdapter = PieceAdapter(getCheckersTypes()),
                 gameRules = getCheckersGameRules(),
                 turnManager = getCheckersTurnManager(),
@@ -100,7 +100,7 @@ class Exam {
     @TestFactory
     fun `custom american checkers tests`(): Stream<DynamicTest> {
         return AmericanCheckersGameTester(
-            TestGameRunnerImpl(
+            TestFrameworkGameRunner(
                 pieceAdapter = PieceAdapter(getAmericanCheckersTypes()),
                 gameRules = getCheckersGameRules(),
                 turnManager = getCheckersTurnManager(),

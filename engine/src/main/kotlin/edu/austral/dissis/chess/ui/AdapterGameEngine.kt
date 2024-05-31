@@ -27,7 +27,7 @@ import edu.austral.dissis.chess.engine.board.Position as EnginePosition
 
 typealias UiBoard = Map<Position, ChessPiece>
 
-class GameEngineImpl(
+class AdapterGameEngine(
     var game: Game,
     private val validator: RectangularBoardValidator,
     private val pieceAdapter: UiPieceAdapter,

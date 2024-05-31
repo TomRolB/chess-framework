@@ -17,10 +17,10 @@ import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PieceOfPlayer
 import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.CompoundWinCondition
 import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.DeadlockWinCondition
 import edu.austral.dissis.chess.engine.rules.gameflow.wincondition.ExtinctionWinCondition
-import edu.austral.dissis.chess.ui.GameEngineImpl
+import edu.austral.dissis.chess.ui.AdapterGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
-fun getAmericanCheckersEngine(): GameEngineImpl {
+fun getAmericanCheckersEngine(): AdapterGameEngine {
     val board = getAmericanCheckersBoard()
 
     val pieceAdapter = UiPieceAdapter(getPieceIdMap())
@@ -30,7 +30,7 @@ fun getAmericanCheckersEngine(): GameEngineImpl {
     val turnManager = getCheckersTurnManager()
     val game = Game(gameRules, board, turnManager)
 
-    return GameEngineImpl(game, board.validator as RectangularBoardValidator, pieceAdapter)
+    return AdapterGameEngine(game, board.validator as RectangularBoardValidator, pieceAdapter)
 }
 
 fun getAmericanCheckersGameRules() =

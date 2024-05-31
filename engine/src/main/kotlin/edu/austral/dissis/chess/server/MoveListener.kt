@@ -5,13 +5,13 @@ import edu.austral.dissis.chess.gui.GameOver
 import edu.austral.dissis.chess.gui.InvalidMove
 import edu.austral.dissis.chess.gui.MoveResult
 import edu.austral.dissis.chess.gui.NewGameState
-import edu.austral.dissis.chess.ui.GameEngineImpl
+import edu.austral.dissis.chess.ui.AdapterGameEngine
 import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.MessageListener
 import edu.austral.ingsis.clientserver.Server
 
 class MoveListener(
-    private val gameEngine: GameEngineImpl,
+    private val gameEngine: AdapterGameEngine,
     private val playerMap: Map<String, Player>,
 ) : MessageListener<MovePayload> {
     lateinit var server: Server

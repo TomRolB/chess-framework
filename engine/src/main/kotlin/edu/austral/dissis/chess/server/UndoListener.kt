@@ -1,13 +1,13 @@
 package edu.austral.dissis.chess.server
 
 import edu.austral.dissis.chess.gui.NewGameState
-import edu.austral.dissis.chess.ui.GameEngineImpl
+import edu.austral.dissis.chess.ui.AdapterGameEngine
 import edu.austral.ingsis.clientserver.Message
 import edu.austral.ingsis.clientserver.MessageListener
 import edu.austral.ingsis.clientserver.Server
 
 class UndoListener(
-    private val gameEngine: GameEngineImpl,
+    private val gameEngine: AdapterGameEngine,
 ) : MessageListener<String> {
     lateinit var server: Server
 

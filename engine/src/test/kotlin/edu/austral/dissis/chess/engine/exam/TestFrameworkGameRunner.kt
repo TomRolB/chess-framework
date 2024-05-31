@@ -29,7 +29,7 @@ import edu.austral.dissis.chess.test.game.TestMoveResult
 import edu.austral.dissis.chess.test.game.TestMoveSuccess
 import edu.austral.dissis.chess.test.game.WhiteCheckMate
 
-class TestGameRunnerImpl : TestGameRunner {
+class TestFrameworkGameRunner : TestGameRunner {
     private val actionAdapter: ActionAdapter
     private val pieceAdapter: PieceAdapter
 
@@ -110,7 +110,7 @@ class TestGameRunnerImpl : TestGameRunner {
         val engineBoard: GameBoard = initEngineBoard(board)
         val game = Game(gameRules, engineBoard, turnManager)
 
-        return TestGameRunnerImpl(game, board, pieceAdapter, actionAdapter)
+        return TestFrameworkGameRunner(game, board, pieceAdapter, actionAdapter)
     }
 
     private fun initEngineBoard(board: TestBoard): GameBoard {
@@ -158,7 +158,7 @@ class TestGameRunnerImpl : TestGameRunner {
         return TestBoard(
             TestSize(
                 (board.validator as RectangularBoardValidator).numberRows,
-                (board.validator as RectangularBoardValidator).numberCols
+                (board.validator as RectangularBoardValidator).numberCols,
             ),
             testPieces,
         )

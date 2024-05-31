@@ -29,10 +29,10 @@ import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CannotStayStill
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.CompoundPrePlayValidator
 import edu.austral.dissis.chess.engine.rules.gameflow.preplay.PieceOfPlayer
 import edu.austral.dissis.chess.engine.turns.OneToOneTurnManager
-import edu.austral.dissis.chess.ui.GameEngineImpl
+import edu.austral.dissis.chess.ui.AdapterGameEngine
 import edu.austral.dissis.chess.ui.UiPieceAdapter
 
-fun getCapablancaEngine(): GameEngineImpl {
+fun getCapablancaEngine(): AdapterGameEngine {
     val validator = RectangularBoardValidator(numberRows = 10, numberCols = 10)
     val board = getInitialBoard()
 
@@ -50,7 +50,7 @@ fun getCapablancaEngine(): GameEngineImpl {
 
     val game = Game(gameRules, board, OneToOneTurnManager(WHITE))
 
-    return GameEngineImpl(game, validator, pieceAdapter)
+    return AdapterGameEngine(game, validator, pieceAdapter)
 }
 
 private fun getInitialBoard() =
