@@ -1,11 +1,11 @@
 # Chess Framework
 
-This framework is part of an extensive course from Universidad Austral on the design of software systems. It includes the following features:
-
 <figure>
   <img src="/diagrams/Capablanca's%20Chess.png" alt="Image description">
   <figcaption>Capablanca's Chess run over the framework</figcaption>
 </figure>
+
+This framework is part of an extensive course from Universidad Austral on the design of software systems. It includes the following features:
 
 * **Working configurations** for **Chess** and **Checkers**, with tests included.
 * A **rule engine** to create pieces (e.g. a pawn for Chess, or a Man for Checkers), general movement rules, winning conditions, etc. for a board game.
