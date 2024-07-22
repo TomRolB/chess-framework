@@ -1,35 +1,18 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/bl6zRdaa)
-# Chess Template
+# Chess Framework
 
+This framework is part of an extensive course from Universidad Austral on the design of software systems. It includes the following features:
 
-This is the template for your chess project. You will use this template to create your own chess game.
+<figure>
+  <img src="/diagrams/Capablanca's%20Chess.png" alt="Image description">
+  <figcaption>Capablanca's Chess run over the framework</figcaption>
+</figure>
 
-This template comes with configurations for:
+* **Working configurations** for **Chess** and **Checkers**, with tests included.
+* A **rule engine** to create pieces (e.g. a pawn for Chess, or a Man for Checkers), general movement rules, winning conditions, etc. for a board game.
+* A **user interface** to play the defined board game.
+* A **server** which supports a client for each player and extra clients for spectators.
 
-- Static code analysis 
-- Coverage
+The core idea of this framework is to have an _onion architecture_, where the engine is completely independent of any app using it.
+This structure, based on the **SOLID** principles and different **design patterns**, greatly eased the development of the UI, the client-server component and the tests for Chess and Checkers.
 
-It supports both Java code and Kotlin code
-
-## Where should you include your code?
-
-Your code should be included in the `engine/src/main/java` or `engine/src/main/kotlin` directory.
-
-## How to build the project?
-
-You can build the project using the following command:
-
-```./gradlew build```
-
-## Testing
-
-### Requirements
-
-This project depends on a package published in the GitHub Packages Registry. In order to download it a GitHub token must be used.
-Instruction on how to create a GitHub personal token are [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). 
-Once created the following environment variables must be defined:
-* GITHUB_USER
-* GITHUB_TOKEN
-Or in a file `gradle.properties` the following values must be defined: 
-* github.user 
-* github.token
+Additionally, games can be easily defined and configured using the developed rule components. For instance, this repository includes not only classic Chess and Checkers examples but also various developed variants.
