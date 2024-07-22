@@ -1,7 +1,7 @@
 # Chess Framework
 
 <figure>
-  <img src="/diagrams/Capablanca's%20Chess.png" alt="Image description">
+  <img src="/diagrams/Capablanca's%20Chess.png" alt="Image description" width="400" height="400">
   <figcaption>Capablanca's Chess run over the framework</figcaption>
 </figure>
 
