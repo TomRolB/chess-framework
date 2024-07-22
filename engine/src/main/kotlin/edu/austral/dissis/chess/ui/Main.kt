@@ -25,7 +25,7 @@ class ChessGameApplication : Application() {
             getChessEngine(),
             getCapablancaEngine(),
             getExtinctionEngine(),
-        )[0]
+        )[3]
     private val imageResolver = CachedImageResolver(DefaultImageResolver())
 
     companion object {
