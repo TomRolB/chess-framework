@@ -1,9 +1,10 @@
 # Chess Framework
 
 <figure>
-  <img src="/diagrams/Capablanca's%20Chess.png" alt="Image description" width="400" height="400">
-  <figcaption>Capablanca's Chess run over the framework</figcaption>
+  <img src="/diagrams/Capablanca's%20Chess.png" alt="Image description" width="400">
 </figure>
+
+_Capablanca's Chess run over the framework_
 
 This framework is part of an extensive course from Universidad Austral on the design of software systems. It includes the following features:
 
